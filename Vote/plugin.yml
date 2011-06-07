@@ -1,0 +1,8 @@
+name: Vote
+main: me.RabidCrab.Vote.Vote
+version: 0.2
+
+commands:
+  vote:
+    description: Voting system
+    usage:
