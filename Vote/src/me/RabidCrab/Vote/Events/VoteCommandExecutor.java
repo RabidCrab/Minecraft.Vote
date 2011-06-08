@@ -38,44 +38,21 @@ public class VoteCommandExecutor implements CommandExecutor {
 			    displayGeneralHelp(player);
 			
 			if (args.length == 1)
-			{
-    			// If they voted yes, and they can, then we need to iterate the current yes vote by 1
     			if ((args[0].equalsIgnoreCase("y") || args[0].equalsIgnoreCase("yes")))
-    			{
-    			    if (Vote.permissions == null)
-    			        plugin.voter.playerVoteYes(player);
-    			    else
-        				if (Vote.permissions.has(player, "vote.voteyes"))
-        					plugin.voter.playerVoteYes(player);
-        				else
-        				    player.sendMessage(Vote.configuration.getPlayerVoteNoPermission());
-    			}
+    			    plugin.voter.playerVoteYes(player);
     			else
-    			{
     				if ((args[0].equalsIgnoreCase("n") || args[0].equalsIgnoreCase("no")))
-    				{
-    				    if (Vote.permissions == null)
-    				        plugin.voter.playerVoteNo(player);
-    				    else
-        					if (Vote.permissions.has(player, "vote.voteno") || Vote.permissions == null)
-        					    plugin.voter.playerVoteNo(player);
-        					else
-        					    player.sendMessage(Vote.configuration.getPlayerVoteNoPermission());
-    				}
+				        plugin.voter.playerVoteNo(player);
     				else
-    				{
     				    if (args[0].equalsIgnoreCase("list"))
     				        displayVoteStartHelp(player);
     				    else
 	                        startVote((Player)sender, args);
-    				}
-    			}
-			}
 			
 			return true;
 		}
 		
-		return true;
+		return false;
 	}
 	
 	/**
