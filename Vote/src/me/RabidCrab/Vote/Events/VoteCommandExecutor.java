@@ -27,8 +27,10 @@ public class VoteCommandExecutor implements CommandExecutor {
 
 	
 	@Override
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if(label.equalsIgnoreCase("vote") && sender != null){
+	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) 
+	{
+		if(label.equalsIgnoreCase("vote") && sender != null)
+		{
 			// Get the player, we'll need it
 			Player player = (Player)sender;
 			
@@ -46,7 +48,7 @@ public class VoteCommandExecutor implements CommandExecutor {
         				if (Vote.permissions.has(player, "vote.voteyes"))
         					plugin.voter.playerVoteYes(player);
         				else
-        				    player.sendMessage("You do not have permission to vote");
+        				    player.sendMessage(Vote.configuration.getPlayerVoteNoPermission());
     			}
     			else
     			{
@@ -58,39 +60,22 @@ public class VoteCommandExecutor implements CommandExecutor {
         					if (Vote.permissions.has(player, "vote.voteno") || Vote.permissions == null)
         					    plugin.voter.playerVoteNo(player);
         					else
-        					    player.sendMessage("You do not have permission to vote");
+        					    player.sendMessage(Vote.configuration.getPlayerVoteNoPermission());
     				}
     				else
     				{
-    				    if (args[0].equalsIgnoreCase("start"))
+    				    if (args[0].equalsIgnoreCase("list"))
     				        displayVoteStartHelp(player);
     				    else
-    				        displayGeneralHelp(player);
+	                        startVote((Player)sender, args);
     				}
     			}
 			}
 			
-			// Vote starting begins here
-			if (args.length >= 2 && args[0].equalsIgnoreCase("start"))
-			{
-			    if (args[1].equalsIgnoreCase("?"))
-			    {
-			        displayVoteStartHelp(player);
-			        return true;
-			    }
-			        
-			    if (Vote.permissions == null)
-			        startVote(sender, args);
-			    else
-    				if (Vote.permissions.has(player, "votes.startvote." + args[1].toString().toLowerCase()))
-    				    startVote(sender, args);
-    				else
-    				    player.sendMessage("You do not have permission to start a vote");
-			}
-			
 			return true;
 		}
-		return false;
+		
+		return true;
 	}
 	
 	/**
@@ -121,14 +106,20 @@ public class VoteCommandExecutor implements CommandExecutor {
 	        player.sendMessage(Vote.configuration.getVoteStartHelpNotFound()); 
 	}
 
-	private void startVote(CommandSender sender, String[] args)
+	private void startVote(Player player, String[] args)
 	{
+	    if (args.length < 1)
+	        return;
+	    
 	    for (String s : Vote.configuration.getAllVoteTypes())
         {
-            if (s.compareToIgnoreCase(args[1].toString()) == 0)
-                plugin.voter.beginVote((Player)sender, Vote.configuration.getPlayerVote(plugin, s));
-            else
-                ((Player)sender).sendMessage(args[1].toString() + " does not exist!");
+            if (s.compareToIgnoreCase(args[0].toString()) == 0)
+            {
+                plugin.voter.beginVote(player, Vote.configuration.getPlayerVote(plugin, s));
+                return;
+            }
         }
+	    
+	    player.sendMessage(args[0].toString() + " does not exist!");
 	}
 }

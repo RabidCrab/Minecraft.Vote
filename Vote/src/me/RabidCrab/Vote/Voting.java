@@ -38,6 +38,13 @@ public class Voting
      */
     public boolean beginVote(Player player, PlayerVote vote)
     {
+        // Verify the user has the rights to start this vote
+        if (!Vote.permissions.has(player, "votes.startvote." + vote.getVoteShortName()))
+        {
+            player.sendMessage(Vote.configuration.getPlayerVoteStartNoPermission());
+            return false;
+        }
+        
         // Make sure a vote isn't already going
         if (IsVoting)
         {
@@ -61,18 +68,23 @@ public class Voting
         }
         
         IsVoting = true;
+        plugin.getServer().broadcastMessage(currentVote.getVoteStartText());
         
         // Create the list of voters and add the beginning voter to the list. Also prevents carried over data
         voteYes = new ArrayList<Player>(); 
         voteNo = new ArrayList<Player>(); 
         // Vote results shouldn't be skewed by a random player joining through the middle of the vote, but that doesn't mean the
         // player shouldn't be allowed to vote. This list will be added to if a player logs in and votes during a vote
-        loggedInPlayers = new ArrayList<Player>(Arrays.asList(plugin.getServer().getOnlinePlayers()));
+        List<Player> allLoggedInPlayers = new ArrayList<Player>(Arrays.asList(plugin.getServer().getOnlinePlayers()));
+        loggedInPlayers = new ArrayList<Player>();
+        
+        // Loop through the logged in players and add the ones who have voting rights
+        for (Player currentPlayer : allLoggedInPlayers)
+            if (canPlayerVoteYes(currentPlayer) || canPlayerVoteNo(currentPlayer))
+                loggedInPlayers.add(currentPlayer);
         
         playerVoteYes(player);
 
-        plugin.getServer().broadcastMessage(currentVote.getVoteStartText());
-        
         // Begin the timer. Why can't I just do a callback method?
         voteTimer.schedule(new VoteFinishedTimer(this), vote.getTimeoutSeconds() * 1000);
         
@@ -80,9 +92,33 @@ public class Voting
     }
     
     /**
+     * A check to see if the player can vote yes
+     * @return True if the player can vote yes
+     */
+    private boolean canPlayerVoteYes(Player player)
+    {
+        if (currentVote == null)
+            return false;
+
+        if (Vote.permissions.has(player, "vote.voteyes." + currentVote.getVoteShortName()))
+            return true;
+        
+        return false;
+    }
+    
+    private boolean canPlayerVoteNo(Player player)
+    {
+        if (currentVote == null)
+            return false;
+
+        if (Vote.permissions.has(player, "vote.voteno." + currentVote.getVoteShortName()))
+            return true;
+        
+        return false;
+    }
+    
+    /**
      * Cancel the vote
-     * @param vote
-     * @return
      */
     public boolean cancelVote(Player player, PlayerVote vote)
     {
@@ -127,6 +163,12 @@ public class Voting
     {
         if (IsVoting)
         {
+            if (!canPlayerVoteYes(player))
+            {
+                Vote.configuration.getPlayerVoteNoPermission();
+                return false;
+            }
+            
             if (!voteYes.contains(player))
             {
                 voteYes.add(player);
@@ -219,6 +261,12 @@ public class Voting
     {
         if (IsVoting)
         {
+            if (!canPlayerVoteNo(player))
+            {
+                Vote.configuration.getPlayerVoteNoPermission();
+                return false;
+            }
+            
             if (!voteNo.contains(player))
             {
                 voteNo.add(player);

@@ -26,33 +26,135 @@ public class ConfigurationFile extends YMLFile
     protected void populateFile(Configuration file)
     {
         // Create the default reset button PlayerVote
-        PlayerVote firstVote = new PlayerVote(file, "votes.restart");
+        PlayerVote restartVote = new PlayerVote(file, "votes.restart");
+        PlayerVote dayVote = new PlayerVote(file, "votes.day");
+        PlayerVote nightVote = new PlayerVote(file, "votes.night");
+        //PlayerVote sunVote = new PlayerVote(file, "votes.sun");
+        //PlayerVote stormVote = new PlayerVote(file, "votes.storm");
         
-        List<String> successCommands = new ArrayList<String>();
-        List<String> failCommands = new ArrayList<String>();
+        // Vote to restart server
+        List<String> restartSuccessCommands = new ArrayList<String>();
+        List<String> restartFailCommands = new ArrayList<String>();
         
-        successCommands.add("kickall");
-        successCommands.add("save-all");
-        successCommands.add("stop");
+        restartSuccessCommands.add("kickall");
+        restartSuccessCommands.add("save-all");
+        restartSuccessCommands.add("stop");
         
-        firstVote.setDescription("Restart the server");
-        firstVote.setLastFailedVote(0);
-        firstVote.setLastSuccessfulVote(0);
-        firstVote.setVoteOnCooldownText("The server has been restarted recently. Please wait a bit before trying again.");
-        firstVote.setVoteStartText("Vote to restart the server has started! type /vote yes or /vote no to vote");
-        firstVote.setVoteSuccessText("Vote succeeded! Restarting server in 60 seconds");
-        firstVote.setVoteFailText("Vote failed! Try again in 30 minutes if it's still lagging");
-        firstVote.setVoteSuccessCommands(successCommands);
-        firstVote.setVoteFailCommands(failCommands);
-        firstVote.setVoteSuccessCommandDelaySeconds(60);
-        firstVote.setVoteFailCommandDelaySeconds(0);
-        firstVote.setTimeoutSeconds(60);
-        firstVote.setMinimumVotes(1);
-        firstVote.setPercentToSucceed(60);
-        firstVote.setCooldownMinutesToFailRevote(30);
-        firstVote.setCooldownMinutesToSuccessRevote(120);
+        restartVote.setDescription("Restart the server");
+        restartVote.setLastFailedVote(0);
+        restartVote.setLastSuccessfulVote(0);
+        restartVote.setVoteOnCooldownText("The server has been restarted recently. Please wait a bit before trying again.");
+        restartVote.setVoteStartText("Vote to restart the server has started! type /vote yes or /vote no to vote");
+        restartVote.setVoteSuccessText("Vote succeeded! Restarting server in 60 seconds");
+        restartVote.setVoteFailText("Vote failed! Try again in 30 minutes if it's still lagging");
+        restartVote.setVoteSuccessCommands(restartSuccessCommands);
+        restartVote.setVoteFailCommands(restartFailCommands);
+        restartVote.setVoteSuccessCommandDelaySeconds(60);
+        restartVote.setVoteFailCommandDelaySeconds(0);
+        restartVote.setTimeoutSeconds(60);
+        restartVote.setMinimumVotes(1);
+        restartVote.setPercentToSucceed(60);
+        restartVote.setCooldownMinutesToFailRevote(30);
+        restartVote.setCooldownMinutesToSuccessRevote(120);
+        restartVote.save();
         
-        firstVote.save();
+        // Vote to set day
+        List<String> daySuccessCommands = new ArrayList<String>();
+        List<String> dayFailCommands = new ArrayList<String>();
+        
+        daySuccessCommands.add("time day");
+        
+        dayVote.setDescription("Set time to day");
+        dayVote.setLastFailedVote(0);
+        dayVote.setLastSuccessfulVote(0);
+        dayVote.setVoteOnCooldownText("The time has been set to day too recently!");
+        dayVote.setVoteStartText("Vote to set the time to day has started! type /vote yes or /vote no to vote");
+        dayVote.setVoteSuccessText("Vote succeeded! Time set to day");
+        dayVote.setVoteFailText("Vote failed! Try again the next time night comes around.");
+        dayVote.setVoteSuccessCommands(daySuccessCommands);
+        dayVote.setVoteFailCommands(dayFailCommands);
+        dayVote.setVoteSuccessCommandDelaySeconds(3);
+        dayVote.setVoteFailCommandDelaySeconds(0);
+        dayVote.setTimeoutSeconds(60);
+        dayVote.setMinimumVotes(1);
+        dayVote.setPercentToSucceed(60);
+        dayVote.setCooldownMinutesToFailRevote(15);
+        dayVote.setCooldownMinutesToSuccessRevote(10);
+        dayVote.save();
+        
+        // Vote to set night
+        List<String> nightSuccessCommands = new ArrayList<String>();
+        List<String> nightFailCommands = new ArrayList<String>();
+        
+        nightSuccessCommands.add("time night");
+        
+        nightVote.setDescription("Set time to night");
+        nightVote.setLastFailedVote(0);
+        nightVote.setLastSuccessfulVote(0);
+        nightVote.setVoteOnCooldownText("The time has been set to night too recently!");
+        nightVote.setVoteStartText("Vote to set the time to night has started! type /vote yes or /vote no to vote");
+        nightVote.setVoteSuccessText("Vote succeeded! Time set to night");
+        nightVote.setVoteFailText("Vote failed! Try again the next time day comes around.");
+        nightVote.setVoteSuccessCommands(nightSuccessCommands);
+        nightVote.setVoteFailCommands(nightFailCommands);
+        nightVote.setVoteSuccessCommandDelaySeconds(3);
+        nightVote.setVoteFailCommandDelaySeconds(0);
+        nightVote.setTimeoutSeconds(60);
+        nightVote.setMinimumVotes(1);
+        nightVote.setPercentToSucceed(60);
+        nightVote.setCooldownMinutesToFailRevote(15);
+        nightVote.setCooldownMinutesToSuccessRevote(10);
+        nightVote.save();
+        
+        /* Not ready quite yet. Still need to add some parameterization
+        // Vote to set weather to sun
+        List<String> sunSuccessCommands = new ArrayList<String>();
+        List<String> sunFailCommands = new ArrayList<String>();
+        
+        sunSuccessCommands.add("weather sun");
+        
+        sunVote.setDescription("Set weather to sunny");
+        sunVote.setLastFailedVote(0);
+        sunVote.setLastSuccessfulVote(0);
+        sunVote.setVoteOnCooldownText("The weather has been set to sunny too recently!");
+        sunVote.setVoteStartText("Vote to set the weather to sunny has started! type /vote yes or /vote no to vote");
+        sunVote.setVoteSuccessText("Vote succeeded! Weather set to sunny");
+        sunVote.setVoteFailText("Vote failed! Try again later.");
+        sunVote.setVoteSuccessCommands(sunSuccessCommands);
+        sunVote.setVoteFailCommands(sunFailCommands);
+        sunVote.setVoteSuccessCommandDelaySeconds(3);
+        sunVote.setVoteFailCommandDelaySeconds(0);
+        sunVote.setTimeoutSeconds(60);
+        sunVote.setMinimumVotes(1);
+        sunVote.setPercentToSucceed(60);
+        sunVote.setCooldownMinutesToFailRevote(10);
+        sunVote.setCooldownMinutesToSuccessRevote(5);
+        sunVote.save();
+        
+         // Vote to set weather to storm
+        List<String> stormSuccessCommands = new ArrayList<String>();
+        List<String> stormFailCommands = new ArrayList<String>();
+        
+        stormSuccessCommands.add("weather storm");
+        
+        stormVote.setDescription("Set weather to stormy");
+        stormVote.setLastFailedVote(0);
+        stormVote.setLastSuccessfulVote(0);
+        stormVote.setVoteOnCooldownText("The weather has been set to stormy too recently!");
+        stormVote.setVoteStartText("Vote to set the weather to stormy has started! type /vote yes or /vote no to vote");
+        stormVote.setVoteSuccessText("Vote succeeded! Weather set to stormy");
+        stormVote.setVoteFailText("Vote failed! Try again later.");
+        stormVote.setVoteSuccessCommands(stormSuccessCommands);
+        stormVote.setVoteFailCommands(stormFailCommands);
+        stormVote.setVoteSuccessCommandDelaySeconds(3);
+        stormVote.setVoteFailCommandDelaySeconds(0);
+        stormVote.setTimeoutSeconds(60);
+        stormVote.setMinimumVotes(1);
+        stormVote.setPercentToSucceed(60);
+        stormVote.setCooldownMinutesToFailRevote(10);
+        stormVote.setCooldownMinutesToSuccessRevote(5);
+        stormVote.save();
+        */
         
         // application information I'll need eventually for updates and whatnot
         super.configurationFile.setProperty("application.files.config.Version", "0.2");
@@ -76,8 +178,8 @@ public class ConfigurationFile extends YMLFile
         
         generalCommandsHelp.add("/vote yes - Vote yes on the active vote.");
         generalCommandsHelp.add("/vote no - Vote no on the active vote.");
-        generalCommandsHelp.add("/vote start [votename] - Start a new vote with the keyword. ");
-        generalCommandsHelp.add("/vote start ? - Display list of votes you can start.");
+        generalCommandsHelp.add("/vote [votename] - Start a new vote with the keyword. ");
+        generalCommandsHelp.add("/vote list - Display list of votes you can start.");
         
         super.configurationFile.setProperty("help.GeneralCommands", generalCommandsHelp);
         super.configurationFile.setProperty("help.GeneralHelpNotFound", "No help list found.");

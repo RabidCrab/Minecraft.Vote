@@ -50,4 +50,16 @@ public abstract class YMLFile
      * @param file The configuration file that was loaded
      */
     protected abstract void populateFile(Configuration file);
+    
+    /**
+     * When retrieving data from a YML file, the hierarchy is case sensitive. This fixes that issue by validating the
+     * property path
+     * @param property The property to validate
+     * @return A valid property path
+     */
+    public String validateProperty(String property)
+    {
+        // Not made quite yet >.<
+        return property;
+    }
 }
