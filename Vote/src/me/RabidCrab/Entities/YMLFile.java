@@ -2,6 +2,9 @@ package me.RabidCrab.Entities;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.bukkit.util.config.Configuration;
 
@@ -12,7 +15,7 @@ import org.bukkit.util.config.Configuration;
  */
 public abstract class YMLFile
 {
-    protected Configuration configurationFile;
+    public Configuration configurationFile;
     
     /**
      * Attempt to load the configuration file. If it doesn't exist, create it
@@ -55,11 +58,47 @@ public abstract class YMLFile
      * When retrieving data from a YML file, the hierarchy is case sensitive. This fixes that issue by validating the
      * property path
      * @param property The property to validate
-     * @return A valid property path
+     * @return A valid property path. If no path found, returns null
      */
     public String validateProperty(String property)
     {
-        // Not made quite yet >.<
-        return property;
+        // First the query gets separated by .'s
+        List<String> keyList = new ArrayList<String>(Arrays.asList(property.split("\\.")));
+        String returnResult = "vote";
+        
+        // Check and make sure there's a result. If there isn't, cry foul
+        if (keyList.size() < 1)
+            throw new IndexOutOfBoundsException();
+        
+        // Remove the vote that's going to be put in correctly to begin with
+        keyList.remove(0);
+        
+        // Loop over all the keys 
+        for (String key : keyList)
+        {
+            boolean foundKey = false;
+            List<String> keys = configurationFile.getKeys(returnResult);
+            
+            // If there's no keys, say bye
+            if (keys == null)
+                return null;
+            
+            // Loop through all the keys and find the right one
+            for (String fileKey : keys)
+            {
+                if (fileKey.equalsIgnoreCase(key))
+                {
+                    returnResult += "." + fileKey;
+                    foundKey = true;
+                    break;
+                }
+            }
+            
+            // If we didn't make a match, return null
+            if (!foundKey)
+                return null;
+        }
+        
+        return returnResult;
     }
 }

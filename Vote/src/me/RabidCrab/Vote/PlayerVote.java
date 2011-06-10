@@ -41,7 +41,7 @@ public class PlayerVote
     public PlayerVote(Configuration file, String voteName)
     {
         this.voteFullName = voteName;
-        this.voteShortName = voteName.substring(voteName.lastIndexOf('.') + 1, voteName.length() - 1);
+        this.voteShortName = voteName.substring(voteName.lastIndexOf('.') + 1, voteName.length());
         this.configurationFile = file;
 
         Description = file.getString(voteFullName + ".Description"); 
