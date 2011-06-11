@@ -9,7 +9,6 @@ import me.RabidCrab.Vote.Events.VoteCommandExecutor;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;
  
 /**
@@ -21,7 +20,7 @@ public class Vote extends JavaPlugin {
 	Logger log = Logger.getLogger("Minecraft");
 	
 	private final VoteCommandExecutor commandExecutor = new VoteCommandExecutor(this);
-	public static PermissionHandler permissions;
+	public static IPermissionHandler permissions;
 	public static ConfigurationFile configuration;
 	public final Voting voter = new Voting(this);
 	
@@ -59,13 +58,20 @@ public class Vote extends JavaPlugin {
 	 * Setup permissions using http://forums.bukkit.org/threads/admn-dev-permissions-3-1-4-the-plugin-of-tomorrow-818.18430/
 	 */
 	private void setupPermissions() {
-	      Plugin permissionsPlugin = this.getServer().getPluginManager().getPlugin("Permissions");
-
+	      Plugin permissionsPlugin = null;
+	      
+	      try
+	      {
+	          permissionsPlugin = this.getServer().getPluginManager().getPlugin("Permissions");
+	      }
+	      catch (Exception e) {}
+	      
 	      if (Vote.permissions == null) {
 	          if (permissionsPlugin != null) {
-	              Vote.permissions = ((Permissions)permissionsPlugin).getHandler();
+	              Vote.permissions = (IPermissionHandler)new PermissionHandlerWrapper(((Permissions)permissionsPlugin).getHandler());
 	          } else {
 	        	  log.info("Permission system not detected, defaulting to OP");
+	        	  Vote.permissions = (IPermissionHandler)new MockPermissionHandler();
 	          }
 	      }
 	  }

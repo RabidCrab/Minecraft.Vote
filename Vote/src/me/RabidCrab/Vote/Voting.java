@@ -100,7 +100,6 @@ public class Voting
         if (currentVote == null)
             return false;
 
-        plugin.getServer().broadcastMessage("Checking permissions for " + player.getName() + " on " + "vote.voteyes." + currentVote.getVoteShortName());
         if (Vote.permissions.has(player, "vote.voteyes." + currentVote.getVoteShortName()))
             return true;
         
