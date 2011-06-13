@@ -40,7 +40,7 @@ public class Voting
     public boolean beginVote(Player player, PlayerVote vote)
     {
         // Verify the user has the rights to start this vote
-        if (!Vote.permissions.has(player, "votes.startvote." + vote.getVoteShortName()))
+        if (!Vote.permissions.has(player, "vote.startvote." + vote.getVoteShortName()))
         {
             player.sendMessage(Vote.configuration.getPlayerVoteStartNoPermission());
             return false;
