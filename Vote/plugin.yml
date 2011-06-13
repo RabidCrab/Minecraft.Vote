@@ -1,9 +1,8 @@
 name: Vote
 main: me.RabidCrab.Vote.Vote
-version: 0.4
+version: 0.6
 author: RabidCrab
-
 commands:
-  vote:
-    description: Voting system
-    usage:
+    vote:
+        description: Voting system
+        usage: /vote

@@ -8,7 +8,7 @@ import com.nijiko.permissions.PermissionHandler;
  * Fracking wrappers. Too bad I can't use dynamic proxies.
  * @author Rabid
  */
-public class PermissionHandlerWrapper
+public class PermissionHandlerWrapper implements IPermissionHandler
 {
     private PermissionHandler permissionBase;
     

@@ -297,6 +297,4 @@ public class PlayerVote
     {
         return Description;
     }
-    
-    
 }

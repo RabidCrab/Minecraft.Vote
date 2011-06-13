@@ -25,6 +25,7 @@ public class Voting
     private List<Player> voteNo;
     private Vote plugin;
     private List<Player> loggedInPlayers;
+    private Player voteStarter;
     
     public Voting(Vote vote)
     {
@@ -54,6 +55,7 @@ public class Voting
         
         // Begin the declarations
         currentVote = vote;
+        voteStarter = player;
         
         // Check and see if the cooldowns are ready to go
         Date now = new Date();
@@ -351,7 +353,8 @@ public class Voting
             currentVote.setLastSuccessfulVote(new Date().getTime());
             currentVote.save();
             
-            ConsoleCommandSender sender = new ConsoleCommandSender(plugin.getServer());
+            Vote.getPlayerCommandExecutor().setCaller(voteStarter);
+            ConsoleCommandSender commandSender = new ConsoleCommandSender(plugin.getServer());
             
             Thread.sleep(currentVote.getVoteSuccessCommandDelaySeconds() * 1000);
             
@@ -359,7 +362,10 @@ public class Voting
             {
                 for (String string : currentVote.getVoteSuccessCommands())
                 {
-                    plugin.getServer().dispatchCommand(sender, string);
+                    if (isConsoleCommand(string))
+                        plugin.getServer().dispatchCommand(commandSender, string);
+                    else
+                        plugin.getServer().dispatchCommand(Vote.getPlayerCommandExecutor(), string);
                     
                     Thread.sleep(500);
                 }
@@ -386,7 +392,8 @@ public class Voting
             currentVote.setLastFailedVote(new Date().getTime());
             currentVote.save();
             
-            ConsoleCommandSender sender = new ConsoleCommandSender(plugin.getServer());
+            Vote.getPlayerCommandExecutor().setCaller(voteStarter);
+            ConsoleCommandSender commandSender = new ConsoleCommandSender(plugin.getServer());
             
             Thread.sleep(currentVote.getVoteFailCommandDelaySeconds() * 1000);
                     
@@ -394,7 +401,10 @@ public class Voting
             {
                 for (String string : currentVote.getVoteFailCommands())
                 {
-                    plugin.getServer().dispatchCommand(sender, string);
+                    if (isConsoleCommand(string))
+                        plugin.getServer().dispatchCommand(commandSender, string);
+                    else
+                        plugin.getServer().dispatchCommand(Vote.getPlayerCommandExecutor(), string);
                     
                     Thread.sleep(500);
                 }
@@ -403,6 +413,19 @@ public class Voting
         {
             plugin.log.info(e.getMessage());
         }
+    }
+    
+    /**
+     * If something is a console command, it gets executed differently from a player command
+     */
+    private boolean isConsoleCommand(String command)
+    {
+        if (command.equalsIgnoreCase("kickall") 
+                || command.equalsIgnoreCase("stop") 
+                || command.equalsIgnoreCase("save-all"))
+            return true;
+        
+        return false;
     }
 }
 
