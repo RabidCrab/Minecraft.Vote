@@ -7,8 +7,10 @@ import java.util.UUID;
 
 import org.bukkit.Achievement;
 import org.bukkit.Effect;
+import org.bukkit.Instrument;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Note;
 import org.bukkit.Server;
 import org.bukkit.Statistic;
 import org.bukkit.World;
@@ -557,6 +559,42 @@ public class PlayerWrapper implements Player
     public void updateInventory()
     {
         caller.updateInventory();
+    }
+
+    @Override
+    public long getPlayerTime()
+    {
+        return caller.getPlayerTime();
+    }
+
+    @Override
+    public long getPlayerTimeOffset()
+    {
+        return caller.getPlayerTimeOffset();
+    }
+
+    @Override
+    public boolean isPlayerTimeRelative()
+    {
+        return caller.isPlayerTimeRelative();
+    }
+
+    @Override
+    public void playNote(Location arg0, Instrument arg1, Note arg2)
+    {
+        caller.playNote(arg0, arg1, arg2);
+    }
+
+    @Override
+    public void resetPlayerTime()
+    {
+        caller.resetPlayerTime();
+    }
+
+    @Override
+    public void setPlayerTime(long arg0, boolean arg1)
+    {
+        caller.setPlayerTime(arg0, arg1);
     }
     
 }

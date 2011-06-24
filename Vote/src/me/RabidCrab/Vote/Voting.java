@@ -127,6 +127,10 @@ public class Voting
         if (IsVoting)
         {
             IsVoting = false;
+            
+            if (voteTimer != null)
+                voteTimer.cancel();
+            
             player.sendMessage(Vote.configuration.getVoteCanceled());
             return true;
         }
@@ -319,10 +323,18 @@ public class Voting
                 return;
             }
 
+            // Next we check and make sure someone voted yes. This should be impossible, but I've seen weirder shenanigans happen
             if (voteYes.size() > 0)
             {
+                // Now we get the full size of the player count.
+                int maxPlayerCount = loggedInPlayers.size();
+                
+                // If the unvoted players are supposed to be ignored, just add up those who voted yes and no to figure out what to do
+                if (currentVote.getIgnoreUnvotedPlayers())
+                    maxPlayerCount = voteYes.size() + voteNo.size();
+                
                 // Next check the ratio
-                if ((voteYes.size() / plugin.getServer().getOnlinePlayers().length) * 100 < currentVote.getPercentToSucceed())
+                if ((voteYes.size() / maxPlayerCount) * 100 < currentVote.getPercentToSucceed())
                 {
                     plugin.getServer().broadcastMessage(currentVote.getVoteFailText());
                     voteFail();

@@ -33,6 +33,7 @@ public class PlayerVote
     private int PercentToSucceed;
     private int CooldownMinutesToFailRevote;
     private int CooldownMinutesToSuccessRevote;
+    private boolean IgnoreUnvotedPlayers;
     
     /**
      * Used to deal with the numerous kind of votes allowed
@@ -60,6 +61,7 @@ public class PlayerVote
         PercentToSucceed = file.getInt(voteFullName + ".PercentToSucceed", 50);
         CooldownMinutesToFailRevote = file.getInt(voteFullName + ".CooldownMinutesToFailRevote", 0);
         CooldownMinutesToSuccessRevote = file.getInt(voteFullName + ".CooldownMinutesToSuccessRevote", 0);
+        IgnoreUnvotedPlayers = file.getBoolean(voteFullName + ".IgnoreUnvotedPlayers", true);
     }
     
     /**
@@ -88,6 +90,7 @@ public class PlayerVote
                 configurationFile.setProperty(voteFullName + ".PercentToSucceed", PercentToSucceed);
                 configurationFile.setProperty(voteFullName + ".CooldownMinutesToFailRevote", CooldownMinutesToFailRevote);
                 configurationFile.setProperty(voteFullName + ".CooldownMinutesToSuccessRevote", CooldownMinutesToSuccessRevote);
+                configurationFile.setProperty(voteFullName + ".IgnoreUnvotedPlayers", IgnoreUnvotedPlayers);
                 
                 configurationFile.save();
             }
@@ -296,5 +299,16 @@ public class PlayerVote
     public String getDescription()
     {
         return Description;
+    }
+    
+    public void setIgnoreUnvotedPlayers(boolean ignoreUnvotedPlayers)
+    {
+        saved = false;
+        IgnoreUnvotedPlayers = ignoreUnvotedPlayers;
+    }
+
+    public boolean getIgnoreUnvotedPlayers()
+    {
+        return IgnoreUnvotedPlayers;
     }
 }

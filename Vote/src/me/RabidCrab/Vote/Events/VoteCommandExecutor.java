@@ -29,7 +29,7 @@ public class VoteCommandExecutor implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) 
 	{
-		if(label.equalsIgnoreCase("vote") && sender != null)
+		if(label.equalsIgnoreCase("vote") && sender != null && args != null)
 		{
 			// Get the player, we'll need it
 			Player player = (Player)sender;

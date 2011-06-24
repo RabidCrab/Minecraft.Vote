@@ -56,6 +56,7 @@ public class ConfigurationFile extends YMLFile
         restartVote.setPercentToSucceed(60);
         restartVote.setCooldownMinutesToFailRevote(30);
         restartVote.setCooldownMinutesToSuccessRevote(120);
+        restartVote.setIgnoreUnvotedPlayers(true);
         restartVote.save();
         
         // Vote to set day
@@ -80,6 +81,7 @@ public class ConfigurationFile extends YMLFile
         dayVote.setPercentToSucceed(60);
         dayVote.setCooldownMinutesToFailRevote(15);
         dayVote.setCooldownMinutesToSuccessRevote(10);
+        dayVote.setIgnoreUnvotedPlayers(true);
         dayVote.save();
         
         // Vote to set night
@@ -104,6 +106,7 @@ public class ConfigurationFile extends YMLFile
         nightVote.setPercentToSucceed(60);
         nightVote.setCooldownMinutesToFailRevote(15);
         nightVote.setCooldownMinutesToSuccessRevote(10);
+        nightVote.setIgnoreUnvotedPlayers(true);
         nightVote.save();
         
         /* Not ready quite yet. Still need to add some parameterization
