@@ -26,6 +26,7 @@ public class Voting
     private Vote plugin;
     private List<Player> loggedInPlayers;
     private Player voteStarter;
+    private List<String> arguments;
     
     public Voting(Vote vote)
     {
@@ -33,11 +34,16 @@ public class Voting
         plugin = vote;
     }
     
+    public String[] getArguments()
+    {
+        return (String[])arguments.toArray();
+    }
+    
     /**
      * Begin a vote with the specified vote
      * @return True if successful
      */
-    public boolean beginVote(Player player, PlayerVote vote)
+    public boolean beginVote(Player player, PlayerVote vote, List<String> arguments)
     {
         // Verify the user has the rights to start this vote
         if (!Vote.permissions.has(player, "vote.startvote." + vote.getVoteShortName()))
@@ -56,6 +62,7 @@ public class Voting
         // Begin the declarations
         currentVote = vote;
         voteStarter = player;
+        this.arguments = arguments;
         
         // Check and see if the cooldowns are ready to go
         Date now = new Date();
@@ -374,10 +381,16 @@ public class Voting
             {
                 for (String string : currentVote.getVoteSuccessCommands())
                 {
-                    if (isConsoleCommand(string))
-                        plugin.getServer().dispatchCommand(commandSender, string);
+                    String command = string;
+                    
+                    // Loop through all of the arguments and add them to the command if it exists
+                    for (int i = 0; i < arguments.size(); i++)
+                        command.replaceAll("[%" + i + "]", arguments.get(i));
+                    
+                    if (isConsoleCommand(command))
+                        plugin.getServer().dispatchCommand(commandSender, command);
                     else
-                        plugin.getServer().dispatchCommand(Vote.getPlayerCommandExecutor(), string);
+                        plugin.getServer().dispatchCommand(Vote.getPlayerCommandExecutor(), command);
                     
                     Thread.sleep(500);
                 }
@@ -413,10 +426,16 @@ public class Voting
             {
                 for (String string : currentVote.getVoteFailCommands())
                 {
+                    String command = string;
+                    
+                    // Loop through all of the arguments and add them to the command if it exists
+                    for (int i = 0; i < arguments.size(); i++)
+                        command.replaceAll("[%" + i + "]", arguments.get(i));
+                    
                     if (isConsoleCommand(string))
-                        plugin.getServer().dispatchCommand(commandSender, string);
+                        plugin.getServer().dispatchCommand(commandSender, command);
                     else
-                        plugin.getServer().dispatchCommand(Vote.getPlayerCommandExecutor(), string);
+                        plugin.getServer().dispatchCommand(Vote.getPlayerCommandExecutor(), command);
                     
                     Thread.sleep(500);
                 }

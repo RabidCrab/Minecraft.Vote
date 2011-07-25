@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.concurrent.Callable;
 import java.util.logging.Logger;
 
 import me.RabidCrab.Vote.Events.VoteCommandExecutor;
@@ -35,7 +36,15 @@ public class Vote extends JavaPlugin {
 	    // Setup the configuration file
 	    try
         {
-            configuration = new ConfigurationFile(new File("plugins" + File.separator + "Vote" + File.separator + "Config.yml"));
+	        // I wasn't expecting to need to pass arguments to the file, but here's my workaround without telling
+	        // ConfigurationFile that anything exists except itself and the file.
+            configuration = new ConfigurationFile(new File("plugins" + File.separator + "Vote" + File.separator + "Config.yml"), new Callable<String[]>() 
+                                                                                                                                {
+                                                                                                                                    public String[] call() 
+                                                                                                                                    {
+                                                                                                                                        return voter.getArguments();
+                                                                                                                                    }
+                                                                                                                                });
         } 
 	    catch (IOException e)
         {

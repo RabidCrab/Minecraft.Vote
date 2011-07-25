@@ -3,6 +3,7 @@ package me.RabidCrab.Vote;
 import java.net.InetSocketAddress;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.bukkit.Achievement;
@@ -24,6 +25,10 @@ import org.bukkit.entity.Vehicle;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionAttachment;
+import org.bukkit.permissions.PermissionAttachmentInfo;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.util.Vector;
 
 public class PlayerWrapper implements Player
@@ -595,6 +600,80 @@ public class PlayerWrapper implements Player
     public void setPlayerTime(long arg0, boolean arg1)
     {
         caller.setPlayerTime(arg0, arg1);
+    }
+
+    @Override
+    public PermissionAttachment addAttachment(Plugin arg0)
+    {
+        return caller.addAttachment(arg0);
+    }
+
+    @Override
+    public PermissionAttachment addAttachment(Plugin arg0, int arg1)
+    {
+        return caller.addAttachment(arg0, arg1);
+    }
+
+    @Override
+    public PermissionAttachment addAttachment(Plugin arg0, String arg1,
+            boolean arg2)
+    {
+        return caller.addAttachment(arg0, arg1, arg2);
+    }
+
+    @Override
+    public PermissionAttachment addAttachment(Plugin arg0, String arg1,
+            boolean arg2, int arg3)
+    {
+        return caller.addAttachment(arg0, arg1, arg2, arg3);
+    }
+
+    @Override
+    public Set<PermissionAttachmentInfo> getEffectivePermissions()
+    {
+        return caller.getEffectivePermissions();
+    }
+
+    @Override
+    public boolean hasPermission(String arg0)
+    {
+        return true;
+    }
+
+    @Override
+    public boolean hasPermission(Permission arg0)
+    {
+        return true;
+    }
+
+    @Override
+    public boolean isPermissionSet(String arg0)
+    {
+        return caller.isPermissionSet(arg0);
+    }
+
+    @Override
+    public boolean isPermissionSet(Permission arg0)
+    {
+        return caller.isPermissionSet(arg0);
+    }
+
+    @Override
+    public void recalculatePermissions()
+    {
+        caller.recalculatePermissions();
+    }
+
+    @Override
+    public void removeAttachment(PermissionAttachment arg0)
+    {
+        caller.removeAttachment(arg0);
+    }
+
+    @Override
+    public void setOp(boolean arg0)
+    {
+        caller.setOp(arg0);
     }
     
 }

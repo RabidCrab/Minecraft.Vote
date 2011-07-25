@@ -1,6 +1,7 @@
 package me.RabidCrab.Vote.Events;
 
 import java.util.AbstractMap.SimpleEntry;
+import java.util.ArrayList;
 import java.util.List;
 import me.RabidCrab.Vote.Vote;
 
@@ -92,7 +93,12 @@ public class VoteCommandExecutor implements CommandExecutor {
         {
             if (s.compareToIgnoreCase(args[0].toString()) == 0)
             {
-                plugin.voter.beginVote(player, Vote.configuration.getPlayerVote(plugin, s));
+                List<String> extraArgs = new ArrayList<String>();
+                
+                for (int i = 2; i < args.length; i++)
+                    extraArgs.add(args[i]);
+                
+                plugin.voter.beginVote(player, Vote.configuration.getPlayerVote(plugin, s), extraArgs);
                 return;
             }
         }

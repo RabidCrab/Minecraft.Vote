@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import org.bukkit.util.config.Configuration;
 
@@ -17,9 +18,13 @@ import me.RabidCrab.Entities.YMLFile;
  */
 public class ConfigurationFile extends YMLFile
 {
-    public ConfigurationFile(File file) throws IOException
+    Callable<String[]> arguments;
+    
+    public ConfigurationFile(File file, Callable<String[]> callable) throws IOException
     {
         super(file);
+        
+        this.arguments = callable;
     }
 
     @Override
@@ -29,8 +34,8 @@ public class ConfigurationFile extends YMLFile
         PlayerVote restartVote = new PlayerVote(file, "vote.votes.restart");
         PlayerVote dayVote = new PlayerVote(file, "vote.votes.day");
         PlayerVote nightVote = new PlayerVote(file, "vote.votes.night");
-        //PlayerVote sunVote = new PlayerVote(file, "votes.sun");
-        //PlayerVote stormVote = new PlayerVote(file, "votes.storm");
+        PlayerVote kickVote = new PlayerVote(file, "votes.kick");
+        PlayerVote banVote = new PlayerVote(file, "votes.ban");
         
         // Vote to restart server
         List<String> restartSuccessCommands = new ArrayList<String>();
@@ -109,55 +114,53 @@ public class ConfigurationFile extends YMLFile
         nightVote.setIgnoreUnvotedPlayers(true);
         nightVote.save();
         
-        /* Not ready quite yet. Still need to add some parameterization
-        // Vote to set weather to sun
-        List<String> sunSuccessCommands = new ArrayList<String>();
-        List<String> sunFailCommands = new ArrayList<String>();
+        // Vote to kick
+        List<String> kickSuccessCommands = new ArrayList<String>();
+        List<String> kickFailCommands = new ArrayList<String>();
         
-        sunSuccessCommands.add("weather sun");
+        kickSuccessCommands.add("weather kick");
         
-        sunVote.setDescription("Set weather to sunny");
-        sunVote.setLastFailedVote(0);
-        sunVote.setLastSuccessfulVote(0);
-        sunVote.setVoteOnCooldownText("The weather has been set to sunny too recently!");
-        sunVote.setVoteStartText("Vote to set the weather to sunny has started! type /vote yes or /vote no to vote");
-        sunVote.setVoteSuccessText("Vote succeeded! Weather set to sunny");
-        sunVote.setVoteFailText("Vote failed! Try again later.");
-        sunVote.setVoteSuccessCommands(sunSuccessCommands);
-        sunVote.setVoteFailCommands(sunFailCommands);
-        sunVote.setVoteSuccessCommandDelaySeconds(3);
-        sunVote.setVoteFailCommandDelaySeconds(0);
-        sunVote.setTimeoutSeconds(60);
-        sunVote.setMinimumVotes(1);
-        sunVote.setPercentToSucceed(60);
-        sunVote.setCooldownMinutesToFailRevote(10);
-        sunVote.setCooldownMinutesToSuccessRevote(5);
-        sunVote.save();
+        kickVote.setDescription("Set weather to kickny");
+        kickVote.setLastFailedVote(0);
+        kickVote.setLastSuccessfulVote(0);
+        kickVote.setVoteOnCooldownText("A vote to kick has been done too recently");
+        kickVote.setVoteStartText("Vote to kick [%0] has started! type /vote yes or /vote no to vote");
+        kickVote.setVoteSuccessText("Vote succeeded! See you later [%0]");
+        kickVote.setVoteFailText("Vote failed to kick [%0]!");
+        kickVote.setVoteSuccessCommands(kickSuccessCommands);
+        kickVote.setVoteFailCommands(kickFailCommands);
+        kickVote.setVoteSuccessCommandDelaySeconds(3);
+        kickVote.setVoteFailCommandDelaySeconds(0);
+        kickVote.setTimeoutSeconds(60);
+        kickVote.setMinimumVotes(2);
+        kickVote.setPercentToSucceed(70);
+        kickVote.setCooldownMinutesToFailRevote(5);
+        kickVote.setCooldownMinutesToSuccessRevote(1);
+        kickVote.save();
         
          // Vote to set weather to storm
-        List<String> stormSuccessCommands = new ArrayList<String>();
-        List<String> stormFailCommands = new ArrayList<String>();
+        List<String> banSuccessCommands = new ArrayList<String>();
+        List<String> banFailCommands = new ArrayList<String>();
         
-        stormSuccessCommands.add("weather storm");
+        banSuccessCommands.add("weather ban");
         
-        stormVote.setDescription("Set weather to stormy");
-        stormVote.setLastFailedVote(0);
-        stormVote.setLastSuccessfulVote(0);
-        stormVote.setVoteOnCooldownText("The weather has been set to stormy too recently!");
-        stormVote.setVoteStartText("Vote to set the weather to stormy has started! type /vote yes or /vote no to vote");
-        stormVote.setVoteSuccessText("Vote succeeded! Weather set to stormy");
-        stormVote.setVoteFailText("Vote failed! Try again later.");
-        stormVote.setVoteSuccessCommands(stormSuccessCommands);
-        stormVote.setVoteFailCommands(stormFailCommands);
-        stormVote.setVoteSuccessCommandDelaySeconds(3);
-        stormVote.setVoteFailCommandDelaySeconds(0);
-        stormVote.setTimeoutSeconds(60);
-        stormVote.setMinimumVotes(1);
-        stormVote.setPercentToSucceed(60);
-        stormVote.setCooldownMinutesToFailRevote(10);
-        stormVote.setCooldownMinutesToSuccessRevote(5);
-        stormVote.save();
-        */
+        banVote.setDescription("Ban a player");
+        banVote.setLastFailedVote(0);
+        banVote.setLastSuccessfulVote(0);
+        banVote.setVoteOnCooldownText("A player has been banned too recently!");
+        banVote.setVoteStartText("Vote to ban [%0] has started! type /vote yes or /vote no to vote");
+        banVote.setVoteSuccessText("Vote succeeded! [%0] has been banned");
+        banVote.setVoteFailText("Vote to ban [%0] failed!");
+        banVote.setVoteSuccessCommands(banSuccessCommands);
+        banVote.setVoteFailCommands(banFailCommands);
+        banVote.setVoteSuccessCommandDelaySeconds(3);
+        banVote.setVoteFailCommandDelaySeconds(0);
+        banVote.setTimeoutSeconds(60);
+        banVote.setMinimumVotes(1);
+        banVote.setPercentToSucceed(80);
+        banVote.setCooldownMinutesToFailRevote(30);
+        banVote.setCooldownMinutesToSuccessRevote(15);
+        banVote.save();
         
         // application information I'll need eventually for updates and whatnot
         super.configurationFile.setProperty("vote.application.files.config.Version", "0.2");
@@ -191,9 +194,34 @@ public class ConfigurationFile extends YMLFile
         super.configurationFile.save();
     }
     
+    /**
+     * Yet again it has to do with arguments. This replaces any possible instance of an argument with the value
+     * @param location The location of the string. Generally something like "vote.default.VoteStartText"
+     * @return A string from the file
+     */
+    private String getStringFromFile(String location)
+    {
+        String foundString = getStringFromFile(location);
+        String[] args;
+        
+        try
+        {
+            args = arguments.call();
+        } 
+        catch (Exception e)
+        {
+            return foundString;
+        }
+        
+        for (int i = 0; i < args.length; i++)
+            foundString.replaceAll("[%" + i + "]", args[i]);
+        
+        return foundString;
+    }
+    
     public String getVoteStartText()
     {
-        return super.configurationFile.getString("vote.default.VoteStartText");
+        return getStringFromFile("vote.default.VoteStartText");
     }
     
     public void setVoteStartText(String defaultVoteStartText)
@@ -204,7 +232,7 @@ public class ConfigurationFile extends YMLFile
     
     public String getVoteEndSuccessText()
     {
-        return super.configurationFile.getString("vote.default.VoteEndSuccessText");
+        return getStringFromFile("vote.default.VoteEndSuccessText");
     }
     
     public void setVoteEndSuccessText(String defaulVoteEndSuccessText)
@@ -215,7 +243,7 @@ public class ConfigurationFile extends YMLFile
     
     public String getVoteEndFailText()
     {
-        return super.configurationFile.getString("vote.default.VoteEndFailText");
+        return getStringFromFile("vote.default.VoteEndFailText");
     }
     
     public void setVoteEndFailText(String defaulVoteEndFailText)
@@ -226,7 +254,7 @@ public class ConfigurationFile extends YMLFile
     
     public String getVoteAlreadyInProgress()
     {
-        return super.configurationFile.getString("vote.default.VoteAlreadyInProgress");
+        return getStringFromFile("vote.default.VoteAlreadyInProgress");
     }
     
     public void setVoteAlreadyInProgress(String voteAlreadyInProgress)
@@ -237,7 +265,7 @@ public class ConfigurationFile extends YMLFile
     
     public String getVoteCanceled()
     {
-        return super.configurationFile.getString("vote.default.VoteCanceled");
+        return getStringFromFile("vote.default.VoteCanceled");
     }
     
     public void setVoteCanceled(String voteCanceled)
@@ -248,7 +276,7 @@ public class ConfigurationFile extends YMLFile
     
     public String getNoVoteInProgress()
     {
-        return super.configurationFile.getString("vote.default.NoVoteInProgress");
+        return getStringFromFile("vote.default.NoVoteInProgress");
     }
     
     public void setNoVoteInProgress(String noVoteInProgress)
@@ -259,7 +287,7 @@ public class ConfigurationFile extends YMLFile
     
     public String getPlayerVoteCounted()
     {
-        return super.configurationFile.getString("vote.default.PlayerVoteCounted");
+        return getStringFromFile("vote.default.PlayerVoteCounted");
     }
     
     public void setPlayerVoteCounted(String playerVoteCounted)
@@ -275,7 +303,7 @@ public class ConfigurationFile extends YMLFile
     
     public String getPlayerAlreadyVoted()
     {
-        return super.configurationFile.getString("vote.default.PlayerAlreadyVoted");
+        return getStringFromFile("vote.default.PlayerAlreadyVoted");
     }
     
     public void setPlayerAlreadyVoted(String playerAlreadyVoted)
@@ -286,7 +314,7 @@ public class ConfigurationFile extends YMLFile
 
     public String getPlayerVoteNoPermission()
     {
-        return super.configurationFile.getString("vote.default.PlayerVoteNoPermission");
+        return getStringFromFile("vote.default.PlayerVoteNoPermission");
     }
     
     public void setPlayerVoteNoPermission(String playerVoteNoPermission)
@@ -297,7 +325,7 @@ public class ConfigurationFile extends YMLFile
     
     public String getPlayerVoteStartNoPermission()
     {
-        return super.configurationFile.getString("vote.default.PlayerVoteStartNoPermission");
+        return getStringFromFile("vote.default.PlayerVoteStartNoPermission");
     }
     
     public void setPlayerVoteStartNoPermission(String playerVoteStartNoPermission)
@@ -308,7 +336,7 @@ public class ConfigurationFile extends YMLFile
     
     public String getPlayerVoteChanged()
     {
-        return super.configurationFile.getString("vote.default.PlayerVoteChanged");
+        return getStringFromFile("vote.default.PlayerVoteChanged");
     }
     
     public void setPlayerVoteChanged(String playerVoteChanged)
@@ -319,7 +347,7 @@ public class ConfigurationFile extends YMLFile
     
     public String getGeneralHelpNotFound()
     {
-        return super.configurationFile.getString("vote.help.GeneralHelpNotFound");
+        return getStringFromFile("vote.help.GeneralHelpNotFound");
     }
     
     public void setGeneralHelpNotFound(String generalHelpNotFound)
@@ -330,7 +358,7 @@ public class ConfigurationFile extends YMLFile
     
     public String getVoteStartHelpNotFound()
     {
-        return super.configurationFile.getString("vote.help.VoteStartHelpNotFound");
+        return getStringFromFile("vote.help.VoteStartHelpNotFound");
     }
     
     public void setVoteStartHelpNotFound(String voteStartHelpNotFound)
