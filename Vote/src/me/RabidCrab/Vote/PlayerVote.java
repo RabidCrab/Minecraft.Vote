@@ -2,6 +2,7 @@ package me.RabidCrab.Vote;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import org.bukkit.util.config.Configuration;
 
@@ -33,18 +34,23 @@ public class PlayerVote
     private int PercentToSucceed;
     private int CooldownMinutesToFailRevote;
     private int CooldownMinutesToSuccessRevote;
+    private int ArgumentCount;
+    private String InsufficientArgumentsError;
+    private Callable<String[]> arguments;
+    
     private boolean IgnoreUnvotedPlayers;
     
     /**
      * Used to deal with the numerous kind of votes allowed
      * @param voteName The name of the vote
      */
-    public PlayerVote(Configuration file, String voteName)
+    public PlayerVote(Configuration file, String voteName, Callable<String[]> callable)
     {
         this.voteFullName = voteName;
         this.voteShortName = voteName.substring(voteName.lastIndexOf('.') + 1, voteName.length());
         this.configurationFile = file;
-
+        this.arguments = callable;
+        
         Description = file.getString(voteFullName + ".Description"); 
         VoteOnCooldownText = file.getString(voteFullName + ".VoteOnCooldownText");
         LastFailedVote = (long)file.getDouble(voteFullName + ".LastFailedVote", 0);
@@ -62,6 +68,8 @@ public class PlayerVote
         CooldownMinutesToFailRevote = file.getInt(voteFullName + ".CooldownMinutesToFailRevote", 0);
         CooldownMinutesToSuccessRevote = file.getInt(voteFullName + ".CooldownMinutesToSuccessRevote", 0);
         IgnoreUnvotedPlayers = file.getBoolean(voteFullName + ".IgnoreUnvotedPlayers", true);
+        ArgumentCount = file.getInt(voteFullName + ".ArgumentCount", 0);
+        InsufficientArgumentsError = file.getString(voteFullName + ".InsufficientArgumentsError");
     }
     
     /**
@@ -91,6 +99,8 @@ public class PlayerVote
                 configurationFile.setProperty(voteFullName + ".CooldownMinutesToFailRevote", CooldownMinutesToFailRevote);
                 configurationFile.setProperty(voteFullName + ".CooldownMinutesToSuccessRevote", CooldownMinutesToSuccessRevote);
                 configurationFile.setProperty(voteFullName + ".IgnoreUnvotedPlayers", IgnoreUnvotedPlayers);
+                configurationFile.setProperty(voteFullName + ".ArgumentCount", ArgumentCount);
+                configurationFile.setProperty(voteFullName + ".InsufficientArgumentsError", InsufficientArgumentsError);
                 
                 configurationFile.save();
             }
@@ -102,6 +112,31 @@ public class PlayerVote
     
         return true;
     }
+    
+    /**
+     * Yet again it has to do with arguments. This replaces any possible instance of an argument with the value
+     * @param location The location of the string. Generally something like "vote.default.VoteStartText"
+     * @return A string from the file
+     */
+    private String getString(String text)
+    {
+        String[] args;
+        
+        try
+        {
+            args = arguments.call();
+        } 
+        catch (Exception e)
+        {
+            return e.getMessage();
+            //return text;
+        }
+        
+        for (int i = 0; i < args.length; i++)
+            text = text.replaceAll("\\[\\%" + i + "\\]", args[i]);
+        
+        return text;
+    }
 
     public boolean isSaved()
     {
@@ -110,7 +145,7 @@ public class PlayerVote
 
     public String getVoteFullName()
     {
-        return voteFullName;
+        return getString(voteFullName);
     }
 
     public void setVoteSuccessText(String voteSuccessText)
@@ -121,7 +156,7 @@ public class PlayerVote
 
     public String getVoteSuccessText()
     {
-        return VoteSuccessText;
+        return getString(VoteSuccessText);
     }
 
     public void setVoteFailText(String voteFailText)
@@ -132,7 +167,7 @@ public class PlayerVote
 
     public String getVoteFailText()
     {
-        return VoteFailText;
+        return getString(VoteFailText);
     }
 
     public void setVoteSuccessCommands(List<String> voteSuccessCommands)
@@ -254,7 +289,7 @@ public class PlayerVote
 
     public String getVoteStartText()
     {
-        return VoteStartText;
+        return getString(VoteStartText);
     }
 
     public void setLastFailedVote(long lastFailedVote)
@@ -287,7 +322,7 @@ public class PlayerVote
 
     public String getVoteOnCooldownText()
     {
-        return VoteOnCooldownText;
+        return getString(VoteOnCooldownText);
     }
 
     public void setDescription(String description)
@@ -310,5 +345,27 @@ public class PlayerVote
     public boolean getIgnoreUnvotedPlayers()
     {
         return IgnoreUnvotedPlayers;
+    }
+
+    public void setArgumentCount(int argumentCount)
+    {
+        saved = false;
+        ArgumentCount = argumentCount;
+    }
+
+    public int getArgumentCount()
+    {
+        return ArgumentCount;
+    }
+
+    public void setInsufficientArgumentsError(String insufficientArgumentsError)
+    {
+        saved = false;
+        InsufficientArgumentsError = insufficientArgumentsError;
+    }
+
+    public String getInsufficientArgumentsError()
+    {
+        return getString(InsufficientArgumentsError);
     }
 }

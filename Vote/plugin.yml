@@ -1,6 +1,6 @@
 name: Vote
 main: me.RabidCrab.Vote.Vote
-version: 0.8
+version: 1.0
 author: RabidCrab
 commands:
     vote:

@@ -26,7 +26,7 @@ public class Voting
     private Vote plugin;
     private List<Player> loggedInPlayers;
     private Player voteStarter;
-    private List<String> arguments;
+    private String[] arguments;
     
     public Voting(Vote vote)
     {
@@ -36,19 +36,26 @@ public class Voting
     
     public String[] getArguments()
     {
-        return (String[])arguments.toArray();
+        return arguments;
     }
     
     /**
      * Begin a vote with the specified vote
      * @return True if successful
      */
-    public boolean beginVote(Player player, PlayerVote vote, List<String> arguments)
+    public boolean beginVote(Player player, PlayerVote vote, String[] arguments)
     {
         // Verify the user has the rights to start this vote
         if (!Vote.permissions.has(player, "vote.startvote." + vote.getVoteShortName()))
         {
             player.sendMessage(Vote.configuration.getPlayerVoteStartNoPermission());
+            return false;
+        }
+        
+        // If they didn't specify the right number of arguments, complain
+        if (arguments.length != vote.getArgumentCount())
+        {
+            player.sendMessage(vote.getInsufficientArgumentsError());
             return false;
         }
         
@@ -382,10 +389,10 @@ public class Voting
                 for (String string : currentVote.getVoteSuccessCommands())
                 {
                     String command = string;
-                    
+
                     // Loop through all of the arguments and add them to the command if it exists
-                    for (int i = 0; i < arguments.size(); i++)
-                        command.replaceAll("[%" + i + "]", arguments.get(i));
+                    for (int i = 0; i < arguments.length; i++)
+                        command = command.replaceAll("\\[\\%" + i + "\\]", arguments[i]);
                     
                     if (isConsoleCommand(command))
                         plugin.getServer().dispatchCommand(commandSender, command);
@@ -429,8 +436,8 @@ public class Voting
                     String command = string;
                     
                     // Loop through all of the arguments and add them to the command if it exists
-                    for (int i = 0; i < arguments.size(); i++)
-                        command.replaceAll("[%" + i + "]", arguments.get(i));
+                    for (int i = 0; i < arguments.length; i++)
+                        command = command.replaceAll("\\[\\%" + i + "\\]", arguments[i]);
                     
                     if (isConsoleCommand(string))
                         plugin.getServer().dispatchCommand(commandSender, command);

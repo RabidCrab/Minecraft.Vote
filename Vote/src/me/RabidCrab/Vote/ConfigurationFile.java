@@ -31,11 +31,11 @@ public class ConfigurationFile extends YMLFile
     protected void populateFile(Configuration file)
     {
         // Create the default reset button PlayerVote
-        PlayerVote restartVote = new PlayerVote(file, "vote.votes.restart");
-        PlayerVote dayVote = new PlayerVote(file, "vote.votes.day");
-        PlayerVote nightVote = new PlayerVote(file, "vote.votes.night");
-        PlayerVote kickVote = new PlayerVote(file, "votes.kick");
-        PlayerVote banVote = new PlayerVote(file, "votes.ban");
+        PlayerVote restartVote = new PlayerVote(file, "vote.votes.restart", arguments);
+        PlayerVote dayVote = new PlayerVote(file, "vote.votes.day", arguments);
+        PlayerVote nightVote = new PlayerVote(file, "vote.votes.night", arguments);
+        PlayerVote kickVote = new PlayerVote(file, "vote.votes.kick", arguments);
+        PlayerVote banVote = new PlayerVote(file, "vote.votes.ban", arguments);
         
         // Vote to restart server
         List<String> restartSuccessCommands = new ArrayList<String>();
@@ -62,6 +62,8 @@ public class ConfigurationFile extends YMLFile
         restartVote.setCooldownMinutesToFailRevote(30);
         restartVote.setCooldownMinutesToSuccessRevote(120);
         restartVote.setIgnoreUnvotedPlayers(true);
+        restartVote.setArgumentCount(0);
+        restartVote.setInsufficientArgumentsError("");
         restartVote.save();
         
         // Vote to set day
@@ -87,6 +89,8 @@ public class ConfigurationFile extends YMLFile
         dayVote.setCooldownMinutesToFailRevote(15);
         dayVote.setCooldownMinutesToSuccessRevote(10);
         dayVote.setIgnoreUnvotedPlayers(true);
+        dayVote.setArgumentCount(0);
+        dayVote.setInsufficientArgumentsError("");
         dayVote.save();
         
         // Vote to set night
@@ -112,15 +116,17 @@ public class ConfigurationFile extends YMLFile
         nightVote.setCooldownMinutesToFailRevote(15);
         nightVote.setCooldownMinutesToSuccessRevote(10);
         nightVote.setIgnoreUnvotedPlayers(true);
+        nightVote.setArgumentCount(0);
+        nightVote.setInsufficientArgumentsError("");
         nightVote.save();
         
         // Vote to kick
         List<String> kickSuccessCommands = new ArrayList<String>();
         List<String> kickFailCommands = new ArrayList<String>();
         
-        kickSuccessCommands.add("weather kick");
+        kickSuccessCommands.add("kick [%0]");
         
-        kickVote.setDescription("Set weather to kickny");
+        kickVote.setDescription("Kick player");
         kickVote.setLastFailedVote(0);
         kickVote.setLastSuccessfulVote(0);
         kickVote.setVoteOnCooldownText("A vote to kick has been done too recently");
@@ -132,17 +138,19 @@ public class ConfigurationFile extends YMLFile
         kickVote.setVoteSuccessCommandDelaySeconds(3);
         kickVote.setVoteFailCommandDelaySeconds(0);
         kickVote.setTimeoutSeconds(60);
-        kickVote.setMinimumVotes(2);
+        kickVote.setMinimumVotes(1);
         kickVote.setPercentToSucceed(70);
         kickVote.setCooldownMinutesToFailRevote(5);
         kickVote.setCooldownMinutesToSuccessRevote(1);
+        kickVote.setArgumentCount(1);
+        kickVote.setInsufficientArgumentsError("Incorrect arguments! You need to do '/Vote kick PlayerName' where PlayerName is the player's name");
         kickVote.save();
         
          // Vote to set weather to storm
         List<String> banSuccessCommands = new ArrayList<String>();
         List<String> banFailCommands = new ArrayList<String>();
         
-        banSuccessCommands.add("weather ban");
+        banSuccessCommands.add("ban [%0]");
         
         banVote.setDescription("Ban a player");
         banVote.setLastFailedVote(0);
@@ -160,11 +168,13 @@ public class ConfigurationFile extends YMLFile
         banVote.setPercentToSucceed(80);
         banVote.setCooldownMinutesToFailRevote(30);
         banVote.setCooldownMinutesToSuccessRevote(15);
+        banVote.setArgumentCount(1);
+        banVote.setInsufficientArgumentsError("Incorrect arguments! You need to do '/Vote ban PlayerName' where PlayerName is the player's name");
         banVote.save();
         
         // application information I'll need eventually for updates and whatnot
-        super.configurationFile.setProperty("vote.application.files.config.Version", "0.2");
-        super.configurationFile.setProperty("vote.application.Version", "0.2");
+        super.configurationFile.setProperty("vote.application.files.config.Version", "1.0");
+        super.configurationFile.setProperty("vote.application.Version", "1.0");
         
         // Settings with no embedding
         super.configurationFile.setProperty("vote.default.VoteStartText", "A vote has begun! Type /vote Yes or /vote No to vote.");
@@ -201,7 +211,7 @@ public class ConfigurationFile extends YMLFile
      */
     private String getStringFromFile(String location)
     {
-        String foundString = getStringFromFile(location);
+        String foundString = this.configurationFile.getString(location);
         String[] args;
         
         try
@@ -214,7 +224,7 @@ public class ConfigurationFile extends YMLFile
         }
         
         for (int i = 0; i < args.length; i++)
-            foundString.replaceAll("[%" + i + "]", args[i]);
+            foundString = foundString.replaceAll("\\[\\%" + i + "\\]", args[i]);
         
         return foundString;
     }
@@ -383,7 +393,7 @@ public class ConfigurationFile extends YMLFile
         // Loop through all the vote types and pull their descriptions
         for (String voteType : getAllVoteTypes())
         {
-            playerVote = new PlayerVote(super.configurationFile, "vote.votes." + voteType);
+            playerVote = new PlayerVote(super.configurationFile, "vote.votes." + voteType, arguments);
             
             returnList.add(new SimpleEntry<String,String>(voteType, playerVote.getDescription()));
         }
@@ -406,7 +416,7 @@ public class ConfigurationFile extends YMLFile
      */
     public PlayerVote getPlayerVote(Vote plugin, String playerVote)
     {
-        return new PlayerVote(super.configurationFile, "vote.votes." + playerVote);
+        return new PlayerVote(super.configurationFile, "vote.votes." + playerVote, arguments);
     }
     
     /**
