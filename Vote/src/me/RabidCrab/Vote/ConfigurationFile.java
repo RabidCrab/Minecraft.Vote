@@ -36,6 +36,8 @@ public class ConfigurationFile extends YMLFile
         PlayerVote nightVote = new PlayerVote(file, "vote.votes.night", arguments);
         PlayerVote kickVote = new PlayerVote(file, "vote.votes.kick", arguments);
         PlayerVote banVote = new PlayerVote(file, "vote.votes.ban", arguments);
+        PlayerVote sunVote = new PlayerVote(file, "vote.votes.sun", arguments);
+        PlayerVote rainVote = new PlayerVote(file, "vote.votes.rain", arguments);
         
         // Vote to restart server
         List<String> restartSuccessCommands = new ArrayList<String>();
@@ -70,7 +72,7 @@ public class ConfigurationFile extends YMLFile
         List<String> daySuccessCommands = new ArrayList<String>();
         List<String> dayFailCommands = new ArrayList<String>();
         
-        daySuccessCommands.add("time day");
+        daySuccessCommands.add("time set 0");
         
         dayVote.setDescription("Set time to day");
         dayVote.setLastFailedVote(0);
@@ -97,7 +99,7 @@ public class ConfigurationFile extends YMLFile
         List<String> nightSuccessCommands = new ArrayList<String>();
         List<String> nightFailCommands = new ArrayList<String>();
         
-        nightSuccessCommands.add("time night");
+        nightSuccessCommands.add("time set 13000");
         
         nightVote.setDescription("Set time to night");
         nightVote.setLastFailedVote(0);
@@ -146,7 +148,7 @@ public class ConfigurationFile extends YMLFile
         kickVote.setInsufficientArgumentsError("Incorrect arguments! You need to do '/Vote kick PlayerName' where PlayerName is the player's name");
         kickVote.save();
         
-         // Vote to set weather to storm
+         // Vote to ban
         List<String> banSuccessCommands = new ArrayList<String>();
         List<String> banFailCommands = new ArrayList<String>();
         
@@ -172,9 +174,63 @@ public class ConfigurationFile extends YMLFile
         banVote.setInsufficientArgumentsError("Incorrect arguments! You need to do '/Vote ban PlayerName' where PlayerName is the player's name");
         banVote.save();
         
+        // Vote to set sun
+        List<String> sunSuccessCommands = new ArrayList<String>();
+        List<String> sunFailCommands = new ArrayList<String>();
+        
+        sunSuccessCommands.add("vote setvalue sun");
+        
+        sunVote.setDescription("Set weather to sun");
+        sunVote.setLastFailedVote(0);
+        sunVote.setLastSuccessfulVote(0);
+        sunVote.setVoteOnCooldownText("Weather has been set to sun too recently!");
+        sunVote.setVoteStartText("Vote to set the weather to sun has started! type /vote yes or /vote no to vote");
+        sunVote.setVoteSuccessText("Vote succeeded! It's now sunny.");
+        sunVote.setVoteFailText("Vote failed! Try again next time.");
+        sunVote.setVoteSuccessCommands(sunSuccessCommands);
+        sunVote.setVoteFailCommands(sunFailCommands);
+        sunVote.setVoteSuccessCommandDelaySeconds(3);
+        sunVote.setVoteFailCommandDelaySeconds(0);
+        sunVote.setTimeoutSeconds(60);
+        sunVote.setMinimumVotes(1);
+        sunVote.setPercentToSucceed(60);
+        sunVote.setCooldownMinutesToFailRevote(10);
+        sunVote.setCooldownMinutesToSuccessRevote(5);
+        sunVote.setIgnoreUnvotedPlayers(true);
+        sunVote.setArgumentCount(0);
+        sunVote.setInsufficientArgumentsError("");
+        sunVote.save();
+        
+        // Vote to set rain
+        List<String> rainSuccessCommands = new ArrayList<String>();
+        List<String> rainFailCommands = new ArrayList<String>();
+        
+        rainSuccessCommands.add("vote setvalue rain");
+        
+        rainVote.setDescription("Set weather to rain");
+        rainVote.setLastFailedVote(0);
+        rainVote.setLastSuccessfulVote(0);
+        rainVote.setVoteOnCooldownText("Weather has been set to rain too recently!");
+        rainVote.setVoteStartText("Vote to set the weather to rain has started! type /vote yes or /vote no to vote");
+        rainVote.setVoteSuccessText("Vote succeeded! It's now rainy.");
+        rainVote.setVoteFailText("Vote failed! Try again next time.");
+        rainVote.setVoteSuccessCommands(rainSuccessCommands);
+        rainVote.setVoteFailCommands(rainFailCommands);
+        rainVote.setVoteSuccessCommandDelaySeconds(3);
+        rainVote.setVoteFailCommandDelaySeconds(0);
+        rainVote.setTimeoutSeconds(60);
+        rainVote.setMinimumVotes(1);
+        rainVote.setPercentToSucceed(60);
+        rainVote.setCooldownMinutesToFailRevote(10);
+        rainVote.setCooldownMinutesToSuccessRevote(5);
+        rainVote.setIgnoreUnvotedPlayers(true);
+        rainVote.setArgumentCount(0);
+        rainVote.setInsufficientArgumentsError("");
+        rainVote.save();
+        
         // application information I'll need eventually for updates and whatnot
-        super.configurationFile.setProperty("vote.application.files.config.Version", "1.0");
-        super.configurationFile.setProperty("vote.application.Version", "1.0");
+        super.configurationFile.setProperty("vote.application.files.config.Version", "1.1");
+        super.configurationFile.setProperty("vote.application.Version", "1.1");
         
         // Settings with no embedding
         super.configurationFile.setProperty("vote.default.VoteStartText", "A vote has begun! Type /vote Yes or /vote No to vote.");
@@ -186,6 +242,7 @@ public class ConfigurationFile extends YMLFile
         super.configurationFile.setProperty("vote.default.PlayerAlreadyVoted", "You have already voted!");
         super.configurationFile.setProperty("vote.default.PlayerVoteCounted", "Vote counted.");
         super.configurationFile.setProperty("vote.default.PlayerVoteNoPermission", "You do not have permission to vote.");
+        super.configurationFile.setProperty("vote.default.PlayerSetValueNoPermission", "You do not have permission to the setvalue command.");
         super.configurationFile.setProperty("vote.default.PlayerVoteStartNoPermission", "You do not have permission to start a vote.");
         super.configurationFile.setProperty("vote.default.PlayerVoteChanged", "You changed your vote.");
         
@@ -217,14 +274,11 @@ public class ConfigurationFile extends YMLFile
         try
         {
             args = arguments.call();
+            
+            for (int i = 0; i < args.length; i++)
+                foundString = foundString.replaceAll("\\[\\%" + i + "\\]", args[i]);
         } 
-        catch (Exception e)
-        {
-            return foundString;
-        }
-        
-        for (int i = 0; i < args.length; i++)
-            foundString = foundString.replaceAll("\\[\\%" + i + "\\]", args[i]);
+        catch (Exception e) { }
         
         return foundString;
     }
@@ -380,6 +434,17 @@ public class ConfigurationFile extends YMLFile
     public List<String> getGeneralCommandsHelp()
     {
         return super.configurationFile.getStringList("vote.help.GeneralCommands", new ArrayList<String>());
+    }
+    
+    public void setPlayerSetValueNoPermission(String playerSetValueNoPermission)
+    {
+        super.configurationFile.setProperty("vote.default.PlayerSetValueNoPermission", playerSetValueNoPermission);
+        this.save();
+    }
+    
+    public String getPlayerSetValueNoPermission()
+    {
+        return super.configurationFile.getString("vote.default.PlayerSetValueNoPermission");
     }
     
     /**

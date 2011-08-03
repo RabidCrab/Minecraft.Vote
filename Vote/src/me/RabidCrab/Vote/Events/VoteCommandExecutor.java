@@ -2,6 +2,8 @@ package me.RabidCrab.Vote.Events;
 
 import java.util.AbstractMap.SimpleEntry;
 import java.util.List;
+
+import me.RabidCrab.Vote.CustomCommands;
 import me.RabidCrab.Vote.Vote;
 
 import org.bukkit.command.Command;
@@ -18,8 +20,8 @@ import org.bukkit.entity.Player;
 public class VoteCommandExecutor implements CommandExecutor {
 
 	public static Vote plugin;
-	
 	public static List<LivingEntity> entities;
+	public CustomCommands customCommands = new CustomCommands();
 	
 	public VoteCommandExecutor(Vote instance) {
 		plugin = instance;
@@ -37,6 +39,7 @@ public class VoteCommandExecutor implements CommandExecutor {
 			if (args.length < 1)
 			    displayGeneralHelp(player);
 			
+			// This really should be turned into a case statement
 			if (args.length == 1)
 			{
     			if ((args[0].equalsIgnoreCase("y") || args[0].equalsIgnoreCase("yes")))
@@ -47,9 +50,18 @@ public class VoteCommandExecutor implements CommandExecutor {
     				else
     				    if (args[0].equalsIgnoreCase("list"))
     				        displayVoteStartHelp(player);
+    				    else
+    				        startVote((Player)sender, args);
 			}
 			else
-			    startVote((Player)sender, args);
+			{
+			    // I have a situation where I call my own commands. Currently it's only for weather, but it'll most likely
+			    // be for other things as well
+			    if (args[0].equalsIgnoreCase("setvalue"))
+			        customCommands.setValue((Player)sender, args[1].toString());
+			    else
+			        startVote((Player)sender, args);
+			}
 			
 			return true;
 		}
@@ -78,9 +90,11 @@ public class VoteCommandExecutor implements CommandExecutor {
 	{
 	    List<SimpleEntry<String,String>> list = Vote.configuration.getVotesListAndDescription();
 	    
+	    // If there's a list, go through it and only show the ones the player has permission to start
 	    if (list.size() > 0)
     	    for (SimpleEntry<String,String> entry : Vote.configuration.getVotesListAndDescription())
-                player.sendMessage(entry.getKey() + " - " + entry.getValue());
+    	        if (Vote.permissions.has(player, "vote.startvote." + entry.getKey()))
+    	            player.sendMessage(entry.getKey() + " - " + entry.getValue());
 	    else
 	        player.sendMessage(Vote.configuration.getVoteStartHelpNotFound()); 
 	}
