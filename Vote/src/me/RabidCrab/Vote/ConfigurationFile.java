@@ -126,7 +126,7 @@ public class ConfigurationFile extends YMLFile
         List<String> kickSuccessCommands = new ArrayList<String>();
         List<String> kickFailCommands = new ArrayList<String>();
         
-        kickSuccessCommands.add("kick [%0]");
+        kickSuccessCommands.add("vote setvalue kick [%0]");
         
         kickVote.setDescription("Kick player");
         kickVote.setLastFailedVote(0);
@@ -152,7 +152,7 @@ public class ConfigurationFile extends YMLFile
         List<String> banSuccessCommands = new ArrayList<String>();
         List<String> banFailCommands = new ArrayList<String>();
         
-        banSuccessCommands.add("ban [%0]");
+        banSuccessCommands.add("vote setvalue ban [%0]");
         
         banVote.setDescription("Ban a player");
         banVote.setLastFailedVote(0);
@@ -245,7 +245,10 @@ public class ConfigurationFile extends YMLFile
         super.configurationFile.setProperty("vote.default.PlayerSetValueNoPermission", "You do not have permission to the setvalue command.");
         super.configurationFile.setProperty("vote.default.PlayerVoteStartNoPermission", "You do not have permission to start a vote.");
         super.configurationFile.setProperty("vote.default.PlayerVoteChanged", "You changed your vote.");
-        
+        super.configurationFile.setProperty("vote.default.PlayerUnbannable", "[%0] cannot be banned!");
+        super.configurationFile.setProperty("vote.default.PlayerUnkickable", "[%0] cannot be kicked!");
+        super.configurationFile.setProperty("vote.default.PlayerNotFound", "[%0] cannot be found!");
+
         // Help settings
         List<String> generalCommandsHelp = new ArrayList<String>();
         
@@ -392,6 +395,28 @@ public class ConfigurationFile extends YMLFile
         return getStringFromFile("vote.default.PlayerVoteStartNoPermission");
     }
     
+    public void setPlayerUnbannable(String playerUnbannable)
+    {
+        super.configurationFile.setProperty("vote.default.PlayerUnbannable", playerUnbannable);
+        this.save();
+    }
+    
+    public String getPlayerUnbannable()
+    {
+        return getStringFromFile("vote.default.PlayerUnbannable");
+    }
+    
+    public void setPlayerUnkickable(String playerUnkickable)
+    {
+        super.configurationFile.setProperty("vote.default.PlayerUnkickable", playerUnkickable);
+        this.save();
+    }
+    
+    public String getPlayerUnkickable()
+    {
+        return getStringFromFile("vote.default.PlayerUnkickable");
+    }
+    
     public void setPlayerVoteStartNoPermission(String playerVoteStartNoPermission)
     {
         super.configurationFile.setProperty("vote.default.PlayerVoteStartNoPermission", playerVoteStartNoPermission);
@@ -445,6 +470,17 @@ public class ConfigurationFile extends YMLFile
     public String getPlayerSetValueNoPermission()
     {
         return super.configurationFile.getString("vote.default.PlayerSetValueNoPermission");
+    }
+    
+    public void setPlayerNotFound(String playerNotFound)
+    {
+        super.configurationFile.setProperty("vote.default.PlayerNotFound", playerNotFound);
+        this.save();
+    }
+    
+    public String getPlayerNotFound()
+    {
+        return getStringFromFile("vote.default.PlayerNotFound");
     }
     
     /**

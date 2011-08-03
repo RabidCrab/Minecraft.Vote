@@ -21,10 +21,11 @@ public class VoteCommandExecutor implements CommandExecutor {
 
 	public static Vote plugin;
 	public static List<LivingEntity> entities;
-	public CustomCommands customCommands = new CustomCommands();
+	public CustomCommands customCommands;
 	
 	public VoteCommandExecutor(Vote instance) {
 		plugin = instance;
+		customCommands = new CustomCommands(instance);
 	}
 
 	
@@ -57,10 +58,11 @@ public class VoteCommandExecutor implements CommandExecutor {
 			{
 			    // I have a situation where I call my own commands. Currently it's only for weather, but it'll most likely
 			    // be for other things as well
-			    if (args[0].equalsIgnoreCase("setvalue"))
-			        customCommands.setValue((Player)sender, args[1].toString());
-			    else
-			        startVote((Player)sender, args);
+			    if (args.length > 0)
+    			    if (args[0].equalsIgnoreCase("setvalue"))
+    			        customCommands.setValue((Player)sender, args[1].toString(), args);
+    			    else
+    			        startVote((Player)sender, args);
 			}
 			
 			return true;
@@ -88,14 +90,19 @@ public class VoteCommandExecutor implements CommandExecutor {
 	 */
 	private void displayVoteStartHelp(Player player)
 	{
+	    int listWritten = 0;
 	    List<SimpleEntry<String,String>> list = Vote.configuration.getVotesListAndDescription();
 	    
 	    // If there's a list, go through it and only show the ones the player has permission to start
 	    if (list.size() > 0)
     	    for (SimpleEntry<String,String> entry : Vote.configuration.getVotesListAndDescription())
     	        if (Vote.permissions.has(player, "vote.startvote." + entry.getKey()))
+    	        {
     	            player.sendMessage(entry.getKey() + " - " + entry.getValue());
-	    else
+    	            listWritten++;
+    	        }
+	    
+	    if (listWritten == 0)
 	        player.sendMessage(Vote.configuration.getVoteStartHelpNotFound()); 
 	}
 

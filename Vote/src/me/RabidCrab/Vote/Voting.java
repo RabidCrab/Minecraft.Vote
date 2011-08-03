@@ -45,11 +45,62 @@ public class Voting
      */
     public boolean beginVote(Player player, PlayerVote vote, String[] arguments)
     {
+        // Make sure a vote isn't already going. This must be first so that setting the global arguments won't break a currently
+        // running vote
+        if (IsVoting)
+        {
+            player.sendMessage(Vote.configuration.getVoteAlreadyInProgress());
+            return false;
+        }
+        
+        // It's important for this to be here so that any errors with parameters will be thrown
+        this.arguments = arguments;
+        
         // Verify the user has the rights to start this vote
         if (!Vote.permissions.has(player, "vote.startvote." + vote.getVoteShortName()))
         {
             player.sendMessage(Vote.configuration.getPlayerVoteStartNoPermission());
             return false;
+        }
+        
+        // Check if the player can even be kicked. If they can't, don't even try
+        if (vote.getVoteShortName().equalsIgnoreCase("kick"))
+        {
+            try
+            {
+                Player target = plugin.getServer().getPlayer(arguments[0].toString());
+                
+                if (Vote.permissions.has(target, "vote.unkickable"))
+                {
+                    player.sendMessage(Vote.configuration.getPlayerUnkickable());
+                    return false;
+                }
+            }
+            catch (Exception e)
+            {
+                player.sendMessage(Vote.configuration.getPlayerNotFound());
+                return false;
+            }
+        }
+        
+        // Check if the player can even be kicked. If they can't, don't even try
+        if (vote.getVoteShortName().equalsIgnoreCase("ban"))
+        {
+            try
+            {
+                Player target = plugin.getServer().getPlayer(arguments[0].toString());
+                
+                if (Vote.permissions.has(target, "vote.unbannable"))
+                {
+                    player.sendMessage(Vote.configuration.getPlayerUnbannable());
+                    return false;
+                }
+            }
+            catch (Exception e)
+            {
+                player.sendMessage(Vote.configuration.getPlayerNotFound());
+                return false;
+            }
         }
         
         // If they didn't specify the right number of arguments, complain
@@ -59,17 +110,9 @@ public class Voting
             return false;
         }
         
-        // Make sure a vote isn't already going
-        if (IsVoting)
-        {
-            player.sendMessage(Vote.configuration.getVoteAlreadyInProgress());
-            return false;
-        }
-        
         // Begin the declarations
         currentVote = vote;
         voteStarter = player;
-        this.arguments = arguments;
         
         // Check and see if the cooldowns are ready to go
         Date now = new Date();
