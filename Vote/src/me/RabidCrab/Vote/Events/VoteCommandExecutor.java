@@ -23,7 +23,8 @@ public class VoteCommandExecutor implements CommandExecutor {
 	public static List<LivingEntity> entities;
 	public CustomCommands customCommands;
 	
-	public VoteCommandExecutor(Vote instance) {
+	public VoteCommandExecutor(Vote instance) 
+	{
 		plugin = instance;
 		customCommands = new CustomCommands(instance);
 	}

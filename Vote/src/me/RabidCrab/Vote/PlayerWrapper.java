@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import org.bukkit.Achievement;
 import org.bukkit.Effect;
+import org.bukkit.GameMode;
 import org.bukkit.Instrument;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -25,6 +26,7 @@ import org.bukkit.entity.Vehicle;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.map.MapView;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.permissions.PermissionAttachmentInfo;
@@ -376,20 +378,6 @@ public class PlayerWrapper implements Player
         return caller.teleport(arg0);
     }
 
-    @SuppressWarnings("deprecation")
-    @Override
-    public void teleportTo(Location arg0)
-    {
-        caller.teleportTo(arg0);
-    }
-
-    @SuppressWarnings("deprecation")
-    @Override
-    public void teleportTo(Entity arg0)
-    {
-        caller.teleportTo(arg0);
-    }
-
     @Override
     public boolean isOp()
     {
@@ -674,6 +662,159 @@ public class PlayerWrapper implements Player
     public void setOp(boolean arg0)
     {
         caller.setOp(arg0);
+    }
+
+    @Override
+    public void sendMap(MapView arg0)
+    {
+        caller.sendMap(arg0);
+    }
+
+    @Override
+    public GameMode getGameMode()
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public void setGameMode(GameMode arg0)
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public boolean isBanned()
+    {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean isWhitelisted()
+    {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public void setBanned(boolean arg0)
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void setWhitelisted(boolean arg0)
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public Location getBedSpawnLocation()
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public float getExhaustion()
+    {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public int getExperience()
+    {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public int getFoodLevel()
+    {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public int getLevel()
+    {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public float getSaturation()
+    {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public int getTotalExperience()
+    {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public boolean isSprinting()
+    {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public void setExhaustion(float arg0)
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void setExperience(int arg0)
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void setFoodLevel(int arg0)
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void setLevel(int arg0)
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void setSaturation(float arg0)
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void setSprinting(boolean arg0)
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void setTotalExperience(int arg0)
+    {
+        // TODO Auto-generated method stub
+        
     }
     
 }
