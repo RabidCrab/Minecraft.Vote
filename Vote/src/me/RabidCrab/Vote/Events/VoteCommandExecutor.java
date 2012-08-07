@@ -1,10 +1,12 @@
 package me.RabidCrab.Vote.Events;
 
 import java.util.AbstractMap.SimpleEntry;
+import java.util.ArrayList;
 import java.util.List;
 
 import me.RabidCrab.Vote.CustomCommands;
 import me.RabidCrab.Vote.Vote;
+import me.RabidCrab.Vote.Common.TextFormatter;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -53,7 +55,10 @@ public class VoteCommandExecutor implements CommandExecutor {
     				    if (args[0].equalsIgnoreCase("list"))
     				        displayVoteStartHelp(player);
     				    else
-    				        startVote((Player)sender, args);
+    				        if (args[0].equalsIgnoreCase("help"))
+    				            displayGeneralHelp(player);
+    				        else
+    				            startVote((Player)sender, args);
 			}
 			else
 			{
@@ -81,7 +86,7 @@ public class VoteCommandExecutor implements CommandExecutor {
 
         if (helpList.size() > 0)
     	    for (String helpText : Vote.configuration.getGeneralCommandsHelp())
-        	    player.sendMessage(helpText);
+        	    player.sendMessage(TextFormatter.format(helpText));
         else
             player.sendMessage(Vote.configuration.getGeneralHelpNotFound()); 
 	}
@@ -99,7 +104,8 @@ public class VoteCommandExecutor implements CommandExecutor {
     	    for (SimpleEntry<String,String> entry : Vote.configuration.getVotesListAndDescription())
     	        if (Vote.permissions.has(player, "vote.startvote." + entry.getKey()))
     	        {
-    	            player.sendMessage(entry.getKey() + " - " + entry.getValue());
+    	            // The colors need to be specified for the key because you can't put a color code in the key
+    	            player.sendMessage(TextFormatter.format("&6" + entry.getKey() + " &A- " + entry.getValue()));
     	            listWritten++;
     	        }
 	    
@@ -116,10 +122,13 @@ public class VoteCommandExecutor implements CommandExecutor {
         {
             if (s.compareToIgnoreCase(args[0].toString()) == 0)
             {
-                String[] extraArgs = new String[args.length - 1];
+                ArrayList<String> extraArgs = new ArrayList<String>();
                 
                 for (int i = 1; i < args.length; i++)
-                    extraArgs[i - 1] = args[i];
+                    extraArgs.add(args[i]);
+                
+                // Add the player name to the end because people use it a lot
+                extraArgs.add(player.getName());
                 
                 plugin.voter.beginVote(player, Vote.configuration.getPlayerVote(plugin, s), extraArgs);
                 return;

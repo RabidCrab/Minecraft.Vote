@@ -26,7 +26,7 @@ public class Voting
     private Vote plugin;
     private List<Player> loggedInPlayers;
     private Player voteStarter;
-    private String[] arguments;
+    private ArrayList<String> arguments;
     
     public Voting(Vote vote)
     {
@@ -34,7 +34,7 @@ public class Voting
         plugin = vote;
     }
     
-    public String[] getArguments()
+    public ArrayList<String> getArguments()
     {
         return arguments;
     }
@@ -43,7 +43,7 @@ public class Voting
      * Begin a vote with the specified vote
      * @return True if successful
      */
-    public boolean beginVote(Player player, PlayerVote vote, String[] arguments)
+    public boolean beginVote(Player player, PlayerVote vote, ArrayList<String> arguments)
     {
         // Make sure a vote isn't already going. This must be first so that setting the global arguments won't break a currently
         // running vote
@@ -68,7 +68,7 @@ public class Voting
         {
             try
             {
-                Player target = plugin.getServer().getPlayer(arguments[0].toString());
+                Player target = plugin.getServer().getPlayer(arguments.get(0));
                 
                 if (Vote.permissions.has(target, "vote.unkickable"))
                 {
@@ -88,7 +88,7 @@ public class Voting
         {
             try
             {
-                Player target = plugin.getServer().getPlayer(arguments[0].toString());
+                Player target = plugin.getServer().getPlayer(arguments.get(0).toString());
                 
                 if (Vote.permissions.has(target, "vote.unbannable"))
                 {
@@ -104,7 +104,8 @@ public class Voting
         }
         
         // If they didn't specify the right number of arguments, complain
-        if (arguments.length != vote.getArgumentCount())
+        // I'm subtracting 1 from the argument size because the caller of the vote is passed when the beginVote is called
+        if (arguments.size() - 1 != vote.getArgumentCount())
         {
             player.sendMessage(vote.getInsufficientArgumentsError());
             return false;
@@ -423,7 +424,7 @@ public class Voting
             currentVote.save();
             
             Vote.getPlayerCommandExecutor().setCaller(voteStarter);
-            ConsoleCommandSender commandSender = new ConsoleCommandSender(plugin.getServer());
+            ConsoleCommandSender commandSender = plugin.getServer().getConsoleSender();
             
             Thread.sleep(currentVote.getVoteSuccessCommandDelaySeconds() * 1000);
             
@@ -434,8 +435,8 @@ public class Voting
                     String command = string;
 
                     // Loop through all of the arguments and add them to the command if it exists
-                    for (int i = 0; i < arguments.length; i++)
-                        command = command.replaceAll("\\[\\%" + i + "\\]", arguments[i]);
+                    for (int i = 0; i < arguments.size(); i++)
+                        command = command.replaceAll("\\[\\%" + i + "\\]", arguments.get(i));
                     
                     if (isConsoleCommand(command))
                         plugin.getServer().dispatchCommand(commandSender, command);
@@ -468,7 +469,7 @@ public class Voting
             currentVote.save();
             
             Vote.getPlayerCommandExecutor().setCaller(voteStarter);
-            ConsoleCommandSender commandSender = new ConsoleCommandSender(plugin.getServer());
+            ConsoleCommandSender commandSender = plugin.getServer().getConsoleSender();
             
             Thread.sleep(currentVote.getVoteFailCommandDelaySeconds() * 1000);
                     
@@ -479,8 +480,8 @@ public class Voting
                     String command = string;
                     
                     // Loop through all of the arguments and add them to the command if it exists
-                    for (int i = 0; i < arguments.length; i++)
-                        command = command.replaceAll("\\[\\%" + i + "\\]", arguments[i]);
+                    for (int i = 0; i < arguments.size(); i++)
+                        command = command.replaceAll("\\[\\%" + i + "\\]", arguments.get(i));
                     
                     if (isConsoleCommand(string))
                         plugin.getServer().dispatchCommand(commandSender, command);

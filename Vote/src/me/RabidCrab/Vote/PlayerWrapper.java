@@ -1,13 +1,16 @@
 package me.RabidCrab.Vote;
 
 import java.net.InetSocketAddress;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
 import org.bukkit.Achievement;
 import org.bukkit.Effect;
+import org.bukkit.EntityEffect;
 import org.bukkit.GameMode;
 import org.bukkit.Instrument;
 import org.bukkit.Location;
@@ -17,20 +20,30 @@ import org.bukkit.Server;
 import org.bukkit.Statistic;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.conversations.Conversation;
+import org.bukkit.conversations.ConversationAbandonedEvent;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Egg;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Snowball;
-import org.bukkit.entity.Vehicle;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
+import org.bukkit.inventory.InventoryView.Property;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.map.MapView;
+import org.bukkit.metadata.MetadataValue;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
 public class PlayerWrapper implements Player
@@ -169,7 +182,7 @@ public class PlayerWrapper implements Player
     }
 
     @Override
-    public Vehicle getVehicle()
+    public Entity getVehicle()
     {
         return caller.getVehicle();
     }
@@ -222,18 +235,21 @@ public class PlayerWrapper implements Player
         caller.setRemainingAir(arg0);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public Arrow shootArrow()
     {
         return caller.shootArrow();
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public Egg throwEgg()
     {
         return caller.throwEgg();
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public Snowball throwSnowball()
     {
@@ -671,150 +687,514 @@ public class PlayerWrapper implements Player
     }
 
     @Override
+    public void closeInventory()
+    {
+        
+        caller.closeInventory();
+    }
+
+    @Override
+    public int getExpToLevel()
+    {
+        
+        return caller.getExpToLevel();
+    }
+
+    @Override
     public GameMode getGameMode()
     {
-        // TODO Auto-generated method stub
-        return null;
+        
+        return caller.getGameMode();
+    }
+
+    @Override
+    public ItemStack getItemOnCursor()
+    {
+        
+        return caller.getItemOnCursor();
+    }
+
+    @Override
+    public InventoryView getOpenInventory()
+    {
+        
+        return caller.getOpenInventory();
+    }
+
+    @Override
+    public boolean isBlocking()
+    {
+        
+        return caller.isBlocking();
+    }
+
+    @Override
+    public InventoryView openEnchanting(Location arg0, boolean arg1)
+    {
+        
+        return caller.openEnchanting(arg0, arg1);
+    }
+
+    @Override
+    public InventoryView openInventory(Inventory arg0)
+    {
+        
+        return caller.openInventory(arg0);
+    }
+
+    @Override
+    public void openInventory(InventoryView arg0)
+    {
+        
+        caller.openInventory(arg0);
+    }
+
+    @Override
+    public InventoryView openWorkbench(Location arg0, boolean arg1)
+    {
+        
+        return caller.openWorkbench(arg0, arg1);
     }
 
     @Override
     public void setGameMode(GameMode arg0)
     {
-        // TODO Auto-generated method stub
         
+        caller.setGameMode(arg0);
+    }
+
+    @Override
+    public void setItemOnCursor(ItemStack arg0)
+    {
+        
+        caller.setItemOnCursor(arg0);
+    }
+
+    @Override
+    public boolean setWindowProperty(Property arg0, int arg1)
+    {
+        
+        return caller.setWindowProperty(arg0, arg1);
+    }
+
+    @Override
+    public boolean addPotionEffect(PotionEffect arg0)
+    {
+        
+        return caller.addPotionEffect(arg0);
+    }
+
+    @Override
+    public boolean addPotionEffect(PotionEffect arg0, boolean arg1)
+    {
+        
+        return caller.addPotionEffect(arg0, arg1);
+    }
+
+    @Override
+    public boolean addPotionEffects(Collection<PotionEffect> arg0)
+    {
+        
+        return caller.addPotionEffects(arg0);
+    }
+
+    @Override
+    public Collection<PotionEffect> getActivePotionEffects()
+    {
+        
+        return caller.getActivePotionEffects();
+    }
+
+    @Override
+    public Player getKiller()
+    {
+        
+        return caller.getKiller();
+    }
+
+    @Override
+    public int getMaxHealth()
+    {
+        
+        return caller.getMaxHealth();
+    }
+
+    @Override
+    public boolean hasLineOfSight(Entity arg0)
+    {
+        
+        return caller.hasLineOfSight(arg0);
+    }
+
+    @Override
+    public boolean hasPotionEffect(PotionEffectType arg0)
+    {
+        
+        return caller.hasPotionEffect(arg0);
+    }
+
+    @Override
+    public <T extends Projectile> T launchProjectile(Class<? extends T> arg0)
+    {
+        
+        return caller.launchProjectile(arg0);
+    }
+
+    @Override
+    public void removePotionEffect(PotionEffectType arg0)
+    {
+        
+        caller.removePotionEffect(arg0);
+    }
+
+    @Override
+    public int getTicksLived()
+    {
+        
+        return caller.getTicksLived();
+    }
+
+    @Override
+    public EntityType getType()
+    {
+        
+        return caller.getType();
+    }
+
+    @Override
+    public boolean isValid()
+    {
+        
+        return caller.isValid();
+    }
+
+    @Override
+    public void playEffect(EntityEffect arg0)
+    {
+        
+        caller.playEffect(arg0);
+    }
+
+    @Override
+    public void setTicksLived(int arg0)
+    {
+        
+        caller.setTicksLived(arg0);
+    }
+
+    @Override
+    public boolean teleport(Location arg0, TeleportCause arg1)
+    {
+        
+        return caller.teleport(arg0, arg1);
+    }
+
+    @Override
+    public boolean teleport(Entity arg0, TeleportCause arg1)
+    {
+        
+        return caller.teleport(arg0, arg1);
+    }
+
+    @Override
+    public List<MetadataValue> getMetadata(String arg0)
+    {
+        
+        return caller.getMetadata(arg0);
+    }
+
+    @Override
+    public boolean hasMetadata(String arg0)
+    {
+        
+        return caller.hasMetadata(arg0);
+    }
+
+    @Override
+    public void removeMetadata(String arg0, Plugin arg1)
+    {
+        
+        caller.removeMetadata(arg0, arg1);
+    }
+
+    @Override
+    public void setMetadata(String arg0, MetadataValue arg1)
+    {
+        
+        caller.setMetadata(arg0, arg1);
+    }
+
+    @Override
+    public void abandonConversation(Conversation arg0)
+    {
+        
+        caller.abandonConversation(arg0);
+    }
+
+    @Override
+    public void abandonConversation(Conversation arg0,
+            ConversationAbandonedEvent arg1)
+    {
+        
+        caller.abandonConversation(arg0, arg1);
+    }
+
+    @Override
+    public void acceptConversationInput(String arg0)
+    {
+        
+        caller.acceptConversationInput(arg0);
+    }
+
+    @Override
+    public boolean beginConversation(Conversation arg0)
+    {
+        
+        return caller.beginConversation(arg0);
+    }
+
+    @Override
+    public boolean isConversing()
+    {
+        
+        return caller.isConversing();
+    }
+
+    @Override
+    public void sendMessage(String[] arg0)
+    {
+        
+        caller.sendMessage(arg0);
+    }
+
+    @Override
+    public long getFirstPlayed()
+    {
+        
+        return caller.getFirstPlayed();
+    }
+
+    @Override
+    public long getLastPlayed()
+    {
+        
+        return caller.getLastPlayed();
+    }
+
+    @Override
+    public Player getPlayer()
+    {
+        return caller.getPlayer();
+    }
+
+    @Override
+    public boolean hasPlayedBefore()
+    {
+        return caller.hasPlayedBefore();
     }
 
     @Override
     public boolean isBanned()
     {
-        // TODO Auto-generated method stub
-        return false;
+        return caller.isBanned();
     }
 
     @Override
     public boolean isWhitelisted()
     {
-        // TODO Auto-generated method stub
-        return false;
+        return caller.isWhitelisted();
     }
 
     @Override
     public void setBanned(boolean arg0)
     {
-        // TODO Auto-generated method stub
-        
+        caller.setBanned(arg0);
     }
 
     @Override
     public void setWhitelisted(boolean arg0)
     {
-        // TODO Auto-generated method stub
-        
+        caller.setWhitelisted(arg0);
+    }
+
+    @Override
+    public Map<String, Object> serialize()
+    {
+        return caller.serialize();
+    }
+
+    @Override
+    public Set<String> getListeningPluginChannels()
+    {
+        return caller.getListeningPluginChannels();
+    }
+
+    @Override
+    public void sendPluginMessage(Plugin arg0, String arg1, byte[] arg2)
+    {
+        caller.sendPluginMessage(arg0, arg1, arg2);
+    }
+
+    @Override
+    public boolean canSee(Player arg0)
+    {
+        return caller.canSee(arg0);
+    }
+
+    @Override
+    public boolean getAllowFlight()
+    {
+        return caller.getAllowFlight();
     }
 
     @Override
     public Location getBedSpawnLocation()
     {
-        // TODO Auto-generated method stub
-        return null;
+        return caller.getBedSpawnLocation();
     }
 
     @Override
     public float getExhaustion()
     {
-        // TODO Auto-generated method stub
-        return 0;
+        return caller.getExhaustion();
     }
 
     @Override
-    public int getExperience()
+    public float getExp()
     {
-        // TODO Auto-generated method stub
-        return 0;
+        return caller.getExp();
     }
 
     @Override
     public int getFoodLevel()
     {
-        // TODO Auto-generated method stub
-        return 0;
+        return caller.getFoodLevel();
     }
 
     @Override
     public int getLevel()
     {
-        // TODO Auto-generated method stub
-        return 0;
+        return caller.getLevel();
+    }
+
+    @Override
+    public String getPlayerListName()
+    {
+        return caller.getPlayerListName();
     }
 
     @Override
     public float getSaturation()
     {
-        // TODO Auto-generated method stub
-        return 0;
+        return caller.getSaturation();
     }
 
     @Override
     public int getTotalExperience()
     {
-        // TODO Auto-generated method stub
-        return 0;
+        return caller.getTotalExperience();
+    }
+
+    @Override
+    public void giveExp(int arg0)
+    {
+        caller.giveExp(arg0);
+    }
+
+    @Override
+    public void hidePlayer(Player arg0)
+    {
+        caller.hidePlayer(arg0);
+    }
+
+    @Override
+    public boolean isFlying()
+    {
+        return caller.isFlying();
     }
 
     @Override
     public boolean isSprinting()
     {
-        // TODO Auto-generated method stub
-        return false;
+        return caller.isSprinting();
+    }
+
+    @Override
+    public <T> void playEffect(Location arg0, Effect arg1, T arg2)
+    {
+        caller.playEffect(arg0, arg1, arg2);
+    }
+
+    @Override
+    public void setAllowFlight(boolean arg0)
+    {
+        caller.setAllowFlight(arg0);
+    }
+
+    @Override
+    public void setBedSpawnLocation(Location arg0)
+    {
+        caller.setBedSpawnLocation(arg0);
     }
 
     @Override
     public void setExhaustion(float arg0)
     {
-        // TODO Auto-generated method stub
-        
+        caller.setExhaustion(arg0);
     }
 
     @Override
-    public void setExperience(int arg0)
+    public void setExp(float arg0)
     {
-        // TODO Auto-generated method stub
-        
+        caller.setExp(arg0);
+    }
+
+    @Override
+    public void setFlying(boolean arg0)
+    {
+        caller.setFlying(arg0);
     }
 
     @Override
     public void setFoodLevel(int arg0)
     {
-        // TODO Auto-generated method stub
-        
+        caller.setFoodLevel(arg0);
     }
 
     @Override
     public void setLevel(int arg0)
     {
-        // TODO Auto-generated method stub
-        
+        caller.setLevel(arg0);
+    }
+
+    @Override
+    public void setPlayerListName(String arg0)
+    {
+        caller.setPlayerListName(arg0);
     }
 
     @Override
     public void setSaturation(float arg0)
     {
-        // TODO Auto-generated method stub
-        
+        caller.setSaturation(arg0);
     }
 
     @Override
     public void setSprinting(boolean arg0)
     {
-        // TODO Auto-generated method stub
-        
+        caller.setSprinting(arg0);
     }
 
     @Override
     public void setTotalExperience(int arg0)
     {
-        // TODO Auto-generated method stub
-        
+        caller.setTotalExperience(arg0);
+    }
+
+    @Override
+    public void showPlayer(Player arg0)
+    {
+        caller.showPlayer(arg0);
     }
     
 }

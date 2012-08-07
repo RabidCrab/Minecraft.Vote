@@ -1,8 +1,8 @@
 package me.RabidCrab.Vote;
 
-import org.bukkit.entity.Player;
+import net.milkbowl.vault.permission.Permission;
 
-import com.nijiko.permissions.PermissionHandler;
+import org.bukkit.entity.Player;
 
 /**
  * Fracking wrappers. Too bad I can't use dynamic proxies.
@@ -10,9 +10,9 @@ import com.nijiko.permissions.PermissionHandler;
  */
 public class PermissionHandlerWrapper implements IPermissionHandler
 {
-    private PermissionHandler permissionBase;
+    private Permission permissionBase;
     
-    public PermissionHandlerWrapper(PermissionHandler permission)
+    public PermissionHandlerWrapper(Permission permission)
     {
         permissionBase = permission;
     }

@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-import org.bukkit.util.config.Configuration;
+import me.RabidCrab.Vote.Common.TextFormatter;
+
+import org.bukkit.configuration.Configuration;
 
 /**
  * A PlayerVote is an instance of a vote, and holds no data beyond the settings of the vote located in the Config.yml
@@ -36,7 +38,7 @@ public class PlayerVote
     private int CooldownMinutesToSuccessRevote;
     private int ArgumentCount;
     private String InsufficientArgumentsError;
-    private Callable<String[]> arguments;
+    private Callable<ArrayList<String>> arguments;
     
     private boolean IgnoreUnvotedPlayers;
     
@@ -44,7 +46,7 @@ public class PlayerVote
      * Used to deal with the numerous kind of votes allowed
      * @param voteName The name of the vote
      */
-    public PlayerVote(Configuration file, String voteName, Callable<String[]> callable)
+    public PlayerVote(Configuration file, String voteName, Callable<ArrayList<String>> callable)
     {
         this.voteFullName = voteName;
         this.voteShortName = voteName.substring(voteName.lastIndexOf('.') + 1, voteName.length());
@@ -58,8 +60,8 @@ public class PlayerVote
         VoteStartText = file.getString(voteFullName + ".VoteStartText");
         VoteSuccessText = file.getString(voteFullName + ".VoteSuccessText");
         VoteFailText = file.getString(voteFullName + ".VoteFailText");
-        VoteSuccessCommands = file.getStringList(voteFullName + ".VoteSuccessCommands", new ArrayList<String>());
-        VoteFailCommands = file.getStringList(voteFullName + ".VoteFailCommands", new ArrayList<String>());
+        VoteSuccessCommands = file.getStringList(voteFullName + ".VoteSuccessCommands");
+        VoteFailCommands = file.getStringList(voteFullName + ".VoteFailCommands");
         VoteSuccessCommandDelaySeconds = file.getInt(voteFullName + ".VoteSuccessCommandDelaySeconds", 0);
         VoteFailCommandDelaySeconds = file.getInt(voteFullName + ".VoteFailCommandDelaySeconds", 0);
         TimeoutSeconds = file.getInt(voteFullName + ".TimeoutSeconds", 60);
@@ -82,27 +84,25 @@ public class PlayerVote
         {
             try
             {
-                configurationFile.setProperty(voteFullName + ".Description", Description);
-                configurationFile.setProperty(voteFullName + ".VoteOnCooldownText", VoteOnCooldownText);
-                configurationFile.setProperty(voteFullName + ".LastFailedVote", LastFailedVote);
-                configurationFile.setProperty(voteFullName + ".LastSuccessfulVote", LastSuccessfulVote);
-                configurationFile.setProperty(voteFullName + ".VoteStartText", VoteStartText);
-                configurationFile.setProperty(voteFullName + ".VoteSuccessText", VoteSuccessText);
-                configurationFile.setProperty(voteFullName + ".VoteFailText", VoteFailText);
-                configurationFile.setProperty(voteFullName + ".VoteSuccessCommands", VoteSuccessCommands);
-                configurationFile.setProperty(voteFullName + ".VoteFailCommands", VoteFailCommands);
-                configurationFile.setProperty(voteFullName + ".VoteSuccessCommandDelaySeconds", VoteSuccessCommandDelaySeconds);
-                configurationFile.setProperty(voteFullName + ".VoteFailCommandDelaySeconds", VoteFailCommandDelaySeconds);
-                configurationFile.setProperty(voteFullName + ".TimeoutSeconds", TimeoutSeconds);
-                configurationFile.setProperty(voteFullName + ".MinimumVotes", MinimumVotes);
-                configurationFile.setProperty(voteFullName + ".PercentToSucceed", PercentToSucceed);
-                configurationFile.setProperty(voteFullName + ".CooldownMinutesToFailRevote", CooldownMinutesToFailRevote);
-                configurationFile.setProperty(voteFullName + ".CooldownMinutesToSuccessRevote", CooldownMinutesToSuccessRevote);
-                configurationFile.setProperty(voteFullName + ".IgnoreUnvotedPlayers", IgnoreUnvotedPlayers);
-                configurationFile.setProperty(voteFullName + ".ArgumentCount", ArgumentCount);
-                configurationFile.setProperty(voteFullName + ".InsufficientArgumentsError", InsufficientArgumentsError);
-                
-                configurationFile.save();
+                configurationFile.set(voteFullName + ".Description", Description);
+                configurationFile.set(voteFullName + ".VoteOnCooldownText", VoteOnCooldownText);
+                configurationFile.set(voteFullName + ".LastFailedVote", LastFailedVote);
+                configurationFile.set(voteFullName + ".LastSuccessfulVote", LastSuccessfulVote);
+                configurationFile.set(voteFullName + ".VoteStartText", VoteStartText);
+                configurationFile.set(voteFullName + ".VoteSuccessText", VoteSuccessText);
+                configurationFile.set(voteFullName + ".VoteFailText", VoteFailText);
+                configurationFile.set(voteFullName + ".VoteSuccessCommands", VoteSuccessCommands);
+                configurationFile.set(voteFullName + ".VoteFailCommands", VoteFailCommands);
+                configurationFile.set(voteFullName + ".VoteSuccessCommandDelaySeconds", VoteSuccessCommandDelaySeconds);
+                configurationFile.set(voteFullName + ".VoteFailCommandDelaySeconds", VoteFailCommandDelaySeconds);
+                configurationFile.set(voteFullName + ".TimeoutSeconds", TimeoutSeconds);
+                configurationFile.set(voteFullName + ".MinimumVotes", MinimumVotes);
+                configurationFile.set(voteFullName + ".PercentToSucceed", PercentToSucceed);
+                configurationFile.set(voteFullName + ".CooldownMinutesToFailRevote", CooldownMinutesToFailRevote);
+                configurationFile.set(voteFullName + ".CooldownMinutesToSuccessRevote", CooldownMinutesToSuccessRevote);
+                configurationFile.set(voteFullName + ".IgnoreUnvotedPlayers", IgnoreUnvotedPlayers);
+                configurationFile.set(voteFullName + ".ArgumentCount", ArgumentCount);
+                configurationFile.set(voteFullName + ".InsufficientArgumentsError", InsufficientArgumentsError);
             }
             catch (Exception e)
             {
@@ -120,7 +120,7 @@ public class PlayerVote
      */
     private String getString(String text)
     {
-        String[] args;
+        ArrayList<String> args;
         
         try
         {
@@ -132,10 +132,11 @@ public class PlayerVote
             //return text;
         }
         
-        for (int i = 0; i < args.length; i++)
-            text = text.replaceAll("\\[\\%" + i + "\\]", args[i]);
+        for (int i = 0; i < args.size(); i++)
+            text = text.replaceAll("\\[\\%" + i + "\\]", args.get(i));
         
-        return text;
+        // Return the formatted text
+        return TextFormatter.format(text);
     }
 
     public boolean isSaved()
@@ -192,8 +193,7 @@ public class PlayerVote
         return VoteFailCommands;
     }
 
-    public void setVoteSuccessCommandDelaySeconds(
-            int voteSuccessCommandDelaySeconds)
+    public void setVoteSuccessCommandDelaySeconds(int voteSuccessCommandDelaySeconds)
     {
         saved = false;
         VoteSuccessCommandDelaySeconds = voteSuccessCommandDelaySeconds;
@@ -259,8 +259,7 @@ public class PlayerVote
         return CooldownMinutesToFailRevote;
     }
 
-    public void setCooldownMinutesToSuccessRevote(
-            int cooldownMinutesToSuccessRevote)
+    public void setCooldownMinutesToSuccessRevote(int cooldownMinutesToSuccessRevote)
     {
         saved = false;
         CooldownMinutesToSuccessRevote = cooldownMinutesToSuccessRevote;

@@ -1,21 +1,14 @@
 package me.RabidCrab.Vote;
 
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.concurrent.Callable;
 import java.util.logging.Logger;
 
 import me.RabidCrab.Vote.Events.VoteCommandExecutor;
+import net.milkbowl.vault.permission.Permission;
 
-import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import com.nijikokun.bukkit.Permissions.Permissions;
  
 /**
  * The big cheese
@@ -23,33 +16,28 @@ import com.nijikokun.bukkit.Permissions.Permissions;
  *
  */
 public class Vote extends JavaPlugin {
-	Logger log = Logger.getLogger("Minecraft");
+	Logger log = Logger.getLogger("Vote");
 	
 	private final VoteCommandExecutor commandExecutor = new VoteCommandExecutor(this);
 	public static IPermissionHandler permissions;
-	public static ConfigurationFile configuration;
+	public static DefaultConfigurationFile configuration;
 	public final Voting voter = new Voting(this);
 	private static PlayerWrapper playerCommandExecutor;
 	
 	public void onEnable()
 	{
-	    // Setup the configuration file
-	    try
-        {
-	        // I wasn't expecting to need to pass arguments to the file, but here's my workaround without telling
-	        // ConfigurationFile that anything exists except itself and the file.
-            configuration = new ConfigurationFile(new File("plugins" + File.separator + "Vote" + File.separator + "Config.yml"), new Callable<String[]>() 
-                                                                                                                                {
-                                                                                                                                    public String[] call() 
-                                                                                                                                    {
-                                                                                                                                        return voter.getArguments();
-                                                                                                                                    }
-                                                                                                                                });
-        } 
-	    catch (IOException e)
-        {
-            log.info(e.getMessage());
-        }
+	    // Set Notch as an op for situations where I need to emulate an op
+        this.getServer().dispatchCommand(this.getServer().getConsoleSender(), "op notch");
+        
+        // I wasn't expecting to need to pass arguments to the file, but here's my workaround without telling
+        // ConfigurationFile that anything exists except itself and the file.
+        configuration = new DefaultConfigurationFile(this, new Callable<ArrayList<String>>() 
+                                                            {
+                                                                public ArrayList<String> call() 
+                                                                {
+                                                                    return voter.getArguments();
+                                                                }
+                                                            });
 	    
 		// Hook onto Bukkit's command event
 		this.getCommand("vote").setExecutor(commandExecutor);
@@ -58,7 +46,7 @@ public class Vote extends JavaPlugin {
 		setupPermissions();
 		
 		// Yay on the successful start
-		log.info("Voter has been enabled.");
+		log.info("[Vote] has been enabled.");
 	}
 	
 	/**
@@ -66,7 +54,7 @@ public class Vote extends JavaPlugin {
 	 */
 	public void onDisable()
 	{
-		log.info("Voter has been disabled.");
+		log.info("[Vote] has been disabled.");
 	}
 	
 	public static PlayerWrapper getPlayerCommandExecutor()
@@ -80,53 +68,27 @@ public class Vote extends JavaPlugin {
 	 */
     private void setupPermissions()
     {
-        Plugin permissionsPlugin = null;
-          
+        RegisteredServiceProvider<Permission> permissionsPlugin = null;  
+        
         try
         {
-            permissionsPlugin = this.getServer().getPluginManager().getPlugin("Permissions");
+            permissionsPlugin = getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
         }
         catch (Exception e) {}
           
         // If there's no permissions found, create the fake permissions wrapper, otherwise load permissions
         if (Vote.permissions == null) {
             if (permissionsPlugin != null) {
-                Vote.permissions = (IPermissionHandler)new PermissionHandlerWrapper(((Permissions)permissionsPlugin).getHandler());
+                Vote.permissions = (IPermissionHandler)new PermissionHandlerWrapper(permissionsPlugin.getProvider());
             } else {
-          	  log.info("Permission system not detected, defaulting to OP");
+          	  log.info("[Vote] Permission system not detected, defaulting to OP");
           	  Vote.permissions = (IPermissionHandler)new MockPermissionHandler();
             }
         }
-         
-        // Pull the first name from ops.txt and use them to call functions
-        FileInputStream fileStream = null;
         
-        try
-        {
-            fileStream = new FileInputStream("ops.txt");
-        } catch (FileNotFoundException e)
-        {
-            log.severe("Cannot find the ops file!");
-            return;
-        }
-        
-        // Get the object of DataInputStream
-        DataInputStream dataStream = new DataInputStream(fileStream);
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(dataStream));
-        String firstOp;
-        
-        try
-        {
-            firstOp = bufferedReader.readLine();
-            playerCommandExecutor = new PlayerWrapper(firstOp);
-        } 
-        catch (IOException e)
-        {
-            log.severe("Ops file is corrupt!");
-            return;
-        }
+        playerCommandExecutor = new PlayerWrapper("notch");
         
         if (playerCommandExecutor == null)
-            log.severe("Can't find an op to mimic!");
+            log.severe("Can't find the player notch to mimic!");
     }
 }

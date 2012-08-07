@@ -1,0 +1,180 @@
+vote:
+    help:
+        GeneralHelpNotFound: '&CNo help list found.'
+        VoteStartHelpNotFound: '&CNo votes you can start found.'
+        GeneralCommands:
+        - '&6/vote yes &A- Vote yes on the active vote.'
+        - '&6/vote no &A- Vote no on the active vote.'
+        - '&6/vote [votename] &A- Start a new vote with the keyword. '
+        - '&6/vote list &A- Display list of votes you can start.'
+    application:
+        files:
+            config:
+                Version: '1.1'
+        Version: '1.1'
+    default:
+        VoteEndSuccessText: '&AThe majority has voted yes.'
+        NoVoteInProgress: '&CNo vote is currently in progress!'
+        PlayerUnbannable: '&A[%0] &Ccannot be banned!'
+        VoteAlreadyInProgress: '&CA vote is already active, please wait to start another vote.'
+        VoteStartText: '&AA vote has begun! Type &6/vote Yes &Aor &6/vote No &Ato vote.'
+        VoteCanceled: '&AThe vote has been canceled.'
+        PlayerVoteCounted: '&AVote counted.'
+        PlayerVoteStartNoPermission: '&CYou do not have permission to start a vote.'
+        PlayerNotFound: '&A[%0] &Ccannot be found!'
+        PlayerSetValueNoPermission: '&CYou do not have permission to the setvalue command.'
+        PlayerUnkickable: '&A[%0] &Ccannot be kicked!'
+        PlayerVoteChanged: '&AYou changed your vote.'
+        VoteEndFailText: '&AThe majority has voted no.'
+        PlayerVoteNoPermission: 'You do not have permission to vote.'
+        PlayerAlreadyVoted: '&CYou have already voted!'
+    votes:
+        ban:
+            VoteFailCommandDelaySeconds: 0
+            InsufficientArgumentsError: '&CIncorrect arguments! You need to do /Vote ban PlayerName where PlayerName is the players name'
+            VoteSuccessCommandDelaySeconds: 3
+            Description: 'Ban a player'
+            VoteSuccessText: '&AVote succeeded! &C[%0] &Ahas been banned'
+            VoteSuccessCommands:
+            - vote setvalue ban [%0]
+            CooldownMinutesToSuccessRevote: 15
+            LastSuccessfulVote: 0
+            TimeoutSeconds: 60
+            VoteOnCooldownText: '&CA player has been banned too recently!'
+            LastFailedVote: 0
+            ArgumentCount: 1
+            VoteStartText: '&AVote to ban &C[%0] &Ahas started! type &6/vote yes &Aor &6/vote no &Ato vote'
+            PercentToSucceed: 80
+            IgnoreUnvotedPlayers: true
+            MinimumVotes: 1
+            VoteFailCommands: []
+            VoteFailText: '&AVote to ban &C[%0] &Afailed!'
+            CooldownMinutesToFailRevote: 30
+        kick:
+            VoteFailCommandDelaySeconds: 0
+            InsufficientArgumentsError: '&CIncorrect arguments! You need to do /Vote kick PlayerName where PlayerName is the players name'
+            VoteSuccessCommandDelaySeconds: 3
+            Description: 'Kick player'
+            VoteSuccessText: '&AVote succeeded! &C[%0] &Ahas been kicked'
+            VoteSuccessCommands:
+            - vote setvalue kick [%0]
+            CooldownMinutesToSuccessRevote: 1
+            LastSuccessfulVote: 0
+            TimeoutSeconds: 60
+            VoteOnCooldownText: '&CA player has been kicked too recently!'
+            LastFailedVote: 0
+            ArgumentCount: 1
+            VoteStartText: '&AVote to kick &C[%0] &Ahas started! type &6/vote yes &Aor &6/vote no &Ato vote'
+            PercentToSucceed: 70
+            IgnoreUnvotedPlayers: true
+            MinimumVotes: 1
+            VoteFailCommands: []
+            VoteFailText: '&AVote to kick &C[%0] &Afailed!'
+            CooldownMinutesToFailRevote: 5
+        restart:
+            VoteFailCommandDelaySeconds: 0
+            InsufficientArgumentsError: ''
+            VoteSuccessCommandDelaySeconds: 60
+            Description: Restart the server
+            VoteSuccessText: '&AVote succeeded! Restarting server in 60 seconds'
+            VoteSuccessCommands:
+            - kickall
+            - save-all
+            - stop
+            CooldownMinutesToSuccessRevote: 120
+            LastSuccessfulVote: 0
+            TimeoutSeconds: 60
+            VoteOnCooldownText: '&CThe server has been restarted recently. Please wait a bit before trying again.'
+            LastFailedVote: 0
+            ArgumentCount: 0
+            VoteStartText: '&AVote to restart the server has started! type &6/vote yes &Aor &6/vote no &Ato vote'
+            PercentToSucceed: 60
+            IgnoreUnvotedPlayers: true
+            MinimumVotes: 1
+            VoteFailCommands: []
+            VoteFailText: '&AVote failed! Try again in 30 minutes if it is still lagging'
+            CooldownMinutesToFailRevote: 30
+        night:
+            VoteFailCommandDelaySeconds: 0
+            InsufficientArgumentsError: ''
+            VoteSuccessCommandDelaySeconds: 3
+            Description: Set time to night
+            VoteSuccessText: '&AVote succeeded! Time set to night'
+            VoteSuccessCommands:
+            - time set 13000
+            CooldownMinutesToSuccessRevote: 10
+            LastSuccessfulVote: 0
+            TimeoutSeconds: 60
+            VoteOnCooldownText: '&CThe time has been set to night too recently!'
+            LastFailedVote: 1317860914502
+            ArgumentCount: 0
+            VoteStartText: '&AVote to set the time to night has started! type &6/vote yes &Aor &6/vote no &Ato vote'
+            PercentToSucceed: 60
+            IgnoreUnvotedPlayers: true
+            MinimumVotes: 1
+            VoteFailCommands: []
+            VoteFailText: '&AVote failed! Try again the next time day comes around.'
+            CooldownMinutesToFailRevote: 15
+        day:
+            VoteFailCommandDelaySeconds: 0
+            InsufficientArgumentsError: ''
+            VoteSuccessCommandDelaySeconds: 3
+            Description: Set time to day
+            VoteSuccessText: '&AVote succeeded! Time set to day'
+            VoteSuccessCommands:
+            - time set 0
+            CooldownMinutesToSuccessRevote: 10
+            LastSuccessfulVote: 0
+            TimeoutSeconds: 60
+            VoteOnCooldownText: '&CThe time has been set to day too recently!'
+            LastFailedVote: 1317860989199
+            ArgumentCount: 0
+            VoteStartText: '&AVote to set the time to day has started! type &6/vote yes &Aor &6/vote no &Ato vote'
+            PercentToSucceed: 60
+            IgnoreUnvotedPlayers: true
+            MinimumVotes: 1
+            VoteFailCommands: []
+            VoteFailText: '&AVote failed! Try again the next time night comes around.'
+            CooldownMinutesToFailRevote: 15
+        rain:
+            VoteFailCommandDelaySeconds: 0
+            InsufficientArgumentsError: ''
+            VoteSuccessCommandDelaySeconds: 3
+            Description: Set weather to rain
+            VoteSuccessText: '&AVote succeeded! it is now rainy.'
+            VoteSuccessCommands:
+            - vote setvalue rain
+            CooldownMinutesToSuccessRevote: 5
+            LastSuccessfulVote: 0
+            TimeoutSeconds: 60
+            VoteOnCooldownText: '&CWeather has been set to rain too recently!'
+            LastFailedVote: 0
+            ArgumentCount: 0
+            VoteStartText: '&AVote to set the weather to rain has started! type &6/vote yes &Aor &6/vote no &Ato vote'
+            PercentToSucceed: 60
+            IgnoreUnvotedPlayers: true
+            MinimumVotes: 1
+            VoteFailCommands: []
+            VoteFailText: '&AVote failed! Try again next time.'
+            CooldownMinutesToFailRevote: 10
+        sun:
+            VoteFailCommandDelaySeconds: 0
+            InsufficientArgumentsError: ''
+            VoteSuccessCommandDelaySeconds: 3
+            Description: Set weather to sun
+            VoteSuccessText: '&AVote succeeded! it is now sunny.'
+            VoteSuccessCommands:
+            - vote setvalue sun
+            CooldownMinutesToSuccessRevote: 5
+            LastSuccessfulVote: 0
+            TimeoutSeconds: 60
+            VoteOnCooldownText: '&CWeather has been set to sun too recently!'
+            LastFailedVote: 0
+            ArgumentCount: 0
+            VoteStartText: '&AVote to set the weather to sun has started! type &6/vote yes &Aor &6/vote no &Ato vote'
+            PercentToSucceed: 60
+            IgnoreUnvotedPlayers: true
+            MinimumVotes: 1
+            VoteFailCommands: []
+            VoteFailText: '&AVote failed! Try again next time.'
+            CooldownMinutesToFailRevote: 10

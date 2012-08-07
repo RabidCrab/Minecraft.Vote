@@ -1,8 +1,34 @@
 name: Vote
 main: me.RabidCrab.Vote.Vote
-version: 1.3
+version: 2.3.1_01
 author: RabidCrab
+website: http://github.com/rabidcrab
+description: Fully customizable voting system designed for admins who want specialized vote types
+depend: [Vault]
 commands:
     vote:
-        description: Voting system
+        description: Voting system. /vote help will give you all options available
         usage: /vote
+        aliases: [voter, rabidvote]
+permissions:
+    vote.voteyes.*:
+        description: Gives access to voting yes. 
+        usage: vote.voteyes.kick allows the player to vote yes on a kick vote. vote.voteyes.ban for ban, etc.
+        default: true
+    vote.voteno.*:
+        description: Gives access to voting no. 
+        usage: vote.voteyes.kick allows the player to vote no on a kick vote. vote.voteyes.ban for ban, etc.
+        default: true
+    vote.unbannable:
+        description: Makes the user immune to ban votes.
+        default: op
+    vote.setvalue:
+        description: This is used by the vote system to execute vote types that are specific to the plugin.
+        default: op
+    vote.unkickable:
+        description: Makes the user immune to kick votes.
+        default: op
+    vote.startvote.*:
+        description: Gives access to starting a vote type. 
+        usage: vote.startvote.kick allows the player to start a kick vote. vote.startvote.ban for ban, etc.
+        default: true
