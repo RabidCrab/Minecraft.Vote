@@ -6,6 +6,7 @@ import java.util.List;
 
 import me.RabidCrab.Vote.CustomCommands;
 import me.RabidCrab.Vote.Vote;
+import me.RabidCrab.Vote.Common.Comparer;
 import me.RabidCrab.Vote.Common.TextFormatter;
 
 import org.bukkit.command.Command;
@@ -37,28 +38,29 @@ public class VoteCommandExecutor implements CommandExecutor {
 	{
 		if(label.equalsIgnoreCase("vote") && sender != null && args != null)
 		{
-			// Get the player, we'll need it
-			Player player = (Player)sender;
-			
 			if (args.length < 1)
-			    displayGeneralHelp(player);
+			    displayGeneralHelp(sender);
 			
 			// This really should be turned into a case statement
 			if (args.length == 1)
 			{
-    			if ((args[0].equalsIgnoreCase("y") || args[0].equalsIgnoreCase("yes")))
-    			    plugin.voter.playerVoteYes(player);
+			    // Only players can vote, so make sure they're a player, and check their input against a list of possible choices
+    			if (Comparer.containsIgnoreCase(Vote.configuration.getVoteYesCommands(), args[0]) && sender instanceof Player)
+    			    plugin.voter.playerVoteYes((Player)sender);
     			else
-    				if ((args[0].equalsIgnoreCase("n") || args[0].equalsIgnoreCase("no")))
-				        plugin.voter.playerVoteNo(player);
+    				if (Comparer.containsIgnoreCase(Vote.configuration.getVoteNoCommands(), args[0]) && sender instanceof Player)
+				        plugin.voter.playerVoteNo((Player)sender);
     				else
-    				    if (args[0].equalsIgnoreCase("list"))
-    				        displayVoteStartHelp(player);
+    				    if (Comparer.containsIgnoreCase(Vote.configuration.getVoteListCommands(), args[0]))
+    				        displayVoteStartHelp(sender);
     				    else
-    				        if (args[0].equalsIgnoreCase("help"))
-    				            displayGeneralHelp(player);
+    				        if (Comparer.containsIgnoreCase(Vote.configuration.getVoteHelpCommands(), args[0]))
+    				            displayGeneralHelp(sender);
     				        else
-    				            startVote((Player)sender, args);
+    				            if (Comparer.containsIgnoreCase(Vote.configuration.getVoteVetoCommands(), args[0]))
+    				                CancelActiveVote(sender);
+    				            else
+    				                startVote(sender, args);
 			}
 			else
 			{
@@ -66,9 +68,9 @@ public class VoteCommandExecutor implements CommandExecutor {
 			    // be for other things as well
 			    if (args.length > 0)
     			    if (args[0].equalsIgnoreCase("setvalue"))
-    			        customCommands.setValue((Player)sender, args[1].toString(), args);
+    			        customCommands.setValue(sender, args[1].toString(), args);
     			    else
-    			        startVote((Player)sender, args);
+    			        startVote(sender, args);
 			}
 			
 			return true;
@@ -78,23 +80,31 @@ public class VoteCommandExecutor implements CommandExecutor {
 	}
 	
 	/**
+	 * Cancel a vote. It's the same as vetoing
+	 */
+	private void CancelActiveVote(CommandSender sender)
+	{
+	    plugin.voter.cancelVote(sender);
+	}
+	
+	/**
 	 * Display the general help to a specific player
 	 */
-	private void displayGeneralHelp(Player player)
+	private void displayGeneralHelp(CommandSender sender)
 	{
 	    List<String> helpList = Vote.configuration.getGeneralCommandsHelp();
 
         if (helpList.size() > 0)
     	    for (String helpText : Vote.configuration.getGeneralCommandsHelp())
-        	    player.sendMessage(TextFormatter.format(helpText));
+    	        sender.sendMessage(TextFormatter.format(helpText));
         else
-            player.sendMessage(Vote.configuration.getGeneralHelpNotFound()); 
+            sender.sendMessage(Vote.configuration.getGeneralHelpNotFound()); 
 	}
 	
 	/**
 	 * Display all of the start vote options available to the player
 	 */
-	private void displayVoteStartHelp(Player player)
+	private void displayVoteStartHelp(CommandSender sender)
 	{
 	    int listWritten = 0;
 	    List<SimpleEntry<String,String>> list = Vote.configuration.getVotesListAndDescription();
@@ -102,18 +112,18 @@ public class VoteCommandExecutor implements CommandExecutor {
 	    // If there's a list, go through it and only show the ones the player has permission to start
 	    if (list.size() > 0)
     	    for (SimpleEntry<String,String> entry : Vote.configuration.getVotesListAndDescription())
-    	        if (Vote.permissions.has(player, "vote.startvote." + entry.getKey()))
+    	        if (Vote.permissions.has(sender, "vote.startvote." + entry.getKey()))
     	        {
     	            // The colors need to be specified for the key because you can't put a color code in the key
-    	            player.sendMessage(TextFormatter.format("&6" + entry.getKey() + " &A- " + entry.getValue()));
+    	            sender.sendMessage(TextFormatter.format("&6" + entry.getKey() + " &A- " + entry.getValue()));
     	            listWritten++;
     	        }
 	    
 	    if (listWritten == 0)
-	        player.sendMessage(Vote.configuration.getVoteStartHelpNotFound()); 
+	        sender.sendMessage(Vote.configuration.getVoteStartHelpNotFound()); 
 	}
 
-	private void startVote(Player player, String[] args)
+	private void startVote(CommandSender sender, String[] args)
 	{
 	    if (args.length < 1)
 	        return;
@@ -127,14 +137,12 @@ public class VoteCommandExecutor implements CommandExecutor {
                 for (int i = 1; i < args.length; i++)
                     extraArgs.add(args[i]);
                 
-                // Add the player name to the end because people use it a lot
-                extraArgs.add(player.getName());
+                plugin.voter.beginVote(sender, Vote.configuration.getPlayerVote(plugin, s), extraArgs);
                 
-                plugin.voter.beginVote(player, Vote.configuration.getPlayerVote(plugin, s), extraArgs);
                 return;
             }
         }
 	    
-	    player.sendMessage(args[0].toString() + " does not exist!");
+	    sender.sendMessage(args[0].toString() + " does not exist!");
 	}
 }

@@ -2,6 +2,7 @@ package me.RabidCrab.Vote;
 
 import net.milkbowl.vault.permission.Permission;
 
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 /**
@@ -20,5 +21,10 @@ public class PermissionHandlerWrapper implements IPermissionHandler
     public boolean has(Player player, String permissionLevel)
     {
         return permissionBase.has(player, permissionLevel);
+    }
+    
+    public boolean has(CommandSender sender, String permissionLevel)
+    {
+        return permissionBase.has(sender, permissionLevel);
     }
 }

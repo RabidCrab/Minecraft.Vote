@@ -1,5 +1,6 @@
 package me.RabidCrab.Vote;
 
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 /**
@@ -9,4 +10,5 @@ import org.bukkit.entity.Player;
 public interface IPermissionHandler
 {
     public boolean has(Player player, String doesntMatter);
+    public boolean has(CommandSender sender, String doesntMatter);
 }

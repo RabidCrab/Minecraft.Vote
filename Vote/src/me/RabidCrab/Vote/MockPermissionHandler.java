@@ -1,5 +1,6 @@
 package me.RabidCrab.Vote;
 
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 /**
@@ -10,10 +11,18 @@ import org.bukkit.entity.Player;
 public class MockPermissionHandler implements IPermissionHandler
 {
     /**
-     * Default permissions are... of course all yes! And this is all I'm going to use
+     * Default permissions are handled by Bukkit
      */
-    public boolean has(Player player, String doesntMatter)
+    public boolean has(Player player, String permission)
     {
-        return true;
+        return player.hasPermission(permission);
+    }
+    
+    /**
+     * Default permissions are handled by Bukkit
+     */
+    public boolean has(CommandSender sender, String permission)
+    {
+        return sender.hasPermission(permission);
     }
 }

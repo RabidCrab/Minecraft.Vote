@@ -1,10 +1,10 @@
 name: Vote
 main: me.RabidCrab.Vote.Vote
-version: 2.3.1_01
+version: 1.4.2_01
 author: RabidCrab
 website: http://github.com/rabidcrab
 description: Fully customizable voting system designed for admins who want specialized vote types
-depend: [Vault]
+softdepend: [Vault]
 commands:
     vote:
         description: Voting system. /vote help will give you all options available
@@ -15,10 +15,26 @@ permissions:
         description: Gives access to voting yes. 
         usage: vote.voteyes.kick allows the player to vote yes on a kick vote. vote.voteyes.ban for ban, etc.
         default: true
+        children:
+            vote.voteyes.day: true
+            vote.voteyes.night: true
+            vote.voteyes.sun: true
+            vote.voteyes.rain: true
+            vote.voteyes.kick: true
+            vote.voteyes.ban: true
+            vote.voteyes.restart: true
     vote.voteno.*:
         description: Gives access to voting no. 
         usage: vote.voteyes.kick allows the player to vote no on a kick vote. vote.voteyes.ban for ban, etc.
         default: true
+        children:
+            vote.voteno.day: true
+            vote.voteno.night: true
+            vote.voteno.sun: true
+            vote.voteno.rain: true
+            vote.voteno.kick: true
+            vote.voteno.ban: true
+            vote.voteno.restart: true
     vote.unbannable:
         description: Makes the user immune to ban votes.
         default: op
@@ -32,3 +48,14 @@ permissions:
         description: Gives access to starting a vote type. 
         usage: vote.startvote.kick allows the player to start a kick vote. vote.startvote.ban for ban, etc.
         default: true
+        children:
+            vote.startvote.day: true
+            vote.startvote.night: true
+            vote.startvote.sun: true
+            vote.startvote.rain: true
+            vote.startvote.kick: true
+            vote.startvote.ban: true
+            vote.startvote.restart: true
+    vote.veto:
+        description: Allows players to cancel active votes.
+        default: op

@@ -37,6 +37,7 @@ public class PlayerVote
     private int CooldownMinutesToFailRevote;
     private int CooldownMinutesToSuccessRevote;
     private int ArgumentCount;
+    private boolean IsConsoleCommand;
     private String InsufficientArgumentsError;
     private Callable<ArrayList<String>> arguments;
     
@@ -66,12 +67,13 @@ public class PlayerVote
         VoteFailCommandDelaySeconds = file.getInt(voteFullName + ".VoteFailCommandDelaySeconds", 0);
         TimeoutSeconds = file.getInt(voteFullName + ".TimeoutSeconds", 60);
         MinimumVotes = file.getInt(voteFullName + ".MinimumVotes", 0);
-        PercentToSucceed = file.getInt(voteFullName + ".PercentToSucceed", 50);
+        PercentToSucceed = file.getInt(voteFullName + ".PercentToSucceed", 100);
         CooldownMinutesToFailRevote = file.getInt(voteFullName + ".CooldownMinutesToFailRevote", 0);
         CooldownMinutesToSuccessRevote = file.getInt(voteFullName + ".CooldownMinutesToSuccessRevote", 0);
         IgnoreUnvotedPlayers = file.getBoolean(voteFullName + ".IgnoreUnvotedPlayers", true);
         ArgumentCount = file.getInt(voteFullName + ".ArgumentCount", 0);
         InsufficientArgumentsError = file.getString(voteFullName + ".InsufficientArgumentsError");
+        IsConsoleCommand = file.getBoolean(voteFullName + ".IsConsoleCommand");
     }
     
     /**
@@ -103,6 +105,7 @@ public class PlayerVote
                 configurationFile.set(voteFullName + ".IgnoreUnvotedPlayers", IgnoreUnvotedPlayers);
                 configurationFile.set(voteFullName + ".ArgumentCount", ArgumentCount);
                 configurationFile.set(voteFullName + ".InsufficientArgumentsError", InsufficientArgumentsError);
+                configurationFile.set(voteFullName + ".IsConsoleCommand", IsConsoleCommand);
             }
             catch (Exception e)
             {
@@ -142,6 +145,11 @@ public class PlayerVote
     public boolean isSaved()
     {
         return saved;
+    }
+    
+    public boolean isConsoleCommand()
+    {
+        return IsConsoleCommand;
     }
 
     public String getVoteFullName()

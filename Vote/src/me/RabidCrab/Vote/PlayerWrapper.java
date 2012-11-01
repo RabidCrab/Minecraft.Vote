@@ -17,6 +17,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Note;
 import org.bukkit.Server;
+import org.bukkit.Sound;
 import org.bukkit.Statistic;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -1195,6 +1196,48 @@ public class PlayerWrapper implements Player
     public void showPlayer(Player arg0)
     {
         caller.showPlayer(arg0);
+    }
+
+    @Override
+    public float getFlySpeed()
+    {
+        return caller.getFlySpeed();
+    }
+
+    @Override
+    public float getWalkSpeed()
+    {
+        return caller.getWalkSpeed();
+    }
+
+    @Override
+    public void setFlySpeed(float arg0) throws IllegalArgumentException
+    {
+        caller.setFlySpeed(arg0);
+    }
+
+    @Override
+    public void setWalkSpeed(float arg0) throws IllegalArgumentException
+    {
+        caller.setWalkSpeed(arg0);
+    }
+
+    @Override
+    public Inventory getEnderChest()
+    {
+        return caller.getEnderChest();
+    }
+
+    @Override
+    public void playSound(Location arg0, Sound arg1, float arg2, float arg3)
+    {
+        caller.playSound(arg0, arg1, arg2, arg3);
+    }
+
+    @Override
+    public void setBedSpawnLocation(Location arg0, boolean arg1)
+    {
+        caller.setBedSpawnLocation(arg0, arg1);
     }
     
 }

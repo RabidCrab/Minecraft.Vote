@@ -70,22 +70,21 @@ public class Vote extends JavaPlugin {
     {
         RegisteredServiceProvider<Permission> permissionsPlugin = null;  
         
-        try
+        if (getServer().getPluginManager().isPluginEnabled("Vault"))
         {
+            log.info("[Vote] Vault detected. Using Vault.");
+            
             permissionsPlugin = getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
-        }
-        catch (Exception e) {}
-          
-        // If there's no permissions found, create the fake permissions wrapper, otherwise load permissions
-        if (Vote.permissions == null) {
-            if (permissionsPlugin != null) {
-                Vote.permissions = (IPermissionHandler)new PermissionHandlerWrapper(permissionsPlugin.getProvider());
-            } else {
-          	  log.info("[Vote] Permission system not detected, defaulting to OP");
-          	  Vote.permissions = (IPermissionHandler)new MockPermissionHandler();
-            }
-        }
         
+            Vote.permissions = (IPermissionHandler)new PermissionHandlerWrapper(permissionsPlugin.getProvider());
+        }
+        else 
+        {
+            log.info("[Vote] Vault not detected for permissions, defaulting to Bukkit Permissions");
+            
+            Vote.permissions = (IPermissionHandler)new MockPermissionHandler();
+        }
+          
         playerCommandExecutor = new PlayerWrapper("notch");
         
         if (playerCommandExecutor == null)

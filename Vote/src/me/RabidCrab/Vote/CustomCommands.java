@@ -1,5 +1,6 @@
 package me.RabidCrab.Vote;
 
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class CustomCommands
@@ -14,19 +15,31 @@ public class CustomCommands
     /**
      * I knew I'd have to set my own custom commands to be executed at some point in time. Well, here it is
      */
-    public void setValue(Player player, String commandName, String[] args)
+    public void setValue(CommandSender sender, String commandName, String[] args)
     {
         if (commandName.equalsIgnoreCase("sun"))
-            setWeatherStorm(player, false);
+            if (sender instanceof Player)
+                setWeatherStorm((Player)sender, false);
+            else 
+                plugin.getServer().getWorld("world").setStorm(false);
         else
             if (commandName.equalsIgnoreCase("rain"))
-                setWeatherStorm(player, true);
+                if (sender instanceof Player)
+                    setWeatherStorm((Player)sender, true);
+                else 
+                    plugin.getServer().getWorld("world").setStorm(true);
             else
                 if (commandName.equalsIgnoreCase("kick"))
-                    kickPlayer(player, args[2]);
+                    kickPlayer(sender, args[2]);
                 else
                     if (commandName.equalsIgnoreCase("ban"))
-                        banPlayer(player, args[2]);
+                        banPlayer(sender, args[2]);
+                    else
+                        if (commandName.equalsIgnoreCase("time"))
+                            if (sender instanceof Player)
+                                ((Player)sender).getWorld().setTime(Long.parseLong(args[2]));
+                            else 
+                                plugin.getServer().getWorld("world").setTime(Long.parseLong(args[2]));
     }
     
     /**
@@ -46,7 +59,7 @@ public class CustomCommands
      * Delios posted a request that there be permissions that make users immune to getting kicked/banned. This is the most elegant
      * solution I can come up with
      */
-    private void kickPlayer(Player player, String targetKick)
+    private void kickPlayer(CommandSender sender, String targetKick)
     {
         Player target = null;
         
@@ -54,7 +67,7 @@ public class CustomCommands
         {
             target = plugin.getServer().getPlayer(targetKick);
 
-            if (Vote.permissions.has(player, "vote.setvalue"))
+            if (Vote.permissions.has(sender, "vote.setvalue"))
                 if (!Vote.permissions.has(target, "vote.unkickable"))
                     plugin.getServer().dispatchCommand(Vote.getPlayerCommandExecutor(), "kick " + targetKick);
         }
@@ -65,7 +78,7 @@ public class CustomCommands
      * Delios posted a request that there be permissions that make users immune to getting kicked/banned. This is the most elegant
      * solution I can come up with
      */
-    private void banPlayer(Player player, String targetBan)
+    private void banPlayer(CommandSender sender, String targetBan)
     {
         Player target = null;
                 
@@ -73,7 +86,7 @@ public class CustomCommands
         {
             target = plugin.getServer().getPlayer(targetBan);
             
-            if (Vote.permissions.has(player, "vote.setvalue"))
+            if (Vote.permissions.has(sender, "vote.setvalue"))
                 if (!Vote.permissions.has(target, "vote.unbannable"))
                     plugin.getServer().dispatchCommand(Vote.getPlayerCommandExecutor(), "ban " + targetBan);
         }
