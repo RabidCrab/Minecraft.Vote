@@ -1239,5 +1239,11 @@ public class PlayerWrapper implements Player
     {
         caller.setBedSpawnLocation(arg0, arg1);
     }
+
+    @Override
+    public void giveExpLevels(int arg0)
+    {
+        caller.giveExpLevels(arg0);
+    }
     
 }
