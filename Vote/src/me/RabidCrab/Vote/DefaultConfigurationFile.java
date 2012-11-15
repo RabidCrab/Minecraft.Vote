@@ -12,9 +12,9 @@ import me.RabidCrab.Vote.Common.TextFormatter;
 import org.bukkit.plugin.Plugin;
 
 /**
- * Currently the file with all of the configuration information.
- * May split file up later if there's any issues of size or scope.
+ * The file with all of the configuration information
  * @author RabidCrab
+ * 
  */
 public class DefaultConfigurationFile
 {
@@ -51,6 +51,53 @@ public class DefaultConfigurationFile
         
         if (plugin.getConfig().getString("vote.application.files.config.Version").compareTo("1.5") == 0)
             UpdateTo16();
+        
+        if (plugin.getConfig().getString("vote.application.files.config.Version").compareTo("1.6") == 0)
+            UpdateTo17();
+        
+        if (plugin.getConfig().getString("vote.application.files.config.Version").compareTo("1.7") == 0)
+            UpdateTo18();
+    }
+    
+    private void UpdateTo18()
+    {
+        plugin.getLogger().log(Level.INFO, "Updating Config file to 1.8");
+        
+        List<String> reloadCommands = new LinkedList<String>();
+        reloadCommands.add("reload");
+        plugin.getConfig().set("vote.default.ReloadCommands", reloadCommands);
+        
+        plugin.getConfig().set("vote.default.ReloadNoPermission", "&CYou do not have permission to reload!");
+        
+        List<String> voteHelpCommands = plugin.getConfig().getStringList("vote.help.GeneralCommands");
+        voteHelpCommands.add("&6/vote reload &A- Reload Vote plugin.");
+        plugin.getConfig().set("vote.help.GeneralCommands", voteHelpCommands);
+        
+        plugin.getConfig().set("vote.application.files.config.Version", "1.8");
+        plugin.saveConfig();
+        
+        plugin.getLogger().log(Level.INFO, "Update to 1.8 successful");
+    }
+    
+    private void UpdateTo17()
+    {
+        plugin.getLogger().log(Level.INFO, "Updating Config file to 1.7");
+        
+        List<String> voteBanCommands = new LinkedList<String>();
+        voteBanCommands.add("FINDPLAYER[%0]");
+        voteBanCommands.add("VERIFYPLAYERONLINE [%0]");
+        voteBanCommands.add("vote setvalue ban [%0]");
+        plugin.getConfig().set("vote.votes.ban.VoteSuccessCommands", voteBanCommands);
+        
+        List<String> voteKickCommands = new LinkedList<String>();
+        voteKickCommands.add("FINDPLAYER[%0]");
+        voteKickCommands.add("VERIFYPLAYERONLINE [%0]");
+        voteKickCommands.add("vote setvalue kick [%0]");
+        plugin.getConfig().set("vote.votes.kick.VoteSuccessCommands", voteKickCommands);
+        
+        plugin.getConfig().set("vote.application.files.config.Version", "1.7");
+        plugin.saveConfig();
+        plugin.getLogger().log(Level.INFO, "Update to 1.7 successful");
     }
     
     private void UpdateTo16()
@@ -179,6 +226,16 @@ public class DefaultConfigurationFile
         return TextFormatter.format(foundString);
     }
     
+    public List<String> getReloadCommands()
+    {
+        return plugin.getConfig().getStringList("vote.default.ReloadCommands");
+    }
+    
+    public String getPlayerReloadNoPermission()
+    {
+        return getStringFromFile("vote.default.ReloadNoPermission");
+    }
+    
     public String getPlayerVetoNoPermission()
     {
         return getStringFromFile("vote.default.VoteVetoNoPermission");
@@ -214,43 +271,19 @@ public class DefaultConfigurationFile
         return getStringFromFile("vote.default.VoteStartText");
     }
     
-    public void setVoteStartText(String defaultVoteStartText)
-    {
-        plugin.getConfig().set("vote.default.VoteStartText", defaultVoteStartText);
-        this.save();
-    }
-    
     public String getVoteEndSuccessText()
     {
         return getStringFromFile("vote.default.VoteEndSuccessText");
-    }
-    
-    public void setVoteEndSuccessText(String defaulVoteEndSuccessText)
-    {
-        plugin.getConfig().set("vote.default.VoteEndSuccessText", defaulVoteEndSuccessText);
-        this.save();
     }
     
     public String getVoteEndFailText()
     {
         return getStringFromFile("vote.default.VoteEndFailText");
     }
-    
-    public void setVoteEndFailText(String defaulVoteEndFailText)
-    {
-        plugin.getConfig().set("vote.default.VoteEndFailText", defaulVoteEndFailText);
-        this.save();
-    }
-    
+
     public String getVoteAlreadyInProgress()
     {
         return getStringFromFile("vote.default.VoteAlreadyInProgress");
-    }
-    
-    public void setVoteAlreadyInProgress(String voteAlreadyInProgress)
-    {
-        plugin.getConfig().set("vote.default.VoteAlreadyInProgress", voteAlreadyInProgress);
-        this.save();
     }
     
     public String getVoteCanceled()
@@ -258,32 +291,14 @@ public class DefaultConfigurationFile
         return getStringFromFile("vote.default.VoteCanceled");
     }
     
-    public void setVoteCanceled(String voteCanceled)
-    {
-        plugin.getConfig().set("vote.default.VoteCanceled", voteCanceled);
-        this.save();
-    }
-    
     public String getNoVoteInProgress()
     {
         return getStringFromFile("vote.default.NoVoteInProgress");
     }
     
-    public void setNoVoteInProgress(String noVoteInProgress)
-    {
-        plugin.getConfig().set("vote.default.NoVoteInProgress", noVoteInProgress);
-        this.save();
-    }
-    
     public String getPlayerVoteCounted()
     {
         return getStringFromFile("vote.default.PlayerVoteCounted");
-    }
-    
-    public void setPlayerVoteCounted(String playerVoteCounted)
-    {
-        plugin.getConfig().set("vote.default.PlayerVoteCounted", playerVoteCounted);
-        this.save();
     }
     
     public List<String> getAllVoteTypes()
@@ -298,22 +313,10 @@ public class DefaultConfigurationFile
     {
         return getStringFromFile("vote.default.PlayerAlreadyVoted");
     }
-    
-    public void setPlayerAlreadyVoted(String playerAlreadyVoted)
-    {
-        plugin.getConfig().set("vote.default.PlayerAlreadyVoted", playerAlreadyVoted);
-        this.save();
-    }
 
     public String getPlayerVoteNoPermission()
     {
         return getStringFromFile("vote.default.PlayerVoteNoPermission");
-    }
-    
-    public void setPlayerVoteNoPermission(String playerVoteNoPermission)
-    {
-        plugin.getConfig().set("vote.default.PlayerVoteNoPermission", playerVoteNoPermission);
-        this.save();
     }
     
     public String getPlayerVoteStartNoPermission()
@@ -321,21 +324,9 @@ public class DefaultConfigurationFile
         return getStringFromFile("vote.default.PlayerVoteStartNoPermission");
     }
     
-    public void setPlayerUnbannable(String playerUnbannable)
-    {
-        plugin.getConfig().set("vote.default.PlayerUnbannable", playerUnbannable);
-        this.save();
-    }
-    
     public String getPlayerUnbannable()
     {
         return getStringFromFile("vote.default.PlayerUnbannable");
-    }
-    
-    public void setPlayerUnkickable(String playerUnkickable)
-    {
-        plugin.getConfig().set("vote.default.PlayerUnkickable", playerUnkickable);
-        this.save();
     }
     
     public String getPlayerUnkickable()
@@ -343,21 +334,9 @@ public class DefaultConfigurationFile
         return getStringFromFile("vote.default.PlayerUnkickable");
     }
     
-    public void setPlayerVoteStartNoPermission(String playerVoteStartNoPermission)
-    {
-        plugin.getConfig().set("vote.default.PlayerVoteStartNoPermission", playerVoteStartNoPermission);
-        this.save();
-    }
-    
     public String getPlayerVoteChanged()
     {
         return getStringFromFile("vote.default.PlayerVoteChanged");
-    }
-    
-    public void setPlayerVoteChanged(String playerVoteChanged)
-    {
-        plugin.getConfig().set("vote.default.PlayerVoteChanged", playerVoteChanged);
-        this.save();
     }
     
     public String getGeneralHelpNotFound()
@@ -365,32 +344,14 @@ public class DefaultConfigurationFile
         return getStringFromFile("vote.help.GeneralHelpNotFound");
     }
     
-    public void setGeneralHelpNotFound(String generalHelpNotFound)
-    {
-        plugin.getConfig().set("vote.help.GeneralHelpNotFound", generalHelpNotFound);
-        this.save();
-    }
-    
     public String getVoteStartHelpNotFound()
     {
         return getStringFromFile("vote.help.VoteStartHelpNotFound");
     }
     
-    public void setVoteStartHelpNotFound(String voteStartHelpNotFound)
-    {
-        plugin.getConfig().set("vote.help.VoteStartHelpNotFound", voteStartHelpNotFound);
-        this.save();
-    }
-    
     public List<String> getGeneralCommandsHelp()
     {
         return plugin.getConfig().getStringList("vote.help.GeneralCommands");
-    }
-    
-    public void setPlayerSetValueNoPermission(String playerSetValueNoPermission)
-    {
-        plugin.getConfig().set("vote.default.PlayerSetValueNoPermission", playerSetValueNoPermission);
-        this.save();
     }
     
     public String getPlayerSetValueNoPermission()
@@ -428,6 +389,12 @@ public class DefaultConfigurationFile
     public void save()
     {
         plugin.saveDefaultConfig();
+    }
+    
+    public void reload()
+    {
+        save();
+        plugin.reloadConfig();
     }
     
     /**

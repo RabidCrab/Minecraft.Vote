@@ -2,6 +2,11 @@ package me.RabidCrab.Vote.Common;
 
 import org.bukkit.ChatColor;
 
+/**
+ * Text formatting for Minecraft to allow for colored text
+ * @author Rabid
+ *
+ */
 public class TextFormatter
 {
     public static String format(String text)
