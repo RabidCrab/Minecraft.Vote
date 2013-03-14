@@ -2,6 +2,11 @@ package me.RabidCrab.Vote.Common;
 
 import java.util.List;
 
+/**
+ * A class containing all the custom comparers I use
+ * @author Rabid
+ *
+ */
 public class Comparer
 {
     /**

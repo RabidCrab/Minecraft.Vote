@@ -2,8 +2,18 @@ package me.RabidCrab.Vote.Common;
 
 import org.bukkit.ChatColor;
 
+/**
+ * Text formatting for Minecraft to allow for colored text
+ * @author Rabid
+ *
+ */
 public class TextFormatter
 {
+    /**
+     * Format the text by replacing color/font type syntax with something Minecraft can read
+     * @param text The text to format colors/italics
+     * @return The formatted text that can be shown in Minecraft
+     */
     public static String format(String text)
     {
             text = text.replaceAll("&0", ChatColor.BLACK+"");

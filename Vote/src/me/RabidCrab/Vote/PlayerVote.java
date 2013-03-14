@@ -132,7 +132,6 @@ public class PlayerVote
         catch (Exception e)
         {
             return e.getMessage();
-            //return text;
         }
         
         for (int i = 0; i < args.size(); i++)

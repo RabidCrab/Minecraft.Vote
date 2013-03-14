@@ -32,6 +32,7 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
+import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.InventoryView.Property;
@@ -47,6 +48,12 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
+/**
+ * Used to route all the permission methods to an op account so they always succeed, but keeping all the other methods specific to the vote starter so that
+ * any plugin that executes a player specific method will change the voting players status, and not the mimicked ops
+ * @author Rabid
+ *
+ */
 public class PlayerWrapper implements Player
 {
     Player caller;
@@ -1245,5 +1252,50 @@ public class PlayerWrapper implements Player
     {
         caller.giveExpLevels(arg0);
     }
+    
+	@Override
+	public boolean getCanPickupItems() {
+		return caller.getCanPickupItems();
+	}
+
+	@Override
+	public EntityEquipment getEquipment() {
+		return caller.getEquipment();
+	}
+
+	@Override
+	public boolean getRemoveWhenFarAway() {
+		return caller.getRemoveWhenFarAway();
+	}
+
+	@Override
+	public void setCanPickupItems(boolean arg0) {
+		caller.setCanPickupItems(arg0);
+	}
+
+	@Override
+	public void setRemoveWhenFarAway(boolean arg0) {
+		caller.setRemoveWhenFarAway(arg0);
+	}
+
+	@Override
+	public Location getLocation(Location arg0) {
+		return caller.getLocation(arg0);
+	}
+
+	@Override
+	public void resetMaxHealth() {
+		caller.resetMaxHealth();
+	}
+
+	@Override
+	public void setMaxHealth(int arg0) {
+		caller.setMaxHealth(arg0);
+	}
+
+	@Override
+	public void setTexturePack(String arg0) {
+		caller.setTexturePack(arg0);
+	}
     
 }

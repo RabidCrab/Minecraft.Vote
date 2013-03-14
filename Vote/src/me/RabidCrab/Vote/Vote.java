@@ -7,8 +7,11 @@ import java.util.logging.Logger;
 import me.RabidCrab.Vote.Events.VoteCommandExecutor;
 import net.milkbowl.vault.permission.Permission;
 
+import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import advancedafk.AFK_API;
  
 /**
  * The big cheese
@@ -21,8 +24,10 @@ public class Vote extends JavaPlugin {
 	private final VoteCommandExecutor commandExecutor = new VoteCommandExecutor(this);
 	public static IPermissionHandler permissions;
 	public static DefaultConfigurationFile configuration;
-	public final Voting voter = new Voting(this);
 	private static PlayerWrapper playerCommandExecutor;
+	
+	/* AdvancedAFK */
+	public static ConfigAccessor autovoteConfig = null;
 	
 	public void onEnable()
 	{
@@ -35,18 +40,38 @@ public class Vote extends JavaPlugin {
                                                             {
                                                                 public ArrayList<String> call() 
                                                                 {
-                                                                    return voter.getArguments();
+                                                                    return ActiveVote.getArguments();
                                                                 }
                                                             });
-	    
-		// Hook onto Bukkit's command event
-		this.getCommand("vote").setExecutor(commandExecutor);
-		
-		// Enable permissions
-		setupPermissions();
-		
-		// Yay on the successful start
-		log.info("[Vote] has been enabled.");
+        
+        /* AdvancedAFK */
+        autovoteConfig = new ConfigAccessor(this, "autovotes.yml");
+        //If you update your config, this applies changes to users config
+        autovoteConfig.getConfig().options().copyDefaults(true);
+        autovoteConfig.saveConfig();
+        
+        //Hook EventListener
+        getServer().getPluginManager().registerEvents(commandExecutor, this);
+        
+        // Hook onto Bukkit's command event
+        this.getCommand("vote").setExecutor(commandExecutor);
+        
+        // Enable permissions
+        setupPermissions();
+        
+        //Try AdvancedAFK hook
+        try{
+            if(AFK_API.isInstalled()){
+                log.info("[Vote] AdvancedAFK found, automatic vote for afk-player");
+            }
+        }catch(NoClassDefFoundError NCDFE){
+            //AdvancedAFK not installed
+        }catch(NullPointerException NPE){
+            //AdvancedAFK not installed
+        }
+        
+        // Yay on the successful start
+        log.info("[Vote] has been enabled.");
 	}
 	
 	/**
@@ -57,9 +82,25 @@ public class Vote extends JavaPlugin {
 		log.info("[Vote] has been disabled.");
 	}
 	
-	public static PlayerWrapper getPlayerCommandExecutor()
+	/**
+	 * Clear out all the data to reload the plugin
+	 */
+	public void reload(CommandSender sender)
 	{
-	    return playerCommandExecutor;
+	    if (permissions.has(sender, "vote.reload"))
+	    {
+    	    // Clearing out...
+    	    configuration.reload();
+    	    CommandScheduler.clearCommands();
+    	    if (ActiveVote.isVoting())
+    	        ActiveVote.cancelVote(this.getServer().getConsoleSender());
+    	    
+    	    // Re-enabling...
+    	    onEnable();
+    	    log.info("[Vote] Reloaded.");
+	    }
+	    else 
+	        sender.sendMessage(configuration.getPlayerReloadNoPermission());
 	}
 	
 	/**
@@ -89,5 +130,13 @@ public class Vote extends JavaPlugin {
         
         if (playerCommandExecutor == null)
             log.severe("Can't find the player notch to mimic!");
+    }
+    
+    /**
+     * @return The admin to mimic
+     */
+    public static PlayerWrapper getPlayerCommandExecutor()
+    {
+        return playerCommandExecutor;
     }
 }

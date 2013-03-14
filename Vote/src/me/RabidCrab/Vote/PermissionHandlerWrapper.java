@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 /**
  * Fracking wrappers. Too bad I can't use dynamic proxies.
  * @author Rabid
+ * 
  */
 public class PermissionHandlerWrapper implements IPermissionHandler
 {

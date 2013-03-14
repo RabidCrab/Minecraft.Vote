@@ -1,6 +1,6 @@
 name: Vote
 main: me.RabidCrab.Vote.Vote
-version: 1.4.2_01
+version: 1.4.7_02
 author: RabidCrab
 website: http://github.com/rabidcrab
 description: Fully customizable voting system designed for admins who want specialized vote types
@@ -58,4 +58,7 @@ permissions:
             vote.startvote.restart: true
     vote.veto:
         description: Allows players to cancel active votes.
+        default: op
+    vote.reload:
+        description: Allows players to reload the plugin.
         default: op
