@@ -8,12 +8,11 @@ vote:
         - '&6/vote [votename] &A- Start a new vote with the keyword. '
         - '&6/vote list &A- Display list of votes you can start.'
         - '&6/vote veto &A- Immediately cancel vote in progress.'
-        - '&6/vote reload &A- Reload Vote plugin.'
     application:
         files:
             config:
-                Version: '1.8'
-        Version: '1.4.2_03'
+                Version: '1.6'
+        Version: '1.4.2_01'
     default:
         VoteEndSuccessText: '&AThe majority has voted yes.'
         NoVoteInProgress: '&CNo vote is currently in progress!'
@@ -42,10 +41,7 @@ vote:
         - 'help'
         VoteVetoCommands:
         - 'veto'
-        ReloadCommands:
-        - 'reload'
         VoteVetoNoPermission: '&CYou do not have permission to veto!'
-        ReloadNoPermission: '&CYou do not have permission to reload!'
     votes:
         ban:
             Description: 'Ban a player'
@@ -57,7 +53,6 @@ vote:
             VoteSuccessText: '&AVote succeeded! &C[%0] &Ahas been banned'
             VoteSuccessCommandDelaySeconds: 3
             VoteSuccessCommands:
-            - FINDPLAYER[%0]
             - VERIFYPLAYERONLINE [%0]
             - vote setvalue ban [%0]
             CooldownMinutesToSuccessRevote: 15
@@ -81,7 +76,6 @@ vote:
             VoteSuccessText: '&AVote succeeded! &C[%0] &Ahas been kicked'
             VoteSuccessCommandDelaySeconds: 3
             VoteSuccessCommands:
-            - FINDPLAYER[%0]
             - VERIFYPLAYERONLINE [%0]
             - vote setvalue kick [%0]
             CooldownMinutesToSuccessRevote: 1

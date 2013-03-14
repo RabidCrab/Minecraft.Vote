@@ -6,7 +6,6 @@ import java.util.List;
 
 import me.RabidCrab.Vote.CustomCommands;
 import me.RabidCrab.Vote.Vote;
-import me.RabidCrab.Vote.ActiveVote;
 import me.RabidCrab.Vote.Common.Comparer;
 import me.RabidCrab.Vote.Common.TextFormatter;
 
@@ -47,10 +46,10 @@ public class VoteCommandExecutor implements CommandExecutor {
 			{
 			    // Only players can vote, so make sure they're a player, and check their input against a list of possible choices
     			if (Comparer.containsIgnoreCase(Vote.configuration.getVoteYesCommands(), args[0]) && sender instanceof Player)
-    			    ActiveVote.playerVoteYes(plugin, (Player)sender);
+    			    plugin.voter.playerVoteYes((Player)sender);
     			else
     				if (Comparer.containsIgnoreCase(Vote.configuration.getVoteNoCommands(), args[0]) && sender instanceof Player)
-    				    ActiveVote.playerVoteNo(plugin, (Player)sender);
+				        plugin.voter.playerVoteNo((Player)sender);
     				else
     				    if (Comparer.containsIgnoreCase(Vote.configuration.getVoteListCommands(), args[0]))
     				        displayVoteStartHelp(sender);
@@ -61,10 +60,7 @@ public class VoteCommandExecutor implements CommandExecutor {
     				            if (Comparer.containsIgnoreCase(Vote.configuration.getVoteVetoCommands(), args[0]))
     				                CancelActiveVote(sender);
     				            else
-    				                if (Comparer.containsIgnoreCase(Vote.configuration.getReloadCommands(), args[0]))
-                                        plugin.reload(sender);
-                                    else
-                                        startVote(sender, args);
+    				                startVote(sender, args);
 			}
 			else
 			{
@@ -88,7 +84,7 @@ public class VoteCommandExecutor implements CommandExecutor {
 	 */
 	private void CancelActiveVote(CommandSender sender)
 	{
-	    ActiveVote.cancelVote(sender);
+	    plugin.voter.cancelVote(sender);
 	}
 	
 	/**
@@ -141,7 +137,7 @@ public class VoteCommandExecutor implements CommandExecutor {
                 for (int i = 1; i < args.length; i++)
                     extraArgs.add(args[i]);
                 
-                ActiveVote.beginVote(plugin, sender, Vote.configuration.getPlayerVote(plugin, s), extraArgs);
+                plugin.voter.beginVote(sender, Vote.configuration.getPlayerVote(plugin, s), extraArgs);
                 
                 return;
             }

@@ -2,9 +2,7 @@ package me.RabidCrab.Vote.Timers;
 
 import java.util.TimerTask;
 
-import org.bukkit.plugin.Plugin;
-
-import me.RabidCrab.Vote.ActiveVote;
+import me.RabidCrab.Vote.Voting;
 
 /**
  * Used by me.RabidCrab.Vote.Voting to execute the timeout of a active vote after a set time
@@ -13,16 +11,17 @@ import me.RabidCrab.Vote.ActiveVote;
  */
 public class VoteFinishedTimer extends TimerTask
 {
-    Plugin plugin;
+    private Voting caller;
     
-    public VoteFinishedTimer(Plugin plugin)
+    public VoteFinishedTimer(Voting caller)
     {
-        this.plugin = plugin;
+        this.caller = caller;
     }
     
     @Override
     public void run()
     {
-        ActiveVote.voteTimeOver(plugin);
+        caller.voteTimeOver();
     }
+    
 }

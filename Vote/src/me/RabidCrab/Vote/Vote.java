@@ -7,7 +7,6 @@ import java.util.logging.Logger;
 import me.RabidCrab.Vote.Events.VoteCommandExecutor;
 import net.milkbowl.vault.permission.Permission;
 
-import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
  
@@ -22,6 +21,7 @@ public class Vote extends JavaPlugin {
 	private final VoteCommandExecutor commandExecutor = new VoteCommandExecutor(this);
 	public static IPermissionHandler permissions;
 	public static DefaultConfigurationFile configuration;
+	public final Voting voter = new Voting(this);
 	private static PlayerWrapper playerCommandExecutor;
 	
 	public void onEnable()
@@ -35,7 +35,7 @@ public class Vote extends JavaPlugin {
                                                             {
                                                                 public ArrayList<String> call() 
                                                                 {
-                                                                    return ActiveVote.getArguments();
+                                                                    return voter.getArguments();
                                                                 }
                                                             });
 	    
@@ -57,25 +57,9 @@ public class Vote extends JavaPlugin {
 		log.info("[Vote] has been disabled.");
 	}
 	
-	/**
-	 * Clear out all the data to reload the plugin
-	 */
-	public void reload(CommandSender sender)
+	public static PlayerWrapper getPlayerCommandExecutor()
 	{
-	    if (permissions.has(sender, "vote.reload"))
-	    {
-    	    // Clearing out...
-    	    configuration.reload();
-    	    CommandScheduler.clearCommands();
-    	    if (ActiveVote.isVoting())
-    	        ActiveVote.cancelVote(this.getServer().getConsoleSender());
-    	    
-    	    // Re-enabling...
-    	    onEnable();
-    	    log.info("[Vote] Reloaded.");
-	    }
-	    else 
-	        sender.sendMessage(configuration.getPlayerReloadNoPermission());
+	    return playerCommandExecutor;
 	}
 	
 	/**
@@ -105,13 +89,5 @@ public class Vote extends JavaPlugin {
         
         if (playerCommandExecutor == null)
             log.severe("Can't find the player notch to mimic!");
-    }
-    
-    /**
-     * @return The admin to mimic
-     */
-    public static PlayerWrapper getPlayerCommandExecutor()
-    {
-        return playerCommandExecutor;
     }
 }

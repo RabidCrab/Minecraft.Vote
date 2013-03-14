@@ -47,12 +47,6 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
-/**
- * Used to route all the permission methods to an op account so they always succeed, but keeping all the other methods specific to the vote starter so that
- * any plugin that executes a player specific method will change the voting players status, and not the mimicked ops
- * @author Rabid
- *
- */
 public class PlayerWrapper implements Player
 {
     Player caller;

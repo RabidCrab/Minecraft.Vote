@@ -6,41 +6,44 @@ import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 
-import me.RabidCrab.Vote.Exceptions.PlayerNotFoundException;
+import me.RabidCrab.Vote.Timers.ExecuteCommandsTimer;
 import me.RabidCrab.Vote.Timers.VoteFinishedTimer;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 
 /**
- * The voting framework. It's designed to hold only one vote because it's substantially easier to code for
+ * The voting framework. Currently it just supports one vote at a time, but I
+ * may extend the functionality at a later date if people want it badly enough
  * @author RabidCrab
- * 
  */
-public class ActiveVote
+public class Voting
 {
-    private static boolean isVoting = false;
-    private static PlayerVote currentVote;
-    private static Timer voteTimer = new Timer();
-    private static List<Player> voteYes;
-    private static List<Player> voteNo;
-    private static List<Player> loggedInPlayers;
-    private static CommandSender voteStarter;
-    private static ArrayList<String> arguments;
+    private boolean IsVoting = false;
+    private PlayerVote currentVote;
+    private Timer voteTimer;
+    private List<Player> voteYes;
+    private List<Player> voteNo;
+    private Vote plugin;
+    private List<Player> loggedInPlayers;
+    private CommandSender voteStarter;
+    private ArrayList<String> arguments;
+    private List<Command> unexecutedCommands = new ArrayList<Command>();
+    private Timer commandsTimer = new Timer();
     
-    /**
-     * @return List of arguments for the vote in progress or the vote recently completed. The last argument is the name of the player who started the vote
-     */
-    public static ArrayList<String> getArguments()
+    public Voting(Vote vote)
+    {
+        voteTimer = new Timer();
+        plugin = vote;
+    }
+    
+    public ArrayList<String> getArguments()
     {
         return arguments;
     }
     
-    /**
-     * When the arguments list is set, the calling players name needs to be added to the end before it can be valid
-     */
-    private static void setArguments(Plugin plugin, ArrayList<String> argumentList) throws PlayerNotFoundException
+    private void setArguments(ArrayList<String> argumentList)
     {
         // We need to add the player name to the end of the arguments so it can be used for
         // various shenanigans. If the last item in the list isn't the player name, make it so
@@ -54,21 +57,17 @@ public class ActiveVote
                 argumentList.add(voteStarter.getName());
         
         arguments = argumentList;
-        
-        // Now that we have the arguments partially setup, time to validate any player names by looping through the success and fail commands
-        arguments = CommandParser.ParseArguments(plugin, currentVote.getVoteSuccessCommands(), arguments);
-        arguments = CommandParser.ParseArguments(plugin, currentVote.getVoteFailCommands(), arguments);
     }
     
     /**
      * Begin a vote with the specified vote
      * @return True if successful
      */
-    public static boolean beginVote(Vote plugin, CommandSender sender, PlayerVote vote, ArrayList<String> arguments)
+    public boolean beginVote(CommandSender sender, PlayerVote vote, ArrayList<String> arguments)
     {
         // Make sure a vote isn't already going. This must be first so that setting the global arguments won't break a currently
         // running vote
-        if (isVoting)
+        if (IsVoting)
         {
             sender.sendMessage(Vote.configuration.getVoteAlreadyInProgress());
             return false;
@@ -80,15 +79,7 @@ public class ActiveVote
         voteStarter = sender;
         
         // It's important for this to be here so that any errors with parameters will be thrown
-        try
-        {
-            setArguments(plugin, arguments);
-        } 
-        catch (PlayerNotFoundException e1)
-        {
-            sender.sendMessage(Vote.configuration.getPlayerNotFound());
-            return false;
-        }
+        this.setArguments(arguments);
         
         // If they didn't specify the right number of arguments, complain
         // I'm subtracting 1 from the argument size because the caller of the vote is passed when the beginVote is called
@@ -157,7 +148,7 @@ public class ActiveVote
             return false;
         }
         
-        isVoting = true;
+        IsVoting = true;
         plugin.getServer().broadcastMessage(currentVote.getVoteStartText());
         
         // Create the list of voters and add the beginning voter to the list. Also prevents carried over data
@@ -187,18 +178,19 @@ public class ActiveVote
         
         // If it's the console, don't let them vote
         if (sender instanceof Player)
-            playerVoteYes(plugin, (Player)sender);
+            playerVoteYes((Player)sender);
 
         // Begin the timer. Why can't I just do a callback method?
-        voteTimer.schedule(new VoteFinishedTimer(plugin), vote.getTimeoutSeconds() * 1000);
+        voteTimer.schedule(new VoteFinishedTimer(this), vote.getTimeoutSeconds() * 1000);
         
         return true;
     }
     
     /**
+     * A check to see if the player can vote yes
      * @return True if the player can vote yes
      */
-    private static boolean canPlayerVoteYes(CommandSender sender)
+    private boolean canPlayerVoteYes(CommandSender sender)
     {
         if (currentVote == null)
             return false;
@@ -209,10 +201,7 @@ public class ActiveVote
         return false;
     }
     
-    /**
-     * @return True if the player can vote no
-     */
-    private static boolean canPlayerVoteNo(Player player)
+    private boolean canPlayerVoteNo(Player player)
     {
         if (currentVote == null)
             return false;
@@ -226,7 +215,7 @@ public class ActiveVote
     /**
      * Cancel the vote
      */
-    public static boolean cancelVote(CommandSender sender)
+    public boolean cancelVote(CommandSender sender)
     {
         if (!Vote.permissions.has(sender, "vote.veto"))
         {
@@ -234,9 +223,9 @@ public class ActiveVote
             return false;
         }
         
-        if (isVoting)
+        if (IsVoting)
         {
-            isVoting = false;
+            IsVoting = false;
             
             if (voteTimer != null)
             {
@@ -260,16 +249,16 @@ public class ActiveVote
      * 
      * @return True if a vote is active
      */
-    public static boolean isVoting()
+    public boolean isVoting()
     {
-        return isVoting;
+        return this.IsVoting;
     }
     
     /**
      * 
      * @return The name of the vote with no prefixes
      */
-    public static String getVoteName()
+    public String getVoteName()
     {
         return currentVote.getVoteShortName();
     }
@@ -278,9 +267,9 @@ public class ActiveVote
      * On player yes-vote, add them to the list of yes-votes if they aren't there already
      * @return Yes if the vote casted successfully
      */
-    public static boolean playerVoteYes(Plugin plugin, Player player)
+    public boolean playerVoteYes(Player player)
     {
-        if (isVoting)
+        if (IsVoting)
         {
             if (!canPlayerVoteYes(player))
             {
@@ -306,10 +295,10 @@ public class ActiveVote
                     player.sendMessage(Vote.configuration.getPlayerVoteCounted());
                 
                 // Check and see if the vote can be finished without counting more votes
-                VoteStatus currentVoteTally = voteResults();
+                int currentVoteTally = voteResults();
                 
-                if (currentVoteTally == VoteStatus.Success || currentVoteTally == VoteStatus.Fail)
-                    voteTimeOver(plugin);
+                if (currentVoteTally == 1 || currentVoteTally == -1)
+                    voteTimeOver();
             }
             else
             {
@@ -329,35 +318,37 @@ public class ActiveVote
     
     /**
      * Gets the tally of the vote results
-     * @return The current vote status
+     * @return 1 means all of the conditions have been met for a successful vote. 0 means not all of the criteria
+     * have been met or no vote is going on. -1 means that there's no chance of the results being successful
+     * I bet you're bitching at me for not making an enum, but you know what? You're right.
      */
-    private static VoteStatus voteResults()
+    private int voteResults()
     {
-        if (isVoting)
+        if (IsVoting)
         {
             // Check the ratio right now and see if it wins. Also check and make sure the minimum votes have been met
             if ((voteYes.size() / loggedInPlayers.size()) * 100 > currentVote.getPercentToSucceed() && voteYes.size() >= currentVote.getMinimumVotes())
-                return VoteStatus.Success;
+                return 1;
             
             // We need to determine if it's a complete fail of -1.
             // First, I get the size of the voteYes and add all of the players who have not voted yet as the best case scenario.
             // This integer is pretty much telling Moore to take his law and shove it up his ass.
-            int potentialYesVotes = voteYes.size() + getUnvotedPlayers().size();
+            int potentialYesVotes = voteYes.size() + unvotedPlayers().size();
             
             // If the best-case minimum size cannot be met, or the best-case ratio isn't high enough, fail it
             if (potentialYesVotes < currentVote.getMinimumVotes() || (potentialYesVotes / loggedInPlayers.size()) * 100 < currentVote.getPercentToSucceed())
-                return VoteStatus.Fail;
+                return -1;
         }
         
         // Nothing was a pure win or fail, so it's fair game.
         // Either that or there's no vote going on
-        return VoteStatus.Inconclusive;
+        return 0;
     }
 
     /**
      * @return A list of all players who have no voted yet
      */
-    private static List<Player> getUnvotedPlayers()
+    private List<Player> unvotedPlayers()
     {
         List<Player> unvoted = new ArrayList<Player>();
         
@@ -374,9 +365,9 @@ public class ActiveVote
      * On player no-vote, do something. Currently doesn't matter if a user votes no
      * @return Yes if the vote casted successfully
      */
-    public static boolean playerVoteNo(Plugin plugin, Player player)
+    public boolean playerVoteNo(Player player)
     {
-        if (isVoting)
+        if (IsVoting)
         {
             if (!canPlayerVoteNo(player))
             {
@@ -402,10 +393,10 @@ public class ActiveVote
                     player.sendMessage(Vote.configuration.getPlayerVoteCounted());
                 
                 // Check and see if the vote can be finished without counting more votes
-                VoteStatus currentVoteTally = voteResults();
+                int currentVoteTally = voteResults();
                 
-                if (currentVoteTally == VoteStatus.Success || currentVoteTally == VoteStatus.Fail)
-                    voteTimeOver(plugin);
+                if (currentVoteTally == 1 || currentVoteTally == -1)
+                    voteTimeOver();
             }
             else
             {
@@ -424,18 +415,19 @@ public class ActiveVote
     }
     
     /**
-     * Called when the vote is over with and the tally needs to be taken. This should only be run by VoteFinishedTimer
+     * Called when the vote is over with and the tally needs to be taken
      */
-    public static void voteTimeOver(Plugin plugin)
+    public void voteTimeOver()
     {
-        if (isVoting)
+        if (IsVoting)
         {
-            isVoting = false;
+            IsVoting = false;
             
             // First check to see if the minimum player count was met
             if ((voteYes.size() + voteNo.size()) < currentVote.getMinimumVotes())
             {
-                voteFail(plugin);
+                plugin.getServer().broadcastMessage(currentVote.getVoteFailText());
+                voteFail();
                 return;
             }
 
@@ -452,26 +444,27 @@ public class ActiveVote
                 // Next check the ratio
                 if (((voteYes.size() / maxPlayerCount) * 100) < currentVote.getPercentToSucceed())
                 {
-                    voteFail(plugin);
+                    plugin.getServer().broadcastMessage(currentVote.getVoteFailText());
+                    voteFail();
                     return;
                 } 
             }
             else
             {
-                voteFail(plugin);
+                voteFail();
                 return;
             }
             
             // Finally it's time to execute the success commands
-            voteSuccess(plugin);
+            voteSuccess();
         }
     }
     
     /**
-     * called when vote succeeds notify of the success
+     * called when vote succeeds
      */
-    @SuppressWarnings("unchecked") // This is for the arguments.clone(). It'll always be an ArrayList<String> without fail
-    private static void voteSuccess(Plugin plugin)
+    @SuppressWarnings("unchecked")
+    private void voteSuccess()
     {
         if (currentVote.getVoteSuccessText() == "")
             plugin.getServer().broadcastMessage(Vote.configuration.getVoteEndSuccessText());
@@ -482,22 +475,18 @@ public class ActiveVote
         currentVote.setLastSuccessfulVote(new Date().getTime());
         currentVote.save();
         
-        // Now add the commandset to the scheduled set and start the command timer if it hasn't been started already
-        CommandScheduler.scheduleCommandSet(new CommandSet(plugin
-                                                            , voteStarter
-                                                            , currentVote.getVoteSuccessCommands()
-                                                            , (ArrayList<String>)arguments.clone()
-                                                            , currentVote.isConsoleCommand())
-                                            , currentVote.getVoteSuccessCommandDelaySeconds());
+        // Now create a new Command to put in the list of commands to run, and start the command timer if it hasn't been started already
+        unexecutedCommands.add(new Command(currentVote.getVoteSuccessCommands(), voteStarter, (ArrayList<String>)arguments.clone()));
+        
+        commandsTimer.schedule(new ExecuteCommandsTimer(this), currentVote.getVoteSuccessCommandDelaySeconds() * 1000);
     }
     
     /**
-     * On vote failure notify of the fail
+     * on vote failure
      */
-    @SuppressWarnings("unchecked") // This is for the arguments.clone(). It'll always be an ArrayList<String> without fail
-    private static void voteFail(Plugin plugin)
+    @SuppressWarnings("unchecked")
+    private void voteFail()
     {
-        // Send the fail message
         if (currentVote.getVoteFailText() == "")
             plugin.getServer().broadcastMessage(Vote.configuration.getVoteEndFailText());
         else
@@ -507,13 +496,116 @@ public class ActiveVote
         currentVote.setLastFailedVote(new Date().getTime());
         currentVote.save();
         
-        // Now add the commandset to the scheduled set and start the command timer if it hasn't been started already
-        CommandScheduler.scheduleCommandSet(new CommandSet(plugin
-                                                            , voteStarter
-                                                            , currentVote.getVoteFailCommands()
-                                                            , (ArrayList<String>)arguments.clone()
-                                                            , currentVote.isConsoleCommand())
-                                            , currentVote.getVoteFailCommandDelaySeconds());
+        if (voteStarter instanceof Player)
+            Vote.getPlayerCommandExecutor().setCaller((Player)voteStarter);
+          
+        // Now create a new Command to put in the list of commands to run, and start the command timer if it hasn't been started already
+        unexecutedCommands.add(new Command(currentVote.getVoteFailCommands(), voteStarter, (ArrayList<String>)arguments.clone()));
+        
+        commandsTimer.schedule(new ExecuteCommandsTimer(this), currentVote.getVoteFailCommandDelaySeconds() * 1000);
+    }
+    
+    /**
+     * If something is a console command, it gets executed differently from a player command
+     */
+    private boolean isConsoleCommand(String command)
+    {
+        if (command.equalsIgnoreCase("kickall") 
+                || command.equalsIgnoreCase("stop") 
+                || command.equalsIgnoreCase("save-all")
+                || currentVote.isConsoleCommand())
+            return true;
+        
+        return false;
+    }
+    
+    /**
+     * This executes any commands that a vote has requested to be run. It's designed like this because for player
+     * consequences, they can just log out to avoid the ban or kick hammer. This will allow me to re-run commands if the player isn't there
+     */
+    public void executeCommands()
+    {
+        ConsoleCommandSender commandSender = plugin.getServer().getConsoleSender();
+        List<Command> commandsToRemove = new ArrayList<Command>();
+        
+        // Go through the list of commands in each of the list of commands
+        for (Command command : unexecutedCommands)
+        {
+            // So here's the bananas. We have 2 situations. 1 is when it's a player, and the other when it's the console.
+            // When it's the console who starts the vote, the commands are always sent by the console
+            if (command.getSender() instanceof Player)
+                Vote.getPlayerCommandExecutor().setCaller((Player)command.getSender());
+            
+            // We need to check and see if there's any VERIFYPLAYERONLINE. If there is, we need to verify the player(s) are online before
+            // we continue
+            boolean playersOnlineCheckFailed = false;
+            
+            // Loop over all the commands to look for a VERIFYPLAYERONLINE
+            for (String string : command.getCommands())
+            {
+                if (string.contains("VERIFYPLAYERONLINE"))
+                {
+                    boolean playerFound = false;
+                    // Get the name from the verify player online command line
+                    String playerTextName = string.replaceAll("VERIFYPLAYERONLINE", "").trim();
+                    
+                    // Loop through all of the arguments and add them to the command if it exists
+                    for (int i = 0; i < arguments.size(); i++)
+                        playerTextName = playerTextName.replaceAll("\\[\\%" + i + "\\]", command.getArguments().get(i));
+                    
+                    // Loop over all the online players to see if the target is online
+                    for (Player playerName : plugin.getServer().getOnlinePlayers())
+                    {
+                        // If they're online, set the verified to true so that the commands can run
+                        if (playerName.getName().equalsIgnoreCase(playerTextName))
+                        {
+                            playerFound = true;
+                            break;
+                        }
+                    }
+                    
+                    // If we couldn't find the player, it failed
+                    if (!playerFound)
+                        playersOnlineCheckFailed = true;
+                }
+            }
+            
+            // It failed the check, so it needs to be re-queued for another run. It's easy enough to do because we only do something if the
+            // player verification passed
+            if (playersOnlineCheckFailed)
+                continue;
+            
+            // Now we execute all the commands, except of course the verification of the online players
+            for (String string : command.getCommands())
+            {
+                // Skip over it if it's a player verification
+                if (string.contains("VERIFYPLAYERONLINE"))
+                    continue;
+                
+                String commandToExecute = string;
+                
+                // Loop through all of the arguments and add them to the command if it exists
+                for (int i = 0; i < arguments.size(); i++)
+                    commandToExecute = commandToExecute.replaceAll("\\[\\%" + i + "\\]", command.getArguments().get(i));
+                
+                // If the console started the vote, there's no way we can pass the console as the sender
+                if (isConsoleCommand(commandToExecute) || !(voteStarter instanceof Player))
+                    plugin.getServer().dispatchCommand(commandSender, commandToExecute);
+                else
+                    plugin.getServer().dispatchCommand(Vote.getPlayerCommandExecutor(), commandToExecute);
+            }
+            
+            // Once everything is done running, then I'll wipe the commands out
+            commandsToRemove.add(command);
+        }
+        
+        // Clear out the ones that ran successfully
+        for (Command command : commandsToRemove)
+            unexecutedCommands.remove(command);
+        
+        // Re-run it if it isn't empty
+        if (!unexecutedCommands.isEmpty())
+            commandsTimer.schedule(new ExecuteCommandsTimer(this), 3000);
     }
 }
 

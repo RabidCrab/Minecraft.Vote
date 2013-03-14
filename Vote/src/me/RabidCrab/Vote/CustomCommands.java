@@ -3,11 +3,6 @@ package me.RabidCrab.Vote;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-/**
- * Contains custom commands such as kicking/banning a player and changing the weather so that I don't have to rely on other plugins
- * @author Rabid
- *
- */
 public class CustomCommands
 {
     private static Vote plugin;
