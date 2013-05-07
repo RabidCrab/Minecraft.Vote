@@ -1,6 +1,6 @@
 name: Vote
 main: me.RabidCrab.Vote.Vote
-version: 1.4.7_02
+version: 1.5.2_01
 author: RabidCrab
 website: http://github.com/rabidcrab
 description: Fully customizable voting system designed for admins who want specialized vote types

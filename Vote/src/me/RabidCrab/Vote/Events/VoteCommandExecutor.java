@@ -13,6 +13,7 @@ import me.RabidCrab.Vote.ActiveVote;
 import me.RabidCrab.Vote.Common.Comparer;
 import me.RabidCrab.Vote.Common.TextFormatter;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -24,6 +25,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+
+import advancedafk.AFK_API;
 
 /**
  * Upon a player command, figure out what they want
@@ -161,8 +164,6 @@ public class VoteCommandExecutor implements CommandExecutor, Listener
 	    if (args.length < 1)
 	        return;
 	    
-	    
-	    
 	    // Loop through the list of potential votes
 	    for (String s : Vote.configuration.getAllVoteTypes())
         {
@@ -178,6 +179,31 @@ public class VoteCommandExecutor implements CommandExecutor, Listener
                 
                 // and pass those arguments along with the others to start the vote
                 ActiveVote.beginVote(plugin, sender, Vote.configuration.getPlayerVote(plugin, s), extraArgs);
+                
+              //Vote started, vote for AFK players
+                try{
+                    for(int i=0;i<Bukkit.getServer().getOnlinePlayers().length;i++){
+                        Player p = Bukkit.getServer().getOnlinePlayers()[i];
+                        
+                        int result = autovotes.get(p).vote(p,Vote.configuration.getPlayerVote(plugin, s));
+                        if(result == 1){
+                            p.sendMessage("[Vote] I did vote YES for you");
+                        }else if(result == 2){
+                            p.sendMessage("[Vote] I did vote NO for you");
+                        }else{
+                            //Did not Vote yet
+                            if(AFK_API.isAfk(p)){
+                                p.chat("/vote yes");
+                            }else if(AFK_API.isInInventory(p)){
+                                p.chat("/vote yes");
+                            }
+                        }
+                    }
+                }catch(NoClassDefFoundError NCDFE){
+                    //AdvancedAFK not installed
+                }catch(NullPointerException NPE){
+                    //AdvancedAFK not installed, or player are null
+                }
                 
                 return;
             }

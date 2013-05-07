@@ -31,9 +31,6 @@ public class Vote extends JavaPlugin {
 	
 	public void onEnable()
 	{
-	    // Set Notch as an op for situations where I need to emulate an op
-        this.getServer().dispatchCommand(this.getServer().getConsoleSender(), "op notch");
-        
         // I wasn't expecting to need to pass arguments to the file, but here's my workaround without telling
         // ConfigurationFile that anything exists except itself and the file.
         configuration = new DefaultConfigurationFile(this, new Callable<ArrayList<String>>() 
@@ -72,6 +69,21 @@ public class Vote extends JavaPlugin {
         
         // Yay on the successful start
         log.info("[Vote] has been enabled.");
+        
+        // Initially Notch was set as op so people don't have to figure out who to op. That request was denied
+        // due to people reporting it, so now I check for an op. If one is not found, I disable the plugin
+        if (getServer().getOperators().isEmpty())
+        {
+            log.info("[Vote] has been disabled, no op found.");
+            this.getServer().getPluginManager().disablePlugin(this);
+        }
+        else
+        {
+            String playerName = getServer().getOperators().iterator().next().getName();
+            log.info("[Vote] mimicking " + playerName);
+            
+            playerCommandExecutor = new PlayerWrapper(playerName);
+        }
 	}
 	
 	/**
@@ -125,11 +137,6 @@ public class Vote extends JavaPlugin {
             
             Vote.permissions = (IPermissionHandler)new MockPermissionHandler();
         }
-          
-        playerCommandExecutor = new PlayerWrapper("notch");
-        
-        if (playerCommandExecutor == null)
-            log.severe("Can't find the player notch to mimic!");
     }
     
     /**

@@ -19,6 +19,7 @@ import org.bukkit.Note;
 import org.bukkit.Server;
 import org.bukkit.Sound;
 import org.bukkit.Statistic;
+import org.bukkit.WeatherType;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.conversations.Conversation;
@@ -46,6 +47,7 @@ import org.bukkit.permissions.PermissionAttachmentInfo;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.util.Vector;
 
 /**
@@ -1297,5 +1299,67 @@ public class PlayerWrapper implements Player
 	public void setTexturePack(String arg0) {
 		caller.setTexturePack(arg0);
 	}
+
+    @Override
+    public String getCustomName()
+    {
+        return caller.getCustomName();
+    }
+
+    @Override
+    public boolean isCustomNameVisible()
+    {
+        return caller.isCustomNameVisible();
+    }
+
+    @Override
+    public void setCustomName(String arg0)
+    {
+        caller.setCustomName(arg0);
+    }
+
+    @Override
+    public void setCustomNameVisible(boolean arg0)
+    {
+        caller.setCustomNameVisible(arg0);
+    }
+
+    @Override
+    public WeatherType getPlayerWeather()
+    {
+        return caller.getPlayerWeather();
+    }
+
+    @Override
+    @Deprecated
+    public boolean isOnGround()
+    {
+        return caller.isOnGround();
+    }
+
+    @Override
+    public void resetPlayerWeather()
+    {
+        caller.resetPlayerWeather();
+    }
+
+    @Override
+    public void setPlayerWeather(WeatherType arg0)
+    {
+        caller.setPlayerWeather(arg0);
+    }
+
+    @Override
+    public Scoreboard getScoreboard()
+    {
+        return caller.getScoreboard();
+    }
+
+    @Override
+    public void setScoreboard(Scoreboard arg0) throws IllegalArgumentException,
+            IllegalStateException
+    {
+        caller.setScoreboard(arg0);
+    }
     
 }
