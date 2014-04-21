@@ -23,6 +23,7 @@ public class CommandParser
      * @param arguments The potential arguments to replace parameters with
      * @return A directly executable command, or null if not executable
      */
+    @SuppressWarnings("deprecation")
     public static String ParseCommand(Plugin plugin, String command, ArrayList<String> arguments) throws PlayerNotOnlineException, PlayerNotFoundException
     {
         // Loop through all of the arguments and add them to the command if it exists
@@ -61,6 +62,8 @@ public class CommandParser
             // Get the name from the verify player online command line
             String playerTextName = command.replaceAll("FINDPLAYER", "").trim();
             
+            // We still have to go by the player string name because that's what people use to target players. This functionality will remain, although
+            // it is deprecated
             if (plugin.getServer().getPlayer(playerTextName) == null)
                 throw new PlayerNotFoundException(playerTextName);
             
@@ -75,6 +78,7 @@ public class CommandParser
      * Sometimes we need to expand a partial name. This is designed to fill the names and return a full set of arguments
      * @return
      */
+    @SuppressWarnings("deprecation")
     public static ArrayList<String> ParseArguments(Plugin plugin, List<String> commands, ArrayList<String> arguments) throws PlayerNotFoundException
     {
         // Loop through all of the arguments and add them to the command if it exists
@@ -96,6 +100,8 @@ public class CommandParser
                     // If it's the right argument number, find the player
                     if (argumentNumber.contains("[%" + i + "]"))
                     {
+                        // We still have to go by the player string name because that's what people use to target players. This functionality will remain, although
+                        // it is deprecated
                         Player foundPlayer = plugin.getServer().getPlayer(arguments.get(i));
                         
                         if (foundPlayer == null)

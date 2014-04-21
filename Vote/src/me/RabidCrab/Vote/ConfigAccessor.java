@@ -41,8 +41,6 @@ public class ConfigAccessor {
     public ConfigAccessor(JavaPlugin plugin, String fileName) {
         if (plugin == null)
             throw new IllegalArgumentException("plugin cannot be null");
-        if (!plugin.isInitialized())
-            throw new IllegalArgumentException("plugin must be initiaized");
         this.plugin = plugin;
         this.fileName = fileName;
     }

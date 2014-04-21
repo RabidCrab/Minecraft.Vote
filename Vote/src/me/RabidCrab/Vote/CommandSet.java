@@ -7,6 +7,7 @@ import java.util.logging.Level;
 import me.RabidCrab.Vote.Exceptions.PlayerNotFoundException;
 import me.RabidCrab.Vote.Exceptions.PlayerNotOnlineException;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -74,15 +75,13 @@ public class CommandSet
      */
     public boolean ExecuteCommands() throws PlayerNotFoundException
     {
-        String formattedCommand;
-        
         // Loop over all the commands to look for a VERIFYPLAYERONLINE
         for (String command : commands)
         {
             try
             {
                 // Format the command to be executable. If there's a failure to deal with players not existing and whatnot, throw it here
-                formattedCommand = CommandParser.ParseCommand(plugin, command, arguments);
+                final String formattedCommand = CommandParser.ParseCommand(plugin, command, arguments);
                 
                 // If it contains DELAY, we need to sleep the thread for a few seconds, then continue.
                 if (command.contains("DELAY"))
@@ -104,10 +103,19 @@ public class CommandSet
                 // If the console started the vote, there's no way we can pass the console as the sender. Most plugins explode if I do this
                 // so in order to account for their poor coding practices, I create notch as a player and have him run the commands
                 if (formattedCommand != null)
-                    if (isConsoleCommand(formattedCommand) || !(voteStarter instanceof Player))
-                        plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), formattedCommand);
-                    else
-                        plugin.getServer().dispatchCommand(playerWrapper, formattedCommand);
+                {
+                    // Make sure the command is executed on the primary thread, otherwise problems could potentially happen
+                    Bukkit.getScheduler().runTask(plugin, new Runnable() 
+                    {
+                        public void run() 
+                        {
+                            if (isConsoleCommand(formattedCommand) || !(voteStarter instanceof Player))
+                                plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), formattedCommand);
+                            else
+                                plugin.getServer().dispatchCommand(playerWrapper, formattedCommand);
+                        }
+                    });
+                }
             } 
             catch (PlayerNotOnlineException e)
             {
