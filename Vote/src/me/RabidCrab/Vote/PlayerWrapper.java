@@ -108,18 +108,6 @@ public class PlayerWrapper implements Player
     }
 
     @Override
-    public void damage(int arg0)
-    {
-        caller.damage(arg0);
-    }
-
-    @Override
-    public void damage(int arg0, Entity arg1)
-    {
-        caller.damage(arg0, arg1);
-    }
-
-    @Override
     public double getEyeHeight()
     {
         return caller.getEyeHeight();
@@ -138,23 +126,25 @@ public class PlayerWrapper implements Player
     }
 
     @Override
-    public int getHealth()
+    public double getHealth()
     {
         return caller.getHealth();
     }
 
     @Override
-    public int getLastDamage()
+    public double getLastDamage()
     {
         return caller.getLastDamage();
     }
 
+    @Deprecated
     @Override
     public List<Block> getLastTwoTargetBlocks(HashSet<Byte> arg0, int arg1)
     {
         return caller.getLastTwoTargetBlocks(arg0, arg1);
     }
 
+    @Deprecated
     @Override
     public List<Block> getLineOfSight(HashSet<Byte> arg0, int arg1)
     {
@@ -185,6 +175,7 @@ public class PlayerWrapper implements Player
         return caller.getRemainingAir();
     }
 
+    @Deprecated
     @Override
     public Block getTargetBlock(HashSet<Byte> arg0, int arg1)
     {
@@ -207,18 +198,6 @@ public class PlayerWrapper implements Player
     public boolean leaveVehicle()
     {
         return caller.leaveVehicle();
-    }
-
-    @Override
-    public void setHealth(int arg0)
-    {
-        caller.setHealth(arg0);
-    }
-
-    @Override
-    public void setLastDamage(int arg0)
-    {
-        caller.setLastDamage(arg0);
     }
 
     @Override
@@ -245,21 +224,21 @@ public class PlayerWrapper implements Player
         caller.setRemainingAir(arg0);
     }
 
-    @SuppressWarnings("deprecation")
+    @Deprecated
     @Override
     public Arrow shootArrow()
     {
         return caller.shootArrow();
     }
 
-    @SuppressWarnings("deprecation")
+    @Deprecated
     @Override
     public Egg throwEgg()
     {
         return caller.throwEgg();
     }
 
-    @SuppressWarnings("deprecation")
+    @Deprecated
     @Override
     public Snowball throwSnowball()
     {
@@ -507,12 +486,14 @@ public class PlayerWrapper implements Player
     }
 
     @Override
+    @Deprecated
     public void playEffect(Location arg0, Effect arg1, int arg2)
     {
         caller.playEffect(arg0, arg1, arg2);
     }
 
     @Override
+    @Deprecated
     public void playNote(Location arg0, byte arg1, byte arg2)
     {
         caller.playNote(arg0, arg1, arg2);
@@ -521,21 +502,24 @@ public class PlayerWrapper implements Player
     @Override
     public void saveData()
     {
-        
+        caller.saveData();
     }
 
+    @Deprecated
     @Override
     public void sendBlockChange(Location arg0, Material arg1, byte arg2)
     {
         caller.sendBlockChange(arg0, arg1, arg2);
     }
 
+    @Deprecated
     @Override
     public void sendBlockChange(Location arg0, int arg1, byte arg2)
     {
         caller.sendBlockChange(arg0, arg1, arg2);
     }
 
+    @Deprecated
     @Override
     public boolean sendChunkChange(Location arg0, int arg1, int arg2, int arg3,
             byte[] arg4)
@@ -572,8 +556,8 @@ public class PlayerWrapper implements Player
     {
         caller.setSneaking(arg0);
     }
-
-    @SuppressWarnings("deprecation")
+    
+    @Deprecated
     @Override
     public void updateInventory()
     {
@@ -823,7 +807,7 @@ public class PlayerWrapper implements Player
     }
 
     @Override
-    public int getMaxHealth()
+    public double getMaxHealth()
     {
         
         return caller.getMaxHealth();
@@ -1291,11 +1275,6 @@ public class PlayerWrapper implements Player
 	}
 
 	@Override
-	public void setMaxHealth(int arg0) {
-		caller.setMaxHealth(arg0);
-	}
-
-	@Override
 	public void setTexturePack(String arg0) {
 		caller.setTexturePack(arg0);
 	}
@@ -1360,6 +1339,275 @@ public class PlayerWrapper implements Player
             IllegalStateException
     {
         caller.setScoreboard(arg0);
+    }
+
+    @Override
+    @Deprecated
+    public int _INVALID_getLastDamage()
+    {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    @Deprecated
+    public void _INVALID_setLastDamage(int arg0)
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void setLastDamage(double arg0)
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    @Deprecated
+    public void _INVALID_damage(int arg0)
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    @Deprecated
+    public void _INVALID_damage(int arg0, Entity arg1)
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    @Deprecated
+    public int _INVALID_getHealth()
+    {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    @Deprecated
+    public int _INVALID_getMaxHealth()
+    {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    @Deprecated
+    public void _INVALID_setHealth(int arg0)
+    {
+        caller._INVALID_setHealth(arg0);
+    }
+
+    @Override
+    @Deprecated
+    public void _INVALID_setMaxHealth(int arg0)
+    {
+        caller._INVALID_setMaxHealth(arg0);
+    }
+
+    @Override
+    public void damage(double arg0)
+    {
+        caller.damage(arg0);
+    }
+
+    @Override
+    public void damage(double arg0, Entity arg1)
+    {
+        caller.damage(arg0, arg1);
+    }
+
+    @Override
+    public void setHealth(double arg0)
+    {
+        caller.setHealth(arg0);
+    }
+
+    @Override
+    public void setMaxHealth(double arg0)
+    {
+        caller.setMaxHealth(arg0);
+    }
+
+    @Override
+    public Entity getLeashHolder() throws IllegalStateException
+    {
+        return caller.getLeashHolder();
+    }
+
+    @Override
+    public boolean isLeashed()
+    {
+        return caller.isLeashed();
+    }
+
+    @Override
+    public boolean setLeashHolder(Entity arg0)
+    {
+        return caller.setLeashHolder(arg0);
+    }
+
+    @Override
+    public double getHealthScale()
+    {
+        return caller.getHealthScale();
+    }
+
+    @Override
+    public boolean isHealthScaled()
+    {
+        return caller.isHealthScaled();
+    }
+
+    @Override
+    @Deprecated
+    public void playSound(Location arg0, String arg1, float arg2, float arg3)
+    {
+        caller.playSound(arg0, arg1, arg2, arg3);
+    }
+
+    @Override
+    public void setHealthScale(double arg0) throws IllegalArgumentException
+    {
+        caller.setHealthScale(arg0);
+    }
+
+    @Override
+    public void setHealthScaled(boolean arg0)
+    {
+        caller.setHealthScaled(arg0);
+    }
+
+    @Override
+    public <T extends Projectile> T launchProjectile(Class<? extends T> arg0,
+            Vector arg1)
+    {
+        return caller.launchProjectile(arg0, arg1);
+    }
+
+    @Override
+    public void decrementStatistic(Statistic arg0)
+            throws IllegalArgumentException
+    {
+        caller.decrementStatistic(arg0);
+    }
+
+    @Override
+    public void decrementStatistic(Statistic arg0, int arg1)
+            throws IllegalArgumentException
+    {
+        caller.decrementStatistic(arg0, arg1);
+    }
+
+    @Override
+    public void decrementStatistic(Statistic arg0, Material arg1)
+            throws IllegalArgumentException
+    {
+        caller.decrementStatistic(arg0, arg1);
+    }
+
+    @Override
+    public void decrementStatistic(Statistic arg0, EntityType arg1)
+            throws IllegalArgumentException
+    {
+        caller.decrementStatistic(arg0, arg1);
+    }
+
+    @Override
+    public void decrementStatistic(Statistic arg0, Material arg1, int arg2)
+            throws IllegalArgumentException
+    {
+        caller.decrementStatistic(arg0, arg1, arg2);
+    }
+
+    @Override
+    public void decrementStatistic(Statistic arg0, EntityType arg1, int arg2)
+    {
+        caller.decrementStatistic(arg0, arg1, arg2);
+    }
+
+    @Override
+    public int getStatistic(Statistic arg0) throws IllegalArgumentException
+    {
+        return caller.getStatistic(arg0);
+    }
+
+    @Override
+    public int getStatistic(Statistic arg0, Material arg1)
+            throws IllegalArgumentException
+    {
+        return caller.getStatistic(arg0, arg1);
+    }
+
+    @Override
+    public int getStatistic(Statistic arg0, EntityType arg1)
+            throws IllegalArgumentException
+    {
+        return caller.getStatistic(arg0, arg1);
+    }
+
+    @Override
+    public boolean hasAchievement(Achievement arg0)
+    {
+        return caller.hasAchievement(arg0);
+    }
+
+    @Override
+    public void incrementStatistic(Statistic arg0, EntityType arg1)
+            throws IllegalArgumentException
+    {
+        caller.incrementStatistic(arg0, arg1);
+    }
+
+    @Override
+    public void incrementStatistic(Statistic arg0, EntityType arg1, int arg2)
+            throws IllegalArgumentException
+    {
+        caller.incrementStatistic(arg0, arg1, arg2);
+    }
+
+    @Override
+    public void removeAchievement(Achievement arg0)
+    {
+        caller.removeAchievement(arg0);
+    }
+
+    @Override
+    public void sendSignChange(Location arg0, String[] arg1)
+            throws IllegalArgumentException
+    {
+        caller.sendSignChange(arg0, arg1);
+    }
+
+    @Override
+    public void setResourcePack(String arg0)
+    {
+        caller.setResourcePack(arg0);
+    }
+
+    @Override
+    public void setStatistic(Statistic arg0, int arg1)
+            throws IllegalArgumentException
+    {
+        caller.setStatistic(arg0, arg1);
+    }
+
+    @Override
+    public void setStatistic(Statistic arg0, Material arg1, int arg2)
+            throws IllegalArgumentException
+    {
+        caller.setStatistic(arg0, arg1, arg2);
+    }
+
+    @Override
+    public void setStatistic(Statistic arg0, EntityType arg1, int arg2)
+    {
+        caller.setStatistic(arg0, arg1, arg2);
     }
     
 }

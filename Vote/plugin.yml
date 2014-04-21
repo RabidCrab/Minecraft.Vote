@@ -1,15 +1,15 @@
 name: Vote
 main: me.RabidCrab.Vote.Vote
-version: 1.5.2_01
+version: 1.7.8_01
 author: RabidCrab
 website: http://github.com/rabidcrab
 description: Fully customizable voting system designed for admins who want specialized vote types
-softdepend: [Vault]
+softdepend: [Vault, AdvancedAFK]
 commands:
     vote:
         description: Voting system. /vote help will give you all options available
         usage: /vote
-        aliases: [voter, rabidvote]
+        aliases: [voter, rabidvote, ivote]
 permissions:
     vote.voteyes.*:
         description: Gives access to voting yes. 

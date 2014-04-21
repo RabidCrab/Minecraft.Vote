@@ -330,7 +330,7 @@ public class ActiveVote
                     player.sendMessage(Vote.configuration.getPlayerVoteCounted());
                 
                 // Check and see if the vote can be finished without counting more votes
-                VoteStatus currentVoteTally = voteResults();
+                VoteStatus currentVoteTally = voteResults(false);
                 
                 if (currentVoteTally == VoteStatus.Success || currentVoteTally == VoteStatus.Fail)
                     voteTimeOver(plugin);
@@ -355,7 +355,7 @@ public class ActiveVote
      * Gets the tally of the vote results
      * @return The current vote status
      */
-    private static VoteStatus voteResults()
+    private static VoteStatus voteResults(boolean isVoteFinished)
     {
         if (isVoting)
         {
@@ -402,6 +402,25 @@ public class ActiveVote
             {
                 //voteStarter.sendMessage("Succeed vote percentage");
                 return VoteStatus.Success;
+            }
+            
+            // If they have IgnoreUnvotedPlayers and it's the ending time for the vote, we should only do the percent between yes and no votes.
+            // Make sure to include a check for 0's so it doesn't screw up
+            if (currentVote.getIgnoreUnvotedPlayers() && isVoteFinished)
+            {
+                // Make sure we have yes voters and more yes's than no's
+                if (voteYesSize < 1 || voteYesSize <= voteNoSize)
+                    return VoteStatus.Fail;
+                
+                // The check above guarantees that there's yes votes. So if there's 0 no votes, it's an automatic win
+                if (voteNoSize < 1)
+                    return VoteStatus.Success;
+                
+                // If there's no votes and yes votes, pull a tally and find out if there should be a win
+                if ((voteNoSize / voteYesSize) * 100 < currentVote.getPercentToSucceed())
+                    return VoteStatus.Fail;
+                else 
+                    return VoteStatus.Success;
             }
             
             // Now we do a final check and make sure the minimum standards for a success can be met. If it can't,
@@ -495,7 +514,7 @@ public class ActiveVote
                     player.sendMessage(Vote.configuration.getPlayerVoteCounted());
                 
                 // Check and see if the vote can be finished without counting more votes
-                VoteStatus currentVoteTally = voteResults();
+                VoteStatus currentVoteTally = voteResults(false);
                 
                 if (currentVoteTally == VoteStatus.Success || currentVoteTally == VoteStatus.Fail)
                     voteTimeOver(plugin);
@@ -524,7 +543,7 @@ public class ActiveVote
         if (isVoting)
         {
             // Get the results of the vote
-            VoteStatus finalVoteTally = voteResults();
+            VoteStatus finalVoteTally = voteResults(true);
             
             isVoting = false;
             
