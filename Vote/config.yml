@@ -13,7 +13,7 @@ vote:
         files:
             config:
                 Version: '2.0'
-        Version: '1.9_02'
+        Version: '1.7.9_01'
     default:
         VoteEndSuccessText: '&AThe majority has voted yes.'
         NoVoteInProgress: '&CNo vote is currently in progress!'

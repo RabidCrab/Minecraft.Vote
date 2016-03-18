@@ -23,6 +23,7 @@ public class CommandParser
      * @param arguments The potential arguments to replace parameters with
      * @return A directly executable command, or null if not executable
      */
+    @SuppressWarnings("deprecation")
     public static String ParseCommand(Plugin plugin, String command, ArrayList<String> arguments) throws PlayerNotOnlineException, PlayerNotFoundException
     {
         // Loop through all of the arguments and add them to the command if it exists
@@ -77,6 +78,7 @@ public class CommandParser
      * Sometimes we need to expand a partial name. This is designed to fill the names and return a full set of arguments
      * @return
      */
+    @SuppressWarnings("deprecation")
     public static ArrayList<String> ParseArguments(Plugin plugin, List<String> commands, ArrayList<String> arguments) throws PlayerNotFoundException
     {
         // Loop through all of the arguments and add them to the command if it exists

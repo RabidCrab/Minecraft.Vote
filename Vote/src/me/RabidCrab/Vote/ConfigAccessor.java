@@ -26,8 +26,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Level;
  
-
-
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -59,7 +57,6 @@ public class ConfigAccessor {
         // Look for defaults in the jar
         InputStream defConfigStream = plugin.getResource(fileName);
         if (defConfigStream != null) {
-            @SuppressWarnings("deprecation")
             YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
             fileConfiguration.setDefaults(defConfig);
         }
