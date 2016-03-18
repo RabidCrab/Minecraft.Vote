@@ -16,21 +16,22 @@ import org.bukkit.Instrument;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Note;
+import org.bukkit.Particle;
 import org.bukkit.Server;
 import org.bukkit.Sound;
 import org.bukkit.Statistic;
 import org.bukkit.WeatherType;
 import org.bukkit.World;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.block.Block;
 import org.bukkit.conversations.Conversation;
 import org.bukkit.conversations.ConversationAbandonedEvent;
-import org.bukkit.entity.Arrow;
-import org.bukkit.entity.Egg;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
-import org.bukkit.entity.Snowball;
+import org.bukkit.entity.Villager;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.EntityEquipment;
@@ -38,6 +39,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.InventoryView.Property;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.MainHand;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.map.MapView;
 import org.bukkit.metadata.MetadataValue;
@@ -78,6 +80,7 @@ public class PlayerWrapper implements Player
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public ItemStack getItemInHand()
     {
         return caller.getItemInHand();
@@ -102,6 +105,7 @@ public class PlayerWrapper implements Player
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void setItemInHand(ItemStack arg0)
     {
         caller.setItemInHand(arg0);
@@ -222,27 +226,6 @@ public class PlayerWrapper implements Player
     public void setRemainingAir(int arg0)
     {
         caller.setRemainingAir(arg0);
-    }
-
-    @Deprecated
-    @Override
-    public Arrow shootArrow()
-    {
-        return caller.shootArrow();
-    }
-
-    @Deprecated
-    @Override
-    public Egg throwEgg()
-    {
-        return caller.throwEgg();
-    }
-
-    @Deprecated
-    @Override
-    public Snowball throwSnowball()
-    {
-        return caller.throwSnowball();
     }
 
     @Override
@@ -1000,6 +983,7 @@ public class PlayerWrapper implements Player
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void setBanned(boolean arg0)
     {
         caller.setBanned(arg0);
@@ -1275,6 +1259,7 @@ public class PlayerWrapper implements Player
 	}
 
 	@Override
+	@SuppressWarnings("deprecation")
 	public void setTexturePack(String arg0) {
 		caller.setTexturePack(arg0);
 	}
@@ -1609,5 +1594,180 @@ public class PlayerWrapper implements Player
     {
         caller.setStatistic(arg0, arg1, arg2);
     }
-    
+
+    @Override
+    public MainHand getMainHand()
+    {
+        return caller.getMainHand();
+    }
+
+    @Override
+    public InventoryView openMerchant(Villager arg0, boolean arg1)
+    {
+        return caller.openMerchant(arg0, arg1);
+    }
+
+    @Override
+    public List<Block> getLastTwoTargetBlocks(Set<Material> arg0, int arg1)
+    {
+        return caller.getLastTwoTargetBlocks(arg0, arg1);
+    }
+
+    @Override
+    public List<Block> getLineOfSight(Set<Material> arg0, int arg1)
+    {
+        return caller.getLineOfSight(arg0, arg1);
+    }
+
+    @Override
+    public Block getTargetBlock(Set<Material> arg0, int arg1)
+    {
+        return caller.getTargetBlock(arg0, arg1);
+    }
+
+    @Override
+    public boolean isGliding()
+    {
+        return caller.isGliding();
+    }
+
+    @Override
+    public void setGliding(boolean arg0)
+    {
+        caller.setGliding(arg0);
+    }
+
+    @Override
+    public AttributeInstance getAttribute(Attribute arg0)
+    {
+        return caller.getAttribute(arg0);
+    }
+
+    @Override
+    public boolean isGlowing()
+    {
+        return caller.isGlowing();
+    }
+
+    @Override
+    public void setGlowing(boolean arg0)
+    {
+        caller.setGlowing(arg0);
+    }
+
+    @Override
+    public Entity getSpectatorTarget()
+    {
+        return caller.getSpectatorTarget();
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public void resetTitle()
+    {
+        caller.resetTitle();
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public void sendTitle(String arg0, String arg1)
+    {
+        caller.sendTitle(arg0, arg1);
+    }
+
+    @Override
+    public void setSpectatorTarget(Entity arg0)
+    {
+        caller.setSpectatorTarget(arg0);
+    }
+
+    @Override
+    public void spawnParticle(Particle arg0, Location arg1, int arg2)
+    {
+        caller.spawnParticle(arg0, arg1, arg2);
+    }
+
+    @Override
+    public <T> void spawnParticle(Particle arg0, Location arg1, int arg2, T arg3)
+    {
+        caller.spawnParticle(arg0, arg1, arg2, arg3);
+    }
+
+    @Override
+    public void spawnParticle(Particle arg0, double arg1, double arg2,
+            double arg3, int arg4)
+    {
+        caller.spawnParticle(arg0, arg1, arg2, arg3, arg4);
+    }
+
+    @Override
+    public <T> void spawnParticle(Particle arg0, double arg1, double arg2,
+            double arg3, int arg4, T arg5)
+    {
+        caller.spawnParticle(arg0, arg1, arg2, arg3, arg4, arg5);
+    }
+
+    @Override
+    public void spawnParticle(Particle arg0, Location arg1, int arg2,
+            double arg3, double arg4, double arg5)
+    {
+        caller.spawnParticle(arg0, arg1, arg2, arg3, arg4, arg5);
+    }
+
+    @Override
+    public <T> void spawnParticle(Particle arg0, Location arg1, int arg2,
+            double arg3, double arg4, double arg5, T arg6)
+    {
+        caller.spawnParticle(arg0, arg1, arg2, arg3, arg4, arg5, arg6);
+    }
+
+    @Override
+    public void spawnParticle(Particle arg0, Location arg1, int arg2,
+            double arg3, double arg4, double arg5, double arg6)
+    {
+        caller.spawnParticle(arg0, arg1, arg2, arg3, arg4, arg5, arg6);
+    }
+
+    @Override
+    public void spawnParticle(Particle arg0, double arg1, double arg2,
+            double arg3, int arg4, double arg5, double arg6, double arg7)
+    {
+        caller.spawnParticle(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
+    }
+
+    @Override
+    public <T> void spawnParticle(Particle arg0, Location arg1, int arg2,
+            double arg3, double arg4, double arg5, double arg6, T arg7)
+    {
+        caller.spawnParticle(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
+    }
+
+    @Override
+    public <T> void spawnParticle(Particle arg0, double arg1, double arg2,
+            double arg3, int arg4, double arg5, double arg6, double arg7, T arg8)
+    {
+        caller.spawnParticle(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
+    }
+
+    @Override
+    public void spawnParticle(Particle arg0, double arg1, double arg2,
+            double arg3, int arg4, double arg5, double arg6, double arg7,
+            double arg8)
+    {
+        caller.spawnParticle(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
+    }
+
+    @Override
+    public <T> void spawnParticle(Particle arg0, double arg1, double arg2,
+            double arg3, int arg4, double arg5, double arg6, double arg7,
+            double arg8, T arg9)
+    {
+        caller.spawnParticle(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9);
+    }
+
+    @Override
+    public Spigot spigot()
+    {
+        return caller.spigot();
+    }
 }

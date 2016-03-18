@@ -182,8 +182,10 @@ public class VoteCommandExecutor implements CommandExecutor, Listener
                 
               //Vote started, vote for AFK players
                 try{
-                    for(int i=0;i<Bukkit.getServer().getOnlinePlayers().length;i++){
-                        Player p = Bukkit.getServer().getOnlinePlayers()[i];
+                    // Updated for Spigot. Finally people who utilize lists instead of arrays, except for the fact
+                    // I had to originally code for an array, and I never worked with Java lists
+                    for(int i=0;i<Bukkit.getServer().getOnlinePlayers().toArray().length;i++){
+                        Player p = (Player)Bukkit.getServer().getOnlinePlayers().toArray()[i];
                         
                         int result = autovotes.get(p).vote(p,Vote.configuration.getPlayerVote(plugin, s));
                         if(result == 1){
