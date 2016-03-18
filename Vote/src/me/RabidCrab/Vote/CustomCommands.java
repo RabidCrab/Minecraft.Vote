@@ -64,7 +64,6 @@ public class CustomCommands
      * Delios posted a request that there be permissions that make users immune to getting kicked/banned. This is the most elegant
      * solution I can come up with
      */
-    @SuppressWarnings("deprecation")
     private void kickPlayer(CommandSender sender, String targetKick)
     {
         Player target = null;
@@ -84,7 +83,6 @@ public class CustomCommands
      * Delios posted a request that there be permissions that make users immune to getting kicked/banned. This is the most elegant
      * solution I can come up with
      */
-    @SuppressWarnings("deprecation")
     private void banPlayer(CommandSender sender, String targetBan)
     {
         Player target = null;

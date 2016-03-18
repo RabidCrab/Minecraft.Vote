@@ -1,7 +1,6 @@
 package me.RabidCrab.Vote;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Timer;
@@ -112,7 +111,6 @@ public class ActiveVote
             {
                 // We still have to go by the player string name because that's what people use to target players. This functionality will remain, although
                 // it is deprecated
-                @SuppressWarnings("deprecation")
                 Player target = plugin.getServer().getPlayer(arguments.get(0));
                 
                 if (Vote.permissions.has(target, "vote.unkickable"))
@@ -135,7 +133,6 @@ public class ActiveVote
             {
                 // We still have to go by the player string name because that's what people use to target players. This functionality will remain, although
                 // it is deprecated
-                @SuppressWarnings("deprecation")
                 Player target = plugin.getServer().getPlayer(arguments.get(0).toString());
                 
                 if (Vote.permissions.has(target, "vote.unbannable"))
@@ -171,7 +168,7 @@ public class ActiveVote
         voteNo = new ArrayList<Player>(); 
         // Vote results shouldn't be skewed by a random player joining through the middle of the vote, but that doesn't mean the
         // player shouldn't be allowed to vote. This list will be added to if a player logs in and votes during a vote
-        List<Player> allLoggedInPlayers = new ArrayList<Player>(Arrays.asList(plugin.getServer().getOnlinePlayers()));
+        List<Player> allLoggedInPlayers = new ArrayList<Player>(plugin.getServer().getOnlinePlayers());
         
         loggedInPlayers = new ArrayList<Player>();
         
