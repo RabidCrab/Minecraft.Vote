@@ -1,7 +1,5 @@
 package me.RabidCrab.Vote.Timers;
 
-import java.util.TimerTask;
-
 import org.bukkit.plugin.Plugin;
 
 import me.RabidCrab.Vote.ActiveVote;
@@ -11,7 +9,7 @@ import me.RabidCrab.Vote.ActiveVote;
  * @author RabidCrab
  *
  */
-public class VoteFinishedTimer extends TimerTask
+public class VoteFinishedTimer implements Runnable
 {
     Plugin plugin;
     
