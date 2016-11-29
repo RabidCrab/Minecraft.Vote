@@ -111,7 +111,6 @@ public class ActiveVote
             {
                 // We still have to go by the player string name because that's what people use to target players. This functionality will remain, although
                 // it is deprecated
-                @SuppressWarnings("deprecation")
                 Player target = plugin.getServer().getPlayer(arguments.get(0));
                 
                 if (Vote.permissions.has(target, "vote.unkickable"))
@@ -134,7 +133,6 @@ public class ActiveVote
             {
                 // We still have to go by the player string name because that's what people use to target players. This functionality will remain, although
                 // it is deprecated
-                @SuppressWarnings("deprecation")
                 Player target = plugin.getServer().getPlayer(arguments.get(0).toString());
                 
                 if (Vote.permissions.has(target, "vote.unbannable"))

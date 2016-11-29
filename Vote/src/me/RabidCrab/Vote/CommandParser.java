@@ -23,7 +23,6 @@ public class CommandParser
      * @param arguments The potential arguments to replace parameters with
      * @return A directly executable command, or null if not executable
      */
-    @SuppressWarnings("deprecation")
     public static String ParseCommand(Plugin plugin, String command, ArrayList<String> arguments) throws PlayerNotOnlineException, PlayerNotFoundException
     {
         // Loop through all of the arguments and add them to the command if it exists
@@ -101,7 +100,6 @@ public class CommandParser
                     {
                         // We still have to go by the player string name because that's what people use to target players. This functionality will remain, although
                         // it is deprecated
-                        @SuppressWarnings("deprecation")
                         Player foundPlayer = plugin.getServer().getPlayer(arguments.get(i));
                         
                         if (foundPlayer == null)

@@ -19,6 +19,7 @@ import org.bukkit.Note;
 import org.bukkit.Particle;
 import org.bukkit.Server;
 import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.Statistic;
 import org.bukkit.WeatherType;
 import org.bukkit.World;
@@ -40,6 +41,7 @@ import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.InventoryView.Property;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MainHand;
+import org.bukkit.inventory.Merchant;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.map.MapView;
 import org.bukkit.metadata.MetadataValue;
@@ -1331,7 +1333,7 @@ public class PlayerWrapper implements Player
     public int _INVALID_getLastDamage()
     {
         // TODO Auto-generated method stub
-        return 0;
+        return caller._INVALID_getLastDamage();
     }
 
     @Override
@@ -1339,14 +1341,14 @@ public class PlayerWrapper implements Player
     public void _INVALID_setLastDamage(int arg0)
     {
         // TODO Auto-generated method stub
-        
+    	caller._INVALID_setLastDamage(arg0);
     }
 
     @Override
     public void setLastDamage(double arg0)
     {
         // TODO Auto-generated method stub
-        
+        caller.setLastDamage(arg0);
     }
 
     @Override
@@ -1354,7 +1356,7 @@ public class PlayerWrapper implements Player
     public void _INVALID_damage(int arg0)
     {
         // TODO Auto-generated method stub
-        
+    	caller._INVALID_damage(arg0);
     }
 
     @Override
@@ -1362,7 +1364,7 @@ public class PlayerWrapper implements Player
     public void _INVALID_damage(int arg0, Entity arg1)
     {
         // TODO Auto-generated method stub
-        
+    	caller._INVALID_damage(arg0, arg1);
     }
 
     @Override
@@ -1370,7 +1372,7 @@ public class PlayerWrapper implements Player
     public int _INVALID_getHealth()
     {
         // TODO Auto-generated method stub
-        return 0;
+        return caller._INVALID_getHealth();
     }
 
     @Override
@@ -1378,7 +1380,7 @@ public class PlayerWrapper implements Player
     public int _INVALID_getMaxHealth()
     {
         // TODO Auto-generated method stub
-        return 0;
+    	return caller._INVALID_getMaxHealth();
     }
 
     @Override
@@ -1764,4 +1766,156 @@ public class PlayerWrapper implements Player
     {
         caller.spawnParticle(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9);
     }
+
+	@Override
+	public boolean isHandRaised() {
+		// TODO Auto-generated method stub
+		return caller.isHandRaised();
+	}
+
+	@Override
+	public PotionEffect getPotionEffect(PotionEffectType arg0) {
+		// TODO Auto-generated method stub
+		return caller.getPotionEffect(arg0);
+	}
+
+	@Override
+	public boolean hasAI() {
+		// TODO Auto-generated method stub
+		return caller.hasAI();
+	}
+
+	@Override
+	public boolean isCollidable() {
+		// TODO Auto-generated method stub
+		return caller.isCollidable();
+	}
+
+	@Override
+	public void setAI(boolean arg0) {
+		// TODO Auto-generated method stub
+		caller.setAI(arg0);
+	}
+
+	@Override
+	public void setCollidable(boolean arg0) {
+		// TODO Auto-generated method stub
+		caller.setCollidable(arg0);
+	}
+
+	@Override
+	public boolean addScoreboardTag(String arg0) {
+		// TODO Auto-generated method stub
+		return caller.addScoreboardTag(arg0);
+	}
+
+	@Override
+	public int getPortalCooldown() {
+		// TODO Auto-generated method stub
+		return caller.getPortalCooldown();
+	}
+
+	@Override
+	public Set<String> getScoreboardTags() {
+		// TODO Auto-generated method stub
+		return caller.getScoreboardTags();
+	}
+
+	@Override
+	public boolean hasGravity() {
+		// TODO Auto-generated method stub
+		return caller.hasGravity();
+	}
+
+	@Override
+	public boolean isInvulnerable() {
+		// TODO Auto-generated method stub
+		return caller.isInvulnerable();
+	}
+
+	@Override
+	public boolean isSilent() {
+		// TODO Auto-generated method stub
+		return caller.isSilent();
+	}
+
+	@Override
+	public boolean removeScoreboardTag(String arg0) {
+		// TODO Auto-generated method stub
+		return caller.removeScoreboardTag(arg0);
+	}
+
+	@Override
+	public void setGravity(boolean arg0) {
+		// TODO Auto-generated method stub
+		caller.setGravity(arg0);
+	}
+
+	@Override
+	public void setInvulnerable(boolean arg0) {
+		// TODO Auto-generated method stub
+		caller.setInvulnerable(arg0);
+	}
+
+	@Override
+	public void setPortalCooldown(int arg0) {
+		// TODO Auto-generated method stub
+		caller.setPortalCooldown(arg0);
+	}
+
+	@Override
+	public void setSilent(boolean arg0) {
+		// TODO Auto-generated method stub
+		caller.setSilent(arg0);
+	}
+/*
+	@Override
+	public Spigot spigot() {
+		// TODO Auto-generated method stub
+		return caller.spigot();
+	}*/
+
+	@Override
+	public void stopSound(Sound arg0) {
+		// TODO Auto-generated method stub
+		caller.stopSound(arg0);
+	}
+
+	@Override
+	public void stopSound(String arg0) {
+		// TODO Auto-generated method stub
+		caller.stopSound(arg0);
+	}
+
+	@Override
+	public InventoryView openMerchant(Merchant arg0, boolean arg1) {
+		// TODO Auto-generated method stub
+		return caller.openMerchant(arg0, arg1);
+	}
+
+	@Override
+	public void playSound(Location arg0, Sound arg1, SoundCategory arg2,
+			float arg3, float arg4) {
+		// TODO Auto-generated method stub
+		caller.playSound(arg0, arg1, arg2, arg3, arg4);
+	}
+
+	@Override
+	public void playSound(Location arg0, String arg1, SoundCategory arg2,
+			float arg3, float arg4) {
+		// TODO Auto-generated method stub
+		caller.playSound(arg0, arg1, arg2, arg3, arg4);
+	}
+
+	@Override
+	public void stopSound(Sound arg0, SoundCategory arg1) {
+		// TODO Auto-generated method stub
+		caller.stopSound(arg0, arg1);
+	}
+
+	@Override
+	public void stopSound(String arg0, SoundCategory arg1) {
+		// TODO Auto-generated method stub
+		caller.stopSound(arg0, arg1);
+	}
 }

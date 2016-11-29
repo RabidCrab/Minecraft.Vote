@@ -13,7 +13,6 @@ import me.RabidCrab.Vote.ActiveVote;
 import me.RabidCrab.Vote.Common.Comparer;
 import me.RabidCrab.Vote.Common.TextFormatter;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -26,7 +25,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import advancedafk.AFK_API;
+//import advancedafk.AFK_API;
 
 /**
  * Upon a player command, figure out what they want
@@ -181,7 +180,7 @@ public class VoteCommandExecutor implements CommandExecutor, Listener
                 ActiveVote.beginVote(plugin, sender, Vote.configuration.getPlayerVote(plugin, s), extraArgs);
                 
               //Vote started, vote for AFK players
-                try{
+                /*try{
                     // Updated for Spigot. Finally people who utilize lists instead of arrays, except for the fact
                     // I had to originally code for an array, and I never worked with Java lists
                     for(int i=0;i<Bukkit.getServer().getOnlinePlayers().toArray().length;i++){
@@ -194,7 +193,7 @@ public class VoteCommandExecutor implements CommandExecutor, Listener
                             p.sendMessage("[Vote] I did vote NO for you");
                         }else{
                             //Did not Vote yet
-                            if(AFK_API.isAfk(p)){
+                            if(AFK_API.isInstalled()(p)){
                                 p.chat("/vote yes");
                             }else if(AFK_API.isInInventory(p)){
                                 p.chat("/vote yes");
@@ -205,7 +204,7 @@ public class VoteCommandExecutor implements CommandExecutor, Listener
                     //AdvancedAFK not installed
                 }catch(NullPointerException NPE){
                     //AdvancedAFK not installed, or player are null
-                }
+                }*/
                 
                 return;
             }

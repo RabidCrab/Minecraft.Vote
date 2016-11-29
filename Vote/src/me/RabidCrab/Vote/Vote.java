@@ -10,8 +10,6 @@ import net.milkbowl.vault.permission.Permission;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import advancedafk.AFK_API;
  
 /**
  * The big cheese
@@ -57,7 +55,7 @@ public class Vote extends JavaPlugin {
         setupPermissions();
         
         //Try AdvancedAFK hook
-        try{
+        /*try{
             if(AFK_API.isInstalled()){
                 log.info("[Vote] AdvancedAFK found, automatic vote for afk-player");
             }
@@ -65,7 +63,7 @@ public class Vote extends JavaPlugin {
             //AdvancedAFK not installed
         }catch(NullPointerException NPE){
             //AdvancedAFK not installed
-        }
+        }*/
         
         // Yay on the successful start
         log.info("[Vote] has been enabled.");
