@@ -161,7 +161,10 @@ public class ActiveVote
         }
         
         isVoting = true;
-        plugin.getServer().broadcastMessage(currentVote.getVoteStartText());
+        
+        plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), currentVote.getVoteStartText());
+        
+        //plugin.getServer().broadcastMessage(currentVote.getVoteStartText());
         
         // Create the list of voters and add the beginning voter to the list. Also prevents carried over data
         voteYes = new ArrayList<Player>(); 

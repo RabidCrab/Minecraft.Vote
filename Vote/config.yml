@@ -5,21 +5,21 @@ vote:
         GeneralCommands:
         - '&6/vote yes &A- Vote yes on the active vote.'
         - '&6/vote no &A- Vote no on the active vote.'
-        - '&6/vote [votename] &A- Start a new vote with the keyword. '
+        - '&6/vote [votename] &A- Start a new vote with the keyword.'
         - '&6/vote list &A- Display list of votes you can start.'
         - '&6/vote veto &A- Immediately cancel vote in progress.'
         - '&6/vote reload &A- Reload Vote plugin.'
     application:
         files:
             config:
-                Version: '2.0'
-        Version: '1.11_01'
+                Version: '2.1'
+        Version: '1.11_02'
     default:
         VoteEndSuccessText: '&AThe majority has voted yes.'
         NoVoteInProgress: '&CNo vote is currently in progress!'
         PlayerUnbannable: '&A[%0] &Ccannot be banned!'
         VoteAlreadyInProgress: '&CA vote is already active, please wait to start another vote.'
-        VoteStartText: '&A[%0] has started a vote! Type &6/vote Yes &Aor &6/vote No &Ato vote.'
+        VoteStartText: 'tellraw @p ["",{"text":"&A[%0] has started a vote! Click below to vote!"},{"text":"\nVote yes","color":"green","bold":true,"clickEvent":{"action":"run_command","value":"/vote yes"}},{"text":"\nVote no","color":"red","bold":true,"clickEvent":{"action":"run_command","value":"/vote no"}}]'
         VoteCanceled: '&AThe vote has been canceled.'
         PlayerVoteCounted: '&AVote counted.'
         PlayerVoteStartNoPermission: '&CYou do not have permission to start a vote.'
@@ -54,7 +54,7 @@ vote:
             Description: 'Ban a player'
             ArgumentCount: 1
             InsufficientArgumentsError: '&CIncorrect arguments! You need to do /Vote ban PlayerName where PlayerName is the players name'
-            VoteStartText: '&A[%1] has started a vote to ban &C[%0]&A! Type &6/vote yes &Aor &6/vote no &Ato vote'
+            VoteStartText: 'tellraw @p ["",{"text":"&A[%1] has started a vote to ban &C[%0]&A!"},{"text":"\nVote yes","color":"green","bold":true,"clickEvent":{"action":"run_command","value":"/vote yes"}},{"text":"\nVote no","color":"red","bold":true,"clickEvent":{"action":"run_command","value":"/vote no"}}]'
             TimeoutSeconds: 60
             VoteOnCooldownText: '&CA player has been banned too recently!'
             VoteSuccessText: '&AVote succeeded! &C[%0] &Ahas been banned'
@@ -78,7 +78,7 @@ vote:
             Description: 'Kick player'
             ArgumentCount: 1
             InsufficientArgumentsError: '&CIncorrect arguments! You need to do /Vote kick PlayerName where PlayerName is the players name'
-            VoteStartText: '&A[%1] has started a vote to kick &C[%0]&A! Type &6/vote yes &Aor &6/vote no &Ato vote'
+            VoteStartText: 'tellraw @p ["",{"text":"&A[%1] has started a vote to kick &C[%0]&A!"},{"text":"\nVote yes","color":"green","bold":true,"clickEvent":{"action":"run_command","value":"/vote yes"}},{"text":"\nVote no","color":"red","bold":true,"clickEvent":{"action":"run_command","value":"/vote no"}}]'
             TimeoutSeconds: 60
             VoteOnCooldownText: '&CA player has been kicked too recently!'
             VoteSuccessText: '&AVote succeeded! &C[%0] &Ahas been kicked'
@@ -102,7 +102,7 @@ vote:
             Description: 'Restart the server'
             ArgumentCount: 0
             InsufficientArgumentsError: ''
-            VoteStartText: '&A[%0] has started a vote to restart the server! Type &6/vote yes &Aor &6/vote no &Ato vote'
+            VoteStartText: 'tellraw @p ["",{"text":"&A[%0] has started a vote to restart the server!"},{"text":"\nVote yes","color":"green","bold":true,"clickEvent":{"action":"run_command","value":"/vote yes"}},{"text":"\nVote no","color":"red","bold":true,"clickEvent":{"action":"run_command","value":"/vote no"}}]'
             TimeoutSeconds: 60
             VoteOnCooldownText: '&CThe server has been restarted recently. Please wait a bit before trying again.'
             VoteSuccessText: '&AVote succeeded! Restarting server in 60 seconds'
@@ -126,7 +126,7 @@ vote:
             Description: 'Set time to night'
             ArgumentCount: 0
             InsufficientArgumentsError: ''
-            VoteStartText: '&A[%0] has started a vote to set the time to night! Type &6/vote yes &Aor &6/vote no &Ato vote'
+            VoteStartText: 'tellraw @p ["",{"text":"&A[%0] has started a vote to set the time to night!"},{"text":"\nVote yes","color":"green","bold":true,"clickEvent":{"action":"run_command","value":"/vote yes"}},{"text":"\nVote no","color":"red","bold":true,"clickEvent":{"action":"run_command","value":"/vote no"}}]'
             TimeoutSeconds: 60
             VoteOnCooldownText: '&CThe time has been set to night too recently!'
             VoteSuccessText: '&AVote succeeded! Time set to night'
@@ -148,7 +148,7 @@ vote:
             Description: 'Set time to day'
             ArgumentCount: 0
             InsufficientArgumentsError: ''
-            VoteStartText: '&A[%0] has started a vote to set the time to day! Type &6/vote yes &Aor &6/vote no &Ato vote'
+            VoteStartText: 'tellraw @p ["",{"text":"&A[%0] has started a vote to set the time to day!"},{"text":"\nVote yes","color":"green","bold":true,"clickEvent":{"action":"run_command","value":"/vote yes"}},{"text":"\nVote no","color":"red","bold":true,"clickEvent":{"action":"run_command","value":"/vote no"}}]'
             TimeoutSeconds: 60
             VoteOnCooldownText: '&CThe time has been set to day too recently!'
             VoteSuccessText: '&AVote succeeded! Time set to day'
@@ -170,7 +170,7 @@ vote:
             Description: 'Set weather to rain'
             ArgumentCount: 0
             InsufficientArgumentsError: ''
-            VoteStartText: '&A[%0] has started a vote to set the weather to rain! type &6/vote yes &Aor &6/vote no &Ato vote'
+            VoteStartText: 'tellraw @p ["",{"text":"&A[%0] has started a vote to set the weather to rain!"},{"text":"\nVote yes","color":"green","bold":true,"clickEvent":{"action":"run_command","value":"/vote yes"}},{"text":"\nVote no","color":"red","bold":true,"clickEvent":{"action":"run_command","value":"/vote no"}}]'
             TimeoutSeconds: 60
             VoteOnCooldownText: '&CWeather has been set to rain too recently!'
             VoteSuccessText: '&AVote succeeded! It is now rainy.'
@@ -192,7 +192,7 @@ vote:
             Description: 'Set weather to sunny'
             ArgumentCount: 0
             InsufficientArgumentsError: ''
-            VoteStartText: '&A[%0] has started a vote to set the weather to sunny! type &6/vote yes &Aor &6/vote no &Ato vote'
+            VoteStartText: 'tellraw @p ["",{"text":"&A[%0] has started a vote to set the weather to sunny!"},{"text":"\nVote yes","color":"green","bold":true,"clickEvent":{"action":"run_command","value":"/vote yes"}},{"text":"\nVote no","color":"red","bold":true,"clickEvent":{"action":"run_command","value":"/vote no"}}]'
             TimeoutSeconds: 60
             VoteOnCooldownText: '&CWeather has been set to sunny too recently!'
             VoteSuccessText: '&AVote succeeded! It is now sunny.'

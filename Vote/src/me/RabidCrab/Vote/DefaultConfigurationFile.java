@@ -68,6 +68,28 @@ public class DefaultConfigurationFile
         
         if (plugin.getConfig().getString("vote.application.files.config.Version").compareTo("1.9") == 0)
             UpdateTo20();
+        
+        if (plugin.getConfig().getString("vote.application.files.config.Version").compareTo("2.0") == 0)
+            UpdateTo21();
+    }
+    
+    private void UpdateTo21()
+    {
+    	plugin.getLogger().log(Level.INFO, "Updating Config file to 2.1");
+
+    	plugin.getConfig().set("vote.default.VoteStartText", "tellraw @p [\"\",{\"text\":\"&A[%0] has started a vote! Click below to vote!\"},{\"text\":\"\nVote yes\",\"color\":\"green\",\"bold\":true,\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/vote yes\"}},{\"text\":\"\nVote no\",\"color\":\"red\",\"bold\":true,\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/vote no\"}}]");
+    	plugin.getConfig().set("vote.votes.ban.VoteStartText", "tellraw @p [\"\",{\"text\":\"&A[%1] has started a vote to ban &C[%0]&A!\"},{\"text\":\"\nVote yes\",\"color\":\"green\",\"bold\":true,\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/vote yes\"}},{\"text\":\"\nVote no\",\"color\":\"red\",\"bold\":true,\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/vote no\"}}]");
+    	plugin.getConfig().set("vote.votes.kick.VoteStartText", "tellraw @p [\"\",{\"text\":\"&A[%1] has started a vote to kick &C[%0]&A!\"},{\"text\":\"\nVote yes\",\"color\":\"green\",\"bold\":true,\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/vote yes\"}},{\"text\":\"\nVote no\",\"color\":\"red\",\"bold\":true,\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/vote no\"}}]");
+    	plugin.getConfig().set("vote.votes.restart.VoteStartText", "tellraw @p [\"\",{\"text\":\"&A[%0] has started a vote to restart the server!\"},{\"text\":\"\nVote yes\",\"color\":\"green\",\"bold\":true,\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/vote yes\"}},{\"text\":\"\nVote no\",\"color\":\"red\",\"bold\":true,\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/vote no\"}}]");
+    	plugin.getConfig().set("vote.votes.night.VoteStartText", "tellraw @p [\"\",{\"text\":\"&A[%0] has started a vote to set the time to night!\"},{\"text\":\"\nVote yes\",\"color\":\"green\",\"bold\":true,\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/vote yes\"}},{\"text\":\"\nVote no\",\"color\":\"red\",\"bold\":true,\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/vote no\"}}]");
+    	plugin.getConfig().set("vote.votes.day.VoteStartText", "tellraw @p [\"\",{\"text\":\"&A[%0] has started a vote to set the time to day!\"},{\"text\":\"\nVote yes\",\"color\":\"green\",\"bold\":true,\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/vote yes\"}},{\"text\":\"\nVote no\",\"color\":\"red\",\"bold\":true,\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/vote no\"}}]");
+    	plugin.getConfig().set("vote.votes.rain.VoteStartText", "tellraw @p [\"\",{\"text\":\"&A[%0] has started a vote to set the weather to rain!\"},{\"text\":\"\nVote yes\",\"color\":\"green\",\"bold\":true,\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/vote yes\"}},{\"text\":\"\nVote no\",\"color\":\"red\",\"bold\":true,\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/vote no\"}}]");
+    	plugin.getConfig().set("vote.votes.sun.VoteStartText", "tellraw @p [\"\",{\"text\":\"&A[%0] has started a vote to set the weather to sunny!\"},{\"text\":\"\nVote yes\",\"color\":\"green\",\"bold\":true,\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/vote yes\"}},{\"text\":\"\nVote no\",\"color\":\"red\",\"bold\":true,\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/vote no\"}}]");
+
+    	plugin.getConfig().set("vote.application.files.config.Version", "2.1");
+        plugin.saveConfig();
+        
+        plugin.getLogger().log(Level.INFO, "Update to 2.1 successful");
     }
     
     private void UpdateTo20()

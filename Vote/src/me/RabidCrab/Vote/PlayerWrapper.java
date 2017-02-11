@@ -1769,153 +1769,183 @@ public class PlayerWrapper implements Player
 
 	@Override
 	public boolean isHandRaised() {
-		// TODO Auto-generated method stub
+
 		return caller.isHandRaised();
 	}
 
 	@Override
 	public PotionEffect getPotionEffect(PotionEffectType arg0) {
-		// TODO Auto-generated method stub
+
 		return caller.getPotionEffect(arg0);
 	}
 
 	@Override
 	public boolean hasAI() {
-		// TODO Auto-generated method stub
+
 		return caller.hasAI();
 	}
 
 	@Override
 	public boolean isCollidable() {
-		// TODO Auto-generated method stub
+
 		return caller.isCollidable();
 	}
 
 	@Override
 	public void setAI(boolean arg0) {
-		// TODO Auto-generated method stub
+
 		caller.setAI(arg0);
 	}
 
 	@Override
 	public void setCollidable(boolean arg0) {
-		// TODO Auto-generated method stub
+
 		caller.setCollidable(arg0);
 	}
 
 	@Override
 	public boolean addScoreboardTag(String arg0) {
-		// TODO Auto-generated method stub
+
 		return caller.addScoreboardTag(arg0);
 	}
 
 	@Override
 	public int getPortalCooldown() {
-		// TODO Auto-generated method stub
+
 		return caller.getPortalCooldown();
 	}
 
 	@Override
 	public Set<String> getScoreboardTags() {
-		// TODO Auto-generated method stub
+
 		return caller.getScoreboardTags();
 	}
 
 	@Override
 	public boolean hasGravity() {
-		// TODO Auto-generated method stub
+
 		return caller.hasGravity();
 	}
 
 	@Override
 	public boolean isInvulnerable() {
-		// TODO Auto-generated method stub
+
 		return caller.isInvulnerable();
 	}
 
 	@Override
 	public boolean isSilent() {
-		// TODO Auto-generated method stub
+
 		return caller.isSilent();
 	}
 
 	@Override
 	public boolean removeScoreboardTag(String arg0) {
-		// TODO Auto-generated method stub
+
 		return caller.removeScoreboardTag(arg0);
 	}
 
 	@Override
 	public void setGravity(boolean arg0) {
-		// TODO Auto-generated method stub
+
 		caller.setGravity(arg0);
 	}
 
 	@Override
 	public void setInvulnerable(boolean arg0) {
-		// TODO Auto-generated method stub
+
 		caller.setInvulnerable(arg0);
 	}
 
 	@Override
 	public void setPortalCooldown(int arg0) {
-		// TODO Auto-generated method stub
+
 		caller.setPortalCooldown(arg0);
 	}
 
 	@Override
 	public void setSilent(boolean arg0) {
-		// TODO Auto-generated method stub
+
 		caller.setSilent(arg0);
 	}
 /*
 	@Override
 	public Spigot spigot() {
-		// TODO Auto-generated method stub
+
 		return caller.spigot();
 	}*/
 
 	@Override
 	public void stopSound(Sound arg0) {
-		// TODO Auto-generated method stub
+
 		caller.stopSound(arg0);
 	}
 
 	@Override
 	public void stopSound(String arg0) {
-		// TODO Auto-generated method stub
+
 		caller.stopSound(arg0);
 	}
 
 	@Override
 	public InventoryView openMerchant(Merchant arg0, boolean arg1) {
-		// TODO Auto-generated method stub
+
 		return caller.openMerchant(arg0, arg1);
 	}
 
 	@Override
 	public void playSound(Location arg0, Sound arg1, SoundCategory arg2,
 			float arg3, float arg4) {
-		// TODO Auto-generated method stub
+
 		caller.playSound(arg0, arg1, arg2, arg3, arg4);
 	}
 
 	@Override
 	public void playSound(Location arg0, String arg1, SoundCategory arg2,
 			float arg3, float arg4) {
-		// TODO Auto-generated method stub
+
 		caller.playSound(arg0, arg1, arg2, arg3, arg4);
 	}
 
 	@Override
 	public void stopSound(Sound arg0, SoundCategory arg1) {
-		// TODO Auto-generated method stub
+
 		caller.stopSound(arg0, arg1);
 	}
 
 	@Override
 	public void stopSound(String arg0, SoundCategory arg1) {
-		// TODO Auto-generated method stub
+
 		caller.stopSound(arg0, arg1);
+	}
+
+	@Override
+	public boolean addPassenger(Entity arg0) {
+
+		return caller.addPassenger(arg0);
+	}
+
+	@Override
+	public List<Entity> getPassengers() {
+
+		return caller.getPassengers();
+	}
+
+	@Override
+	public boolean removePassenger(Entity arg0) {
+
+		return caller.removePassenger(arg0);
+	}
+
+	@Override
+	public void sendTitle(String arg0, String arg1, int arg2, int arg3, int arg4) {
+
+		caller.sendTitle(arg0, arg1, arg2, arg3, arg4);
+	}
+
+	@Override
+	public Spigot spigot() {
+
+		return caller.spigot();
 	}
 }
