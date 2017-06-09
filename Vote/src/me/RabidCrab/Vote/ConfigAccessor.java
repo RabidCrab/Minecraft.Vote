@@ -40,29 +40,18 @@ public class ConfigAccessor {
     private File configFile;
     private FileConfiguration fileConfiguration;
  
-    public ConfigAccessor(JavaPlugin plugin, String fileName) {
+    public ConfigAccessor(JavaPlugin plugin, String fileName) 
+    {
         if (plugin == null)
             throw new IllegalArgumentException("plugin cannot be null");
+        
         this.plugin = plugin;
         this.fileName = fileName;
     }
  
-    public void reloadConfig() {
-        if (configFile == null) {
-            File dataFolder = plugin.getDataFolder();
-            if (dataFolder == null)
-                throw new IllegalStateException();
-            configFile = new File(dataFolder, fileName);
-        }
-        fileConfiguration = YamlConfiguration.loadConfiguration(configFile);
- 
-        // Look for defaults in the jar
-        InputStream defConfigStream = plugin.getResource(fileName);
-        if (defConfigStream != null) {
-            @SuppressWarnings("deprecation")
-            YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-            fileConfiguration.setDefaults(defConfig);
-        }
+    public void reloadConfig() 
+    {
+        plugin.reloadConfig();
     }
  
     public FileConfiguration getConfig() {

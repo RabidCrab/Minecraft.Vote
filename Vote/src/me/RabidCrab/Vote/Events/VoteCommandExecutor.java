@@ -84,17 +84,10 @@ public class VoteCommandExecutor implements CommandExecutor, Listener
 			}
 			else
 			{
-			    /* AdvancedAFK */
                 // I have a situation where I call my own commands. Currently it's only for weather, but it'll most likely
                 // be for other things as well
                 if (args.length > 0)
-                    if(sender instanceof Player && args.length == 3 && args[0].equalsIgnoreCase("auto")){
-                        autoVote((Player) sender,args[1],args[2]);
-                    }else if(sender instanceof Player && args.length == 2 && args[0].equalsIgnoreCase("autoyes")){
-                        autoVote((Player) sender,args[1],"yes");
-                    }else if(sender instanceof Player && args.length == 2 && args[0].equalsIgnoreCase("autono")){
-                        autoVote((Player) sender,args[1],"no");
-                    }else if (args[0].equalsIgnoreCase("setvalue"))
+                    if (args[0].equalsIgnoreCase("setvalue"))
                         customCommands.setValue(sender, args[1].toString(), args);
                     else
                         startVote(sender, args);
@@ -220,88 +213,4 @@ public class VoteCommandExecutor implements CommandExecutor, Listener
 	    // If we didn't find any, complain to the user
 	    sender.sendMessage(Vote.configuration.getVoteNotFound(extraArgs));
 	}
-	
-	/* Auto-AFK functions below */
-	private Map<Player,AutoVote> autovotes = new HashMap<Player,AutoVote>();
-	
-	@EventHandler
-    public void onPlayerJoin(PlayerJoinEvent e){
-        addAutoVoter(e.getPlayer());
-        loadAutoVotes(e.getPlayer());
-    }
-    
-    @EventHandler
-    public void onPlayerLeave(PlayerQuitEvent e){
-        removeAutoVoter(e.getPlayer());
-    }
-    
-    @EventHandler
-    public void onPlayerLeave2(PlayerKickEvent e){
-        removeAutoVoter(e.getPlayer());
-    }
-    
-	public void addAutoVoter(Player p){
-        autovotes.put(p,new AutoVote());
-    }
-    
-    public void removeAutoVoter(Player p){
-        autovotes.remove(p);
-    }
-    
-    private void autoVote(Player p, String vote, String type){
-        for (String s : Vote.configuration.getAllVoteTypes()){
-            if (s.compareToIgnoreCase(vote.toString()) == 0){
-                int result = autovotes.get(p).setAuto(Vote.configuration.getPlayerVote(plugin, s), type);
-                if(result == 0){
-                    p.sendMessage("[Vote] Error no such vote: " + vote);
-                }else if(result == 1){
-                    saveAutoVote(p,vote,type);
-                    p.sendMessage("[Vote] AutoVote saved: " + type + " for " + vote);                   
-                }else if(result == 2){
-                    p.sendMessage("[Vote] AutoVote removed for " + vote);
-                }else if(result == 3){
-                    p.sendMessage("[Vote] This vote has been activated before: " + type + " for " + vote);
-                }else{
-                    p.sendMessage("[Vote] There was no such vote to deactivate: " + type + " for " + vote);
-                }
-            }
-        }
-    }
-    
-    private List<String> getAllAutoVotes(Player p){
-        List<String> votes = new ArrayList<String>();
-        AutoVote avotes = autovotes.get(p);
-        votes.addAll(avotes.getYesVotes());
-        votes.addAll(avotes.getNoVotes());
-        return votes;
-    }
-    
-    private void saveAutoVote(Player p, String vote, String type){
-        ConfigurationSection CS = Vote.autovoteConfig.getConfig().getConfigurationSection("player");
-        if(CS != null){
-            Vote.autovoteConfig.getConfig().set("player." + p.getName() + ".votes", getAllAutoVotes(p));
-            Vote.autovoteConfig.saveConfig();
-        }else{
-            plugin.getServer().getLogger().info("Config Error, autovote");
-        }
-    }
-    
-    private void loadAutoVotes(Player p){
-        ConfigurationSection CS = Vote.autovoteConfig.getConfig().getConfigurationSection("player");
-        if(CS != null){
-            List<String> voteList = Vote.autovoteConfig.getConfig().getStringList("player." + p.getName() + ".votes");
-            if(voteList == null || voteList.size() == 0){
-                return;
-            }
-            Iterator<String> itVes = voteList.iterator();
-            while(itVes.hasNext()){
-                String line = itVes.next();
-                String vote = line.split("/")[0];
-                String type = line.split("/")[1];
-                autoVote(p,vote,type);
-            }
-        }else{
-            plugin.getServer().getLogger().info("Config Error, autovote");
-        }
-    }
 }

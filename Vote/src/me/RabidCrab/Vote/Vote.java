@@ -24,9 +24,6 @@ public class Vote extends JavaPlugin {
 	public static DefaultConfigurationFile configuration;
 	private static PlayerWrapper playerCommandExecutor;
 	
-	/* AdvancedAFK */
-	public static ConfigAccessor autovoteConfig = null;
-	
 	public void onEnable()
 	{
         // I wasn't expecting to need to pass arguments to the file, but here's my workaround without telling
@@ -39,12 +36,6 @@ public class Vote extends JavaPlugin {
                                                                 }
                                                             });
         
-        /* AdvancedAFK */
-        autovoteConfig = new ConfigAccessor(this, "autovotes.yml");
-        //If you update your config, this applies changes to users config
-        autovoteConfig.getConfig().options().copyDefaults(true);
-        autovoteConfig.saveConfig();
-        
         //Hook EventListener
         getServer().getPluginManager().registerEvents(commandExecutor, this);
         
@@ -53,17 +44,6 @@ public class Vote extends JavaPlugin {
         
         // Enable permissions
         setupPermissions();
-        
-        //Try AdvancedAFK hook
-        /*try{
-            if(AFK_API.isInstalled()){
-                log.info("[Vote] AdvancedAFK found, automatic vote for afk-player");
-            }
-        }catch(NoClassDefFoundError NCDFE){
-            //AdvancedAFK not installed
-        }catch(NullPointerException NPE){
-            //AdvancedAFK not installed
-        }*/
         
         // Yay on the successful start
         log.info("[Vote] has been enabled.");

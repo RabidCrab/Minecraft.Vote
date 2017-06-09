@@ -23,6 +23,8 @@ import org.bukkit.SoundCategory;
 import org.bukkit.Statistic;
 import org.bukkit.WeatherType;
 import org.bukkit.World;
+import org.bukkit.advancement.Advancement;
+import org.bukkit.advancement.AdvancementProgress;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.block.Block;
@@ -148,13 +150,6 @@ public class PlayerWrapper implements Player
     public List<Block> getLastTwoTargetBlocks(HashSet<Byte> arg0, int arg1)
     {
         return caller.getLastTwoTargetBlocks(arg0, arg1);
-    }
-
-    @Deprecated
-    @Override
-    public List<Block> getLineOfSight(HashSet<Byte> arg0, int arg1)
-    {
-        return caller.getLineOfSight(arg0, arg1);
     }
 
     @Override
@@ -985,13 +980,6 @@ public class PlayerWrapper implements Player
     }
 
     @Override
-    @SuppressWarnings("deprecation")
-    public void setBanned(boolean arg0)
-    {
-        caller.setBanned(arg0);
-    }
-
-    @Override
     public void setWhitelisted(boolean arg0)
     {
         caller.setWhitelisted(arg0);
@@ -1329,72 +1317,10 @@ public class PlayerWrapper implements Player
     }
 
     @Override
-    @Deprecated
-    public int _INVALID_getLastDamage()
-    {
-        // TODO Auto-generated method stub
-        return caller._INVALID_getLastDamage();
-    }
-
-    @Override
-    @Deprecated
-    public void _INVALID_setLastDamage(int arg0)
-    {
-        // TODO Auto-generated method stub
-    	caller._INVALID_setLastDamage(arg0);
-    }
-
-    @Override
     public void setLastDamage(double arg0)
     {
         // TODO Auto-generated method stub
         caller.setLastDamage(arg0);
-    }
-
-    @Override
-    @Deprecated
-    public void _INVALID_damage(int arg0)
-    {
-        // TODO Auto-generated method stub
-    	caller._INVALID_damage(arg0);
-    }
-
-    @Override
-    @Deprecated
-    public void _INVALID_damage(int arg0, Entity arg1)
-    {
-        // TODO Auto-generated method stub
-    	caller._INVALID_damage(arg0, arg1);
-    }
-
-    @Override
-    @Deprecated
-    public int _INVALID_getHealth()
-    {
-        // TODO Auto-generated method stub
-        return caller._INVALID_getHealth();
-    }
-
-    @Override
-    @Deprecated
-    public int _INVALID_getMaxHealth()
-    {
-        // TODO Auto-generated method stub
-    	return caller._INVALID_getMaxHealth();
-    }
-
-    @Override
-    @Deprecated
-    public void _INVALID_setHealth(int arg0)
-    {
-        caller._INVALID_setHealth(arg0);
-    }
-
-    @Override
-    @Deprecated
-    public void _INVALID_setMaxHealth(int arg0)
-    {
-        caller._INVALID_setMaxHealth(arg0);
     }
 
     @Override
@@ -1943,9 +1869,68 @@ public class PlayerWrapper implements Player
 		caller.sendTitle(arg0, arg1, arg2, arg3, arg4);
 	}
 
-	@Override
-	public Spigot spigot() {
+	//@Override
+	//public Spigot spigot() {
+	//	return caller.spigot();
+	//}
 
-		return caller.spigot();
+	@Override
+	public int getCooldown(Material arg0) {
+		return caller.getCooldown(arg0);
+	}
+
+	@Override
+	public Entity getShoulderEntityLeft() {
+		return caller.getShoulderEntityLeft();
+	}
+
+	@Override
+	public Entity getShoulderEntityRight() {
+		return caller.getShoulderEntityRight();
+	}
+
+	@Override
+	public boolean hasCooldown(Material arg0) {
+		return caller.hasCooldown(arg0);
+	}
+
+	@Override
+	public void setCooldown(Material arg0, int arg1) {
+		caller.setCooldown(arg0, arg1);
+	}
+
+	@Override
+	public void setShoulderEntityLeft(Entity arg0) {
+		caller.setShoulderEntityLeft(arg0);
+	}
+
+	@Override
+	public void setShoulderEntityRight(Entity arg0) {
+		caller.setShoulderEntityRight(arg0);
+	}
+
+	@Override
+	public double getHeight() {
+		return caller.getHeight();
+	}
+
+	@Override
+	public double getWidth() {
+		return caller.getWidth();
+	}
+
+	@Override
+	public AdvancementProgress getAdvancementProgress(Advancement arg0) {
+		return caller.getAdvancementProgress(arg0);
+	}
+
+	@Override
+	public String getLocale() {
+		return caller.getLocale();
+	}
+
+	@Override
+	public void setResourcePack(String arg0, byte[] arg1) {
+		caller.setResourcePack(arg0, arg1);
 	}
 }
